@@ -61,15 +61,15 @@ stroke-dashoffset: 248.186;
 .sprint-game-header {
     height: 10%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 0.5fr 1fr 0.5fr 1fr;
     align-items: center;
     justify-content: space-between;
 }
 
 .sprint-game-countdoun-container {
     position: relative;
-    width: 10vh;
-    height: 10vh;
+    width: 8vh;
+    height: 6vh;
     background-color: transparent;
     /* backdrop-filter: blur(3px); */
     color: white;
@@ -78,7 +78,7 @@ stroke-dashoffset: 248.186;
 
 .sprint-game-sound-container {
     height: 100%;
-    /* background-image: url(../assets/svg/audio.svg); */
+   /* background-image: url(../assets/svg/audio.svg);  */
     background-size: contain;
     background-repeat: no-repeat;
 }

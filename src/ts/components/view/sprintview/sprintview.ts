@@ -1,4 +1,5 @@
 import './sprint.css';
+import { updateVolume, toggleMute, getVolumeLocalStorage } from "../../app/audio/audio";
 
 export const sprintView = () => {
     const pageContainer = document.querySelector('.page-container__start-plate') as HTMLElement;
@@ -63,6 +64,14 @@ const startSprint = async() => {
         <div class="sprint-game-countdoun-container"></div>
         <div class="sprint-round-score-container">0</div>
         <div class="sprint-game-sound-container"></div>
+        <div class="sprint-game-volume-container">
+        <button type="button" class="mute-label">
+            </button>
+            <label for="volume" class="volume-label">
+                <h2>Громкость</h2>
+
+                <input type="range" value="0.24" min="0" max="1" step="0.01" class="progress" id="volume">
+            </label></div>
     </div>
     <div class="sprint-game-body">
     </div>
@@ -70,6 +79,10 @@ const startSprint = async() => {
     </div>`;
     const roundTimerContainer = document.querySelector('.sprint-game-countdoun-container')as HTMLElement;
     getCountdoun(60, roundTimerContainer, '', ()=>{console.log('game over!')});
+    //getVolumeLocalStorage();
+    toggleMute();
+    const volume = document.getElementById('volume') as HTMLInputElement;
+    volume.addEventListener('input', updateVolume);
   //  const wordsChunk = await getWordsChunk(0, 0);
   //  console.log(wordsChunk);
 };
