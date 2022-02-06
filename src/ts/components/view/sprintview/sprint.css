@@ -1,0 +1,84 @@
+.sprint-container {
+    position: relative;
+    width: 80vw;
+    height: 80vh;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(81, 165, 221);
+    background-image: url(https://c.pxhere.com/photos/02/f1/westminster_big_ben_london-1069141.jpg!d);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.welcome-sprint-button {
+    position: absolute;
+    left: calc(50% - 10vh);
+    top: calc(50% - 10vh);
+    width: 20vh;
+    height: 20vh;
+    border-radius: 50%;
+    border: none;    
+    background-color: transparent;
+    backdrop-filter: blur(3px);
+    color: white;
+    font-size: 3vh;
+}
+
+/* .circle-background,*/
+.circle-progress {
+stroke-dashoffset: 248.186;
+}
+
+.countdoun-svg {
+    /* width: 15vh;
+    height: 15vh; */
+    fill: none;
+}
+
+.circle-text {
+    width: 15vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 5vh;
+}
+
+.sprint-game-container {
+    position: relative;
+    min-width: 300px;
+    max-width: 1000px;
+    width: 40vw;
+    height: 60vh;
+    margin: 0 auto;
+    border-radius: 25px;
+    background-color: rgba(133, 151, 175, 0.76);
+    backdrop-filter: blur(5px);
+}
+
+.sprint-game-header {
+    height: 10%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sprint-game-countdoun-container {
+    position: relative;
+    width: 10vh;
+    height: 10vh;
+    background-color: transparent;
+    /* backdrop-filter: blur(3px); */
+    color: white;
+    font-size: 3vh;
+}
+
+.sprint-game-sound-container {
+    height: 100%;
+    /* background-image: url(../assets/svg/audio.svg); */
+    background-size: contain;
+    background-repeat: no-repeat;
+}
