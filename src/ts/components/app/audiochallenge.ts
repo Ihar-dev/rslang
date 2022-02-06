@@ -1,0 +1,167 @@
+//* Логика работы
+
+//* 0. Сброс счётчиков правельных и не правельных ответов, сброс счетчика серии правельных ответов - ОК!
+
+//* 1. Отбираются слова для игры (для теста выбираем страницу и уровень заранее) - делается 1 раз после старта игры. Массив объектов (как с сервера). - getChunkOfWords() ОК!
+
+//* 2. Рандомно выбирается слово для игры из отобранных слов (пункт 1). Сохраняем его позицию в массиве слов (20 слов). - ОК!
+//* 3. Рандомно выбираются 4 ложных ответа. Ответы не должны повторятся между собой и правельным. Сохраняются в массив. - ОК!
+//* 4. Рандомно добавляем правельный ответ (слово) в массив с 4 ложными ответами => массив с 5 ответами; - ОК!
+
+//* 5. Рендеринг страницы (шаблона);
+
+//* 6. Изменение страницы на основе выбранного слова:
+//* - Вставка картинки, звука, слова на английсом в теги;
+//* - Вставка вариантов ответа в кнопки (ставка переводов);
+
+//* 7. При клике проверяем перевод слова на правельность (правельный ответ сохранён, выбранный ответ берём из клика по кнопке - событие).
+
+//* 8. Изменение данных о слове: правильно / не правильно и т.п.
+
+//* 9. Отрисовка страницы с ответом (появление слова, индикаторы у кнопок и т.п.).
+
+//* 10. Удаление слова по позиции (которая была заранее сохранена) из массива слов для игры (пункт 1).
+
+//* 11. Проверка массива слов для игры, если он пуст, то игра окончена, если нет - следующий раунд (повторяем действия начиная с пункта 2)
+
+//* 12. Если раунд окончен, вывод статистики
+
+//* 13. Сохранение прогресса по изучению слов в localStorage
+//* { "id слова" : { status: "learned" , correctAnswers: 3 } }
+
+import AudiochallengeContent from '../view/audiochallenge/audiochallenge';
+import AudiochallengeTopContent from '../view/audiochallenge/top/top';
+import AudiochallengeVarianContent from '../view/audiochallenge/variant/variant';
+import AudiochallengeBottomContent from '../view/audiochallenge/bottom/bottom';
+
+interface Word {
+  id: string,
+  group: number,
+  page: number,
+  word: string,
+  image: string,
+  audio: string,
+  audioMeaning: string,
+  audioExample: string,
+  textMeaning: string,
+  textExample: string,
+  transcription: string,
+  wordTranslate: string,
+  textMeaningTranslate: string,
+  textExampleTranslate: string
+}
+
+class StartAudiochallengeApp {
+  private static wordGroup = '0';
+  private static wordPage = '0';
+
+  private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
+  private static wordСhunkPageLink = `${StartAudiochallengeApp.basePageLink}/words?group=${StartAudiochallengeApp.wordGroup}&page=${StartAudiochallengeApp.wordPage}`;
+
+  private static chunkOfWords: Array<Word>;
+  private static correctAnswer: Word;
+  private static answers: Array<string>;
+
+  private static roundStatistic = {
+    numberOfQuestions: 0,
+    correctAnswers: 0,
+    correctAnswersSeries: 0,
+    maxCorrectAnswersSeries: 0,
+  }
+
+  //* Функция получения пандомного числа в заданном диапазоне
+  public static getRandomNumber(min: number, max: number) {
+    let rand = min + Math.random() * (max + 1 - min);
+    return Math.floor(rand);
+  }
+
+  public async render() {
+    const answersNumber = 5;
+
+    const page = document.querySelector('.page-container') as HTMLElement;
+    page.innerHTML = await AudiochallengeContent.render();
+
+    const top = document.querySelector('.audiochallenge-container__top') as HTMLElement;
+    top.innerHTML = await AudiochallengeTopContent.render();
+
+    const middle = document.querySelector('.audiochallenge-container__middle') as HTMLElement;
+    middle.innerHTML = "";
+    for (let i = 1; i <= answersNumber; i++) {
+      middle.insertAdjacentHTML('beforeend', await AudiochallengeVarianContent.render());
+    }
+
+    const bottom = document.querySelector('.audiochallenge-container__bottom') as HTMLElement;
+    bottom.innerHTML = await AudiochallengeBottomContent.render();
+    //TODO Добавить контент в блок со статистикой
+    // const statistic = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
+  }
+
+  //TODO Функция получения данных о текщей страницы (группа и страница) запуска игры
+  public async getWordGroupAndPage() {
+    StartAudiochallengeApp.wordGroup = '0';  
+    StartAudiochallengeApp.wordPage = '0';  
+  }
+
+  //* Функция сброса статистики перед началом раунда
+  private async resetRoundStatistic() { 
+    StartAudiochallengeApp.roundStatistic.numberOfQuestions = 0;
+    StartAudiochallengeApp.roundStatistic.correctAnswers = 0;
+    StartAudiochallengeApp.roundStatistic.correctAnswersSeries = 0;
+    StartAudiochallengeApp.roundStatistic.maxCorrectAnswersSeries = 0;
+  }
+
+    //* Функция сброса вариантов ответа перед началом раунда
+    private async resetAnswers() {
+      StartAudiochallengeApp.answers = [];
+    }
+
+  //* Функция получения массива слов в зависимости от заданных параметров (группа и страница)
+  private async getChunkOfWords() { 
+    const data = await (await fetch(StartAudiochallengeApp.wordСhunkPageLink)).json();
+    StartAudiochallengeApp.chunkOfWords = [...data];
+    StartAudiochallengeApp.roundStatistic.numberOfQuestions = StartAudiochallengeApp.chunkOfWords.length;
+  }
+  
+  //* Функция получения рандомного слова для раунда
+  private async getCorrectAnswer() {
+    const CorrectAnswerPosition =  StartAudiochallengeApp.getRandomNumber(0, StartAudiochallengeApp.chunkOfWords.length);
+    StartAudiochallengeApp.correctAnswer = StartAudiochallengeApp.chunkOfWords[CorrectAnswerPosition];
+    StartAudiochallengeApp.chunkOfWords.splice(CorrectAnswerPosition, 1);
+  }
+
+    //* Функция получения вариантов ответа (массив из правильного и 4 неправельных ответов)
+    private async getAnswers() {
+      const wrongAnswersNumber = 4;
+      const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
+
+      if (StartAudiochallengeApp.answers.length < wrongAnswersNumber) {
+        const maxGroupNumber = 5;
+        const maxPageNumber = 29;
+        const group = StartAudiochallengeApp.getRandomNumber(0, maxGroupNumber);
+        const page = StartAudiochallengeApp.getRandomNumber(0, maxPageNumber);
+        const wordСhunkPageLink = `${StartAudiochallengeApp.basePageLink}/words?group=${group}&page=${page}`;
+        const wordСhunk: Array<Word> = await (await fetch(wordСhunkPageLink)).json();
+        const variant = wordСhunk[StartAudiochallengeApp.getRandomNumber(0, wordСhunk.length - 1)].wordTranslate;
+
+        if (!StartAudiochallengeApp.answers.includes(variant) && variant !== correctAnswer){
+          StartAudiochallengeApp.answers.push(variant);
+        }
+
+        await this.getAnswers();
+      } else {
+        StartAudiochallengeApp.answers.splice(StartAudiochallengeApp.getRandomNumber(0, wrongAnswersNumber), 0, correctAnswer);
+      }
+    }
+
+  //* Функция старта игры
+  public async startGame() {
+    await this.resetRoundStatistic();
+    await this.resetAnswers();
+    await this.getChunkOfWords();
+    await this.getCorrectAnswer();
+    await this.getAnswers();
+    //TODO Функция изменения страници (вставка вариантов ответа, картинки, звука, слова на английском)
+  }
+}
+
+export default StartAudiochallengeApp;

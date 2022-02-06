@@ -1,0 +1,58 @@
+.audiochallenge-container__play-audio-1 {
+  /* display: none; */
+  margin: 1em;
+  height: 60px;
+  width: 60px;
+
+  -webkit-mask: url(../../../../../assets/svg/audiochallenge__play-audio.svg) no-repeat center;
+  mask: url(../../../../../assets/svg/audiochallenge__play-audio.svg) no-repeat center;
+  background-color: black;
+
+  transition: 0.5s;
+}
+
+.audiochallenge-container__play-audio-1:hover {
+  background-color: goldenrod;
+  cursor: pointer;
+}
+
+.audiochallenge-container__word-image {
+  display: none;
+
+  margin: 1em;
+  height: 100px;
+  width: 100px;
+
+  border: 3px solid green;
+  border-radius: 50%;
+
+  background-image: url(../../../../../assets/img/word-image.png);
+}
+
+.audiochallenge-container__word-conteiner {
+  /* display: flex; */
+  display: none;
+  align-items: center;
+  margin: 1em;
+}
+
+.audiochallenge-container__play-audio-2 {
+  margin: 1em;
+  height: 30px;
+  width: 30px;
+
+  -webkit-mask: url(../../../../../assets/svg/audiochallenge__play-audio.svg) no-repeat center;
+  mask: url(../../../../../assets/svg/audiochallenge__play-audio.svg) no-repeat center;
+  background-color: black;
+
+  transition: 0.5s;
+}
+
+.audiochallenge-container__play-audio-2:hover {
+  background-color: goldenrod;
+  cursor: pointer;
+}
+
+.audiochallenge-container__word {
+  font-size: 46px;
+}

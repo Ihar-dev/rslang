@@ -1,0 +1,36 @@
+.audiochallenge-container__variant {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1em;
+  padding: 1em;
+
+  user-select: none;
+  transition: 0.5s;
+}
+
+.audiochallenge-container__variant:hover {
+  border-radius: 5px;
+  background-color: rgba(167, 167, 167, 0.35);
+  cursor: pointer;
+}
+
+.audiochallenge-container__variant-number {
+  /* display: none; */
+  display: block;
+}
+
+.audiochallenge-container__answer-indicator {
+  display: none;
+  /* display: block; */
+  height: 30px;
+  width: 30px;
+
+  -webkit-mask: url(../../../../../assets/svg/audiochallenge__answer-indicator.svg) no-repeat center;
+  mask: url(../../../../../assets/svg/audiochallenge__answer-indicator.svg) no-repeat center;
+  background-color: green;
+}
+
+.audiochallenge-container__text {
+  margin: 0.25em;
+}
