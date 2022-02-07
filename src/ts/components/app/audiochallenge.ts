@@ -126,14 +126,14 @@ class StartAudiochallengeApp {
   } 
   
   //* Функция получения рандомного слова для раунда
-  private async setCorrectAnswer() {
+  private async getCorrectAnswer() {
     const CorrectAnswerPosition =  StartAudiochallengeApp.getRandomNumber(0, StartAudiochallengeApp.chunkOfWords.length);
     StartAudiochallengeApp.correctAnswer = StartAudiochallengeApp.chunkOfWords[CorrectAnswerPosition];
     StartAudiochallengeApp.chunkOfWords.splice(CorrectAnswerPosition, 1);
   }
 
     //* Функция получения вариантов ответа (массив из правильного и 4 неправельных ответов)
-    private async setAnswers() {
+    private async getAnswers() {
       const wrongAnswersNumber = 4;
       const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
 
@@ -160,8 +160,8 @@ class StartAudiochallengeApp {
     await this.resetRoundStatistic();
     await this.resetAnswers();
     await this.setWords(StartAudiochallengeApp.wordGroup, StartAudiochallengeApp.wordPage);
-    await this.setCorrectAnswer();
-    await this.setAnswers();
+    await this.getCorrectAnswer();
+    await this.getAnswers();
     //TODO Функция изменения страници (вставка вариантов ответа, картинки, звука, слова на английском)
   }
 }
