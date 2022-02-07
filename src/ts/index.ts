@@ -22,7 +22,7 @@ document.addEventListener('click', (event) => {
   }
 
   if (target.classList.contains('audiochallenge-container__play-audio-1') || target.classList.contains('audiochallenge-container__play-audio-2')) {
-    startAudiochallengeApp.playAudio();
+    startAudiochallengeApp.sayWord();
   }
   });
 >>>>>>> 729c695 (feat: add function to play a sound of word)

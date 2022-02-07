@@ -74,6 +74,7 @@ class StartAudiochallengeApp {
     return Math.floor(rand);
   }
 
+  //* Функция рендеринга шаблона страницы с игрой (раунд)
   public async render() {
     const answersNumber = 5;
 
@@ -95,7 +96,8 @@ class StartAudiochallengeApp {
     // const statistic = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
   }
 
-  public async playAudio() {
+  //* Функция для произношения слова
+  public async sayWord() {
     const audio = new Audio();
     audio.src = `${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.audio}`;
     audio.currentTime = 0;
@@ -108,7 +110,7 @@ class StartAudiochallengeApp {
     StartAudiochallengeApp.wordPage = '0';  
   }
 
-  //* Функция сброса статистики перед началом раунда
+  //* Функция сброса статистики (перед началом раунда)
   private async resetRoundStatistic() { 
     StartAudiochallengeApp.roundStatistic.numberOfQuestions = 0;
     StartAudiochallengeApp.roundStatistic.correctAnswers = 0;
@@ -116,7 +118,7 @@ class StartAudiochallengeApp {
     StartAudiochallengeApp.roundStatistic.maxCorrectAnswersSeries = 0;
   }
 
-  //* Функция сброса вариантов ответа перед началом раунда
+  //* Функция сброса вариантов ответа (перед началом раунда)
   private async resetAnswers() {
     StartAudiochallengeApp.answers = [];
   }
@@ -127,6 +129,7 @@ class StartAudiochallengeApp {
     return (await fetch(wordСhunkPageLink)).json();
   }
 
+  //* Функция сохранения полученного массива слов для раунда
   private async setWords(group: string, page: string) {
     const data = await this.getChunkOfWords(group, page);
     StartAudiochallengeApp.chunkOfWords = [...data];
@@ -135,9 +138,11 @@ class StartAudiochallengeApp {
   
   //* Функция получения рандомного слова для раунда
   private async getCorrectAnswer() {
-    const CorrectAnswerPosition =  StartAudiochallengeApp.getRandomNumber(0, StartAudiochallengeApp.chunkOfWords.length);
-    StartAudiochallengeApp.correctAnswer = StartAudiochallengeApp.chunkOfWords[CorrectAnswerPosition];
-    StartAudiochallengeApp.chunkOfWords.splice(CorrectAnswerPosition, 1);
+    if (StartAudiochallengeApp.chunkOfWords.length) {
+      const CorrectAnswerPosition =  StartAudiochallengeApp.getRandomNumber(0, StartAudiochallengeApp.chunkOfWords.length);
+      StartAudiochallengeApp.correctAnswer = StartAudiochallengeApp.chunkOfWords[CorrectAnswerPosition];
+      StartAudiochallengeApp.chunkOfWords.splice(CorrectAnswerPosition, 1);
+    }
   }
 
   //* Функция получения вариантов ответа (массив из правильного и 4 неправельных ответов)
