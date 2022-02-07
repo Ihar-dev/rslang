@@ -18,7 +18,7 @@ test();
 document.addEventListener('click', (event) => {
   const target = event.target as HTMLElement;
   if (target.closest('.audiochallenge-container__variant')) {
-    console.log("OK!");
+    startAudiochallengeApp.checkAnswer(event);
   }
 
   if (target.classList.contains('audiochallenge-container__play-audio-1') || target.classList.contains('audiochallenge-container__play-audio-2')) {
