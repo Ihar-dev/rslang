@@ -10,7 +10,7 @@
 
 //* 5. Рендеринг страницы (шаблона); - ОК!
 
-//* 6. Изменение страницы на основе выбранного слова:
+//* 6. Изменение страницы на основе выбранного слова: - ОК!
 //* - Вставка картинки, звука, слова на английсом в теги;
 //* - Вставка вариантов ответа в кнопки (ставка переводов);
 
@@ -95,10 +95,12 @@ class StartAudiochallengeApp {
     // const statistic = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
   }
 
-  // public async playAudio() {
-  //   const audio = new Audio();
-  //   audio.scr = `${StartAudiochallengeApp.basePageLink}/${}`;
-  // }
+  public async playAudio() {
+    const audio = new Audio();
+    audio.src = `${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.audio}`;
+    audio.currentTime = 0;
+    audio.play();
+  }
 
   //TODO Функция получения данных о текщей страницы (группа и страница) запуска игры
   public async getWordGroupAndPage() {
@@ -163,8 +165,6 @@ class StartAudiochallengeApp {
 
   //* Функция изменения данных отрендеренной страницы на основе данных для раунда
   private async setDataToPage(){
-    // const playAudio1 = document.querySelector('.audiochallenge-container__play-audio-1') as HTMLTemplateElement;
-    // const playAudio2 = document.querySelector('.audiochallenge-container__play-audio-2') as HTMLTemplateElement;
     const img = document.querySelector('.audiochallenge-container__word-image') as HTMLTemplateElement;
     const word = document.querySelector('.audiochallenge-container__word') as HTMLTemplateElement;
     const variantsNumber = document.querySelectorAll('.audiochallenge-container__variant-number');
@@ -192,8 +192,6 @@ class StartAudiochallengeApp {
     await this.getAnswers();
     await this.render();
     await this.setDataToPage();
-    
-    //TODO Функция изменения страници (вставка вариантов ответа, картинки, звука, слова на английском)
   }
 }
 

@@ -17,7 +17,7 @@
 }
 
 .audiochallenge-container__word-image {
-  /* display: none; */
+  display: none;
 
   margin: 1em;
   height: 150px;
@@ -31,8 +31,8 @@
 }
 
 .audiochallenge-container__word-conteiner {
-  display: flex;
-  /* display: none; */
+  /* display: flex; */
+  display: none;
   align-items: center;
   margin: 1em;
 }
