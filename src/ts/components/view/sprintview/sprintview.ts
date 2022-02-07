@@ -1,6 +1,6 @@
 import './sprint.css';
 import { updateVolume, toggleMute, getVolumeLocalStorage } from "../../app/audio/audio";
-
+import { roundOver } from "../../app/sprint";
 export const sprintView = () => {
     const pageContainer = document.querySelector('.page-container__start-plate') as HTMLElement;
     const sprintContainer = document.createElement('div');
@@ -19,9 +19,9 @@ for (let i= 0; i <= timer; i++) {
     setTimeout(() => {      
     container.innerHTML = ` 
     <svg class="countdoun-svg" viewBox="0 0 80 80">
-    <circle class="circle-background" cx="40" cy="40" r="39.5" stroke-width="1px" style="stroke: rgb(255, 255, 255);"></circle>
-    <circle class="circle-progress" cx="40" cy="40" r="39.5" stroke-width="2px" transform="rotate(-90 40 40)" style="stroke-dasharray: 248.186; stroke-dashoffset: ${248.186 - (248.186 / (timer-1)) * i}; stroke: rgb(40, 195, 138);"></circle>
-    <text class="circle-text" x="50%" y="50%" dy=".3em" text-anchor="middle" style="fill: rgb(255, 255, 255);">${sec}</text>
+    <circle class="circle-background" cx="40" cy="40" r="39.5" stroke-width="1px" style="stroke: rgb(128, 128, 128);"></circle>
+    <circle class="circle-progress" cx="40" cy="40" r="39" stroke-width="3px" transform="rotate(-90 40 40)" style="stroke-dasharray: 248.186; stroke-dashoffset: ${248.186 - (248.186 / (timer-1)) * i}; stroke: rgb(40, 195, 138);"></circle>
+    <text class="circle-text" x="50%" y="50%" dy=".3em" text-anchor="middle" style="fill: rgb(128, 128, 128);">${sec}</text>
     </svg>${text}`;
     sec--;    
      if (i == timer) {    
@@ -32,57 +32,53 @@ for (let i= 0; i <= timer; i++) {
 }
 };
 
-type word = {
-    id: string,
-    group: string,
-    page: string,
-    word: string,
-    image: string,
-    audio: string,
-    audioMeaning: string,
-    audioExample: string,
-    textMeaning: string,
-    textExample: string,
-    transcription: string,
-    wordTranslate: string,
-    textMeaningTranslate: string,
-    textExampleTranslate: string
-};
 
-const getWordsChunk = async(page: number, group: number): Promise<word[]> => {
-    const response = await fetch (`https://rs-lang-work-team.herokuapp.com/words?page=${page}&group=${group}`);
-    const wordsChunk = await response.json();
-    return wordsChunk;
-};
 
-const startSprint = async() => {
-   // alert('START!');
+export const startSprint = async() => {
     const sprintContainer = document.querySelector('.sprint-container') as HTMLElement;
     sprintContainer.innerHTML = `
     <div class="sprint-game-container">
         <div class="sprint-game-header">
-        <div class="sprint-game-countdoun-container"></div>
+        <div class="sprint-game-countdoun-container">
+        <div class="sprint-round-countdoun"></div>
+        </div>
         <div class="sprint-round-score-container">0</div>
         <div class="sprint-game-sound-container"></div>
         <div class="sprint-game-volume-container">
-        <button type="button" class="mute-label">
-            </button>
             <label for="volume" class="volume-label">
-                <h2>Громкость</h2>
-
-                <input type="range" value="0.24" min="0" max="1" step="0.01" class="progress" id="volume">
-            </label></div>
+            <input type="range" value="0.24" min="0" max="1" step="0.01" class="progress" id="volume">
+            </label>
+        </div>
     </div>
     <div class="sprint-game-body">
     </div>
     <div class="sprint-game-footer">
     </div>`;
-    const roundTimerContainer = document.querySelector('.sprint-game-countdoun-container')as HTMLElement;
-    getCountdoun(60, roundTimerContainer, '', ()=>{console.log('game over!')});
-    //getVolumeLocalStorage();
+    renderQuestionContainer();
+    const roundTimerContainer = document.querySelector('.sprint-round-countdoun')as HTMLElement;
+    getCountdoun(60, roundTimerContainer, '', roundOver);
+    getVolumeLocalStorage();
     toggleMute();
     const volume = document.getElementById('volume') as HTMLInputElement;
-    volume.addEventListener('input', updateVolume);
-  //  const wordsChunk = await getWordsChunk(0, 0);
-  //  console.log(wordsChunk);
+    volume.addEventListener('input', updateVolume);  
+};
+
+const renderQuestionContainer = () => {
+    const questionBody = document.querySelector('.sprint-game-body') as HTMLElement;
+    const questionFooter = document.querySelector('.sprint-game-footer') as HTMLElement;
+    questionBody.innerHTML = `
+   <div class="sprint-round-right-answers-count">
+   <div class="sugar"></div>
+   </div>
+    <div class="sprint-round-right-answers-cup">
+    <div class="kettle"></div>
+    <div class="cup"></div>
+    </div>
+    <div class="sprint-question-word">Word</div>
+    <div class="sprint-answer-word">Слово</div> `;
+    questionFooter.innerHTML = `
+     <input type="button" value="WRONG" name="wrongbutton" class="sprint-wrong-button">
+      <input type="button" value="RIGHT" name="rightbutton" class="sprint-right-button">
+      <label for="wrongbutton"></label>
+      <label for="rightbutton"></label>`;    
 };

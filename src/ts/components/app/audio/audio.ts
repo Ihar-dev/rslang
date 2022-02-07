@@ -11,7 +11,7 @@ let currentVolume = audio.volume = 0.24;
 
 //-----------------------------------------------------------------
 export const toggleMute = (): void=> {
-    const volumebtn = document.querySelector('.mute-label') as HTMLElement;
+    const volumebtn = document.querySelector('.sprint-game-sound-container') as HTMLElement;
     const volume = document.getElementById('volume') as HTMLInputElement;
     volumebtn.onclick = () => {
         if (audio.volume > 0) {
@@ -27,13 +27,13 @@ export const toggleMute = (): void=> {
 
 export const updateVolume = (): void => {
     const volume = document.getElementById('volume') as HTMLInputElement;
-    const volumebtn = document.querySelector('.mute-label') as HTMLElement;
+    const volumebtn = document.querySelector('.sprint-game-sound-container') as HTMLElement;
     audio.volume = Number(volume.value);
-    volume.style.background = `linear-gradient(to right, #24809E 0%, #24809E ${Number(volume.value)*100}%, #fff ${Number(volume.value)*100}%, #fff 100%)`;
+    volume.style.background = `linear-gradient(to right, #24809E 0%, #24809E ${Number(volume.value)*100}%, #808080 ${Number(volume.value)*100}%, #808080 100%)`;
     if (audio.volume === 0) {
-        volumebtn.style.backgroundImage = 'url(../../../../../assets/svg/mute.svg)';
+        volumebtn.classList.add('mute');
     } else {
-        volumebtn.style.backgroundImage = 'url(../../../../../assets/svg/Volume_btn.svg)';
+        volumebtn.classList.remove('mute');
     }
 audio.src = '../../../../../assets/audio/correctanswer.mp3';
 audio.play();
@@ -49,12 +49,13 @@ const saveSettings = () => {
         localStorage.setItem('volume', volume.value); 
 }
 
-//----------------------------------------------getLocalStorage------------------
+//----------------------------------------------GET LocalStorage------------------
 export const getVolumeLocalStorage = (): void => {
     const volume = document.getElementById('volume') as HTMLInputElement;
     try {
         audio.volume = Number(localStorage.getItem('volume'));
-        volume.style.background = `linear-gradient(to right, #24809E 0%, #24809E ${Number(volume.value)*100}%, #fff ${Number(volume.value)*100}%, #fff 100%)`;       
+        volume.setAttribute('value', `${audio.volume}`)
+        volume.style.background = `linear-gradient(to right, #24809E 0%, #24809E ${Number(audio.volume)*100}%, #808080 ${Number(audio.volume)*100}%, #808080 100%)`;              
     } catch (error) {
         // false;
         console.log(error);
