@@ -17,21 +17,22 @@
 }
 
 .audiochallenge-container__word-image {
-  display: none;
+  /* display: none; */
 
   margin: 1em;
-  height: 100px;
-  width: 100px;
+  height: 150px;
+  width: 150px;
 
   border: 3px solid green;
-  border-radius: 50%;
-
-  background-image: url(../../../../../assets/img/word-image.png);
+  border-radius: 50%; 
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .audiochallenge-container__word-conteiner {
-  /* display: flex; */
-  display: none;
+  display: flex;
+  /* display: none; */
   align-items: center;
   margin: 1em;
 }

@@ -52,6 +52,8 @@ interface Word {
 }
 
 class StartAudiochallengeApp {
+  private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
+
   private static wordGroup = '0';
   private static wordPage = '0';
 
@@ -93,6 +95,11 @@ class StartAudiochallengeApp {
     // const statistic = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
   }
 
+  // public async playAudio() {
+  //   const audio = new Audio();
+  //   audio.scr = `${StartAudiochallengeApp.basePageLink}/${}`;
+  // }
+
   //TODO Функция получения данных о текщей страницы (группа и страница) запуска игры
   public async getWordGroupAndPage() {
     StartAudiochallengeApp.wordGroup = '0';  
@@ -107,15 +114,14 @@ class StartAudiochallengeApp {
     StartAudiochallengeApp.roundStatistic.maxCorrectAnswersSeries = 0;
   }
 
-    //* Функция сброса вариантов ответа перед началом раунда
-    private async resetAnswers() {
-      StartAudiochallengeApp.answers = [];
-    }
+  //* Функция сброса вариантов ответа перед началом раунда
+  private async resetAnswers() {
+    StartAudiochallengeApp.answers = [];
+  }
 
   //* Функция получения массива слов в зависимости от заданных параметров (группа и страница)
-  private async getChunkOfWords(group: string, page: string) {
-    const basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
-    const wordСhunkPageLink = `${basePageLink}/words?group=${group}&page=${page}`;
+  private async getChunkOfWords(group: string, page: string) {    
+    const wordСhunkPageLink = `${StartAudiochallengeApp.basePageLink}/words?group=${group}&page=${page}`;
     return (await fetch(wordСhunkPageLink)).json();
   }
 
@@ -132,28 +138,50 @@ class StartAudiochallengeApp {
     StartAudiochallengeApp.chunkOfWords.splice(CorrectAnswerPosition, 1);
   }
 
-    //* Функция получения вариантов ответа (массив из правильного и 4 неправельных ответов)
-    private async getAnswers() {
-      const wrongAnswersNumber = 4;
-      const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
+  //* Функция получения вариантов ответа (массив из правильного и 4 неправельных ответов)
+  private async getAnswers() {
+    const wrongAnswersNumber = 4;
+    const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
 
-      if (StartAudiochallengeApp.answers.length < wrongAnswersNumber) {
-        const maxGroupNumber = 5;
-        const maxPageNumber = 29;
-        const group = String(StartAudiochallengeApp.getRandomNumber(0, maxGroupNumber));
-        const page = String(StartAudiochallengeApp.getRandomNumber(0, maxPageNumber));
-        const wordСhunk: Array<Word> = await this.getChunkOfWords(group, page);
-        const variant = wordСhunk[StartAudiochallengeApp.getRandomNumber(0, wordСhunk.length - 1)].wordTranslate;
+    if (StartAudiochallengeApp.answers.length < wrongAnswersNumber) {
+      const maxGroupNumber = 5;
+      const maxPageNumber = 29;
+      const group = String(StartAudiochallengeApp.getRandomNumber(0, maxGroupNumber));
+      const page = String(StartAudiochallengeApp.getRandomNumber(0, maxPageNumber));
+      const wordСhunk: Array<Word> = await this.getChunkOfWords(group, page);
+      const variant = wordСhunk[StartAudiochallengeApp.getRandomNumber(0, wordСhunk.length - 1)].wordTranslate;
 
-        if (!StartAudiochallengeApp.answers.includes(variant) && variant !== correctAnswer){
-          StartAudiochallengeApp.answers.push(variant);
-        }
-
-        await this.getAnswers();
-      } else {
-        StartAudiochallengeApp.answers.splice(StartAudiochallengeApp.getRandomNumber(0, wrongAnswersNumber), 0, correctAnswer);
+      if (!StartAudiochallengeApp.answers.includes(variant) && variant !== correctAnswer){
+        StartAudiochallengeApp.answers.push(variant);
       }
+
+      await this.getAnswers();
+    } else {
+      StartAudiochallengeApp.answers.splice(StartAudiochallengeApp.getRandomNumber(0, wrongAnswersNumber), 0, correctAnswer);
     }
+  }
+
+  //* Функция изменения данных отрендеренной страницы на основе данных для раунда
+  private async setDataToPage(){
+    // const playAudio1 = document.querySelector('.audiochallenge-container__play-audio-1') as HTMLTemplateElement;
+    // const playAudio2 = document.querySelector('.audiochallenge-container__play-audio-2') as HTMLTemplateElement;
+    const img = document.querySelector('.audiochallenge-container__word-image') as HTMLTemplateElement;
+    const word = document.querySelector('.audiochallenge-container__word') as HTMLTemplateElement;
+    const variantsNumber = document.querySelectorAll('.audiochallenge-container__variant-number');
+    const variantsText = document.querySelectorAll('.audiochallenge-container__text');
+
+    if (img) {
+      img.style.backgroundImage = `url(${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.image})`;
+    }
+    if (word) {
+      word.innerHTML = `${StartAudiochallengeApp.correctAnswer.word}`;
+    }
+
+    for (let i = 0; i < variantsText.length; i++) {
+      variantsNumber[i].innerHTML = `${i+1}`;
+      variantsText[i].innerHTML = `${StartAudiochallengeApp.answers[i]}`;
+    }
+  }
 
   //* Функция старта игры
   public async startGame() {
@@ -162,6 +190,9 @@ class StartAudiochallengeApp {
     await this.setWords(StartAudiochallengeApp.wordGroup, StartAudiochallengeApp.wordPage);
     await this.getCorrectAnswer();
     await this.getAnswers();
+    await this.render();
+    await this.setDataToPage();
+    
     //TODO Функция изменения страници (вставка вариантов ответа, картинки, звука, слова на английском)
   }
 }
