@@ -13,8 +13,8 @@
 // 12.	Проверка выбранного варианта ответа, изменение стилей страницы - [DONE]
 // 13.	Изменение статистики раунда игры - [DONE]
 // 14.	Изменение данных о слове ({ "id слова" : { status: "learned" , correctAnswers: 3 } })
-// 15.	Проверка оставшихся слов для продолжения игры (если слова есть, то игра продолжается; если нет – то выводится статистика раунда игры, данные о словах сохраняются)
-// 16.	Следующий вопрос (повторить пункты 7 – 15)
+// 15.	Проверка оставшихся слов для продолжения игры (если слова есть, то игра продолжается; если нет – то выводится статистика раунда игры, данные о словах сохраняются) - [DONE]
+// 16.	Следующий вопрос (повторить пункты 7 – 15) - [DONE]
 // 17.	Конец раунда(игры) - вывод статистики раунда и сохранение данных о словах в вопросах
 
 import AudiochallengeContent from '../view/audiochallenge/audiochallenge';
@@ -60,7 +60,7 @@ class StartAudiochallengeApp {
 
   private static chunkOfWords: Array<Word>;
   private static correctAnswer: Word;
-  private static answers: Array<string>;
+  private static answers: Array<string> = [];
 
   private static roundStatistic: RoundStatistic = {
     numberOfQuestions: 0,
@@ -181,7 +181,7 @@ class StartAudiochallengeApp {
 
   //Функция сброса вариантов ответа раунда перед его началом
   private async resetAnswers() {
-    StartAudiochallengeApp.answers = [];
+    StartAudiochallengeApp.answers.length = 0;
   }
 
   //Функция получения массива слов (20 слов) с сервера
@@ -258,9 +258,26 @@ class StartAudiochallengeApp {
     await this.sayWord();
   }
 
-  //TODO Функция пропуска вопроса (вызов при клике по кнопке “I don’t know”)
+  //Функция для следующего слова
+  public async nextWord() {
+    if (StartAudiochallengeApp.chunkOfWords.length) {
+      await this.resetAnswers();
+      await this.getCorrectAnswer();
+      await this.getAnswerVariants();
+      await this.renderPage();
+      await this.setDataToPage();
+      await this.sayWord();
+    } else {
+      //TODO Страница статистики
+      console.log("Game over");
+      console.log("Правильно ответил:", StartAudiochallengeApp.roundStatistic.correctAnswers);
+      console.log("Ошибся:", StartAudiochallengeApp.roundStatistic.wrongAnswers);
+      console.log("Лучшая серия:", StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries);
+      console.log("Точность:", StartAudiochallengeApp.roundStatistic.correctAnswers.length / StartAudiochallengeApp.roundStatistic.numberOfQuestions);
+    }
+  }
 
-  //TODO Функция следующего вопроса (вызов при клике по кнопке ‘Next’)
+  //TODO Функция пропуска вопроса (вызов при клике по кнопке “I don’t know”)
 }
 
 export default StartAudiochallengeApp;
