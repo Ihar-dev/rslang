@@ -109,8 +109,29 @@ class StartAudiochallengeApp {
   //Функция проверки выбранного ответа на вопрос раунда игры
   public async checkAnswer(event: Event){
     const target = event.target as HTMLElement;
-    const answer = target.closest('.audiochallenge-container__variant')?.lastElementChild?.innerHTML;
-    const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
+    
+    if (target.closest('.audiochallenge-container__variant')){
+      const answer = target.closest('.audiochallenge-container__variant')?.lastElementChild?.innerHTML;
+      const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
+      const result = Boolean(answer === correctAnswer);
+
+      if (result) {
+        //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
+        //TODO Звук  ответа
+        const children = target.closest('.audiochallenge-container__variant')?.children as HTMLCollectionOf<HTMLElement>;
+        children[0].style.display = 'none';
+        children[1].style.display = 'block';
+      } else {
+        //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
+        //TODO Звук  ответа
+        target.closest('.audiochallenge-container__variant')?.classList.add('wrong');
+      }
+  
+      await this.updateStatistic(result);
+    } else if (target.closest('.audiochallenge-container__dont-know')) {
+      await this.updateStatistic(false);
+    }
+
     const playAudioBtn1 = document.querySelector('.audiochallenge-container__play-audio-1') as HTMLElement;
     const wordImage = document.querySelector('.audiochallenge-container__word-image') as HTMLElement;
     const wordContainer = document.querySelector('.audiochallenge-container__word-container') as HTMLElement;
@@ -127,20 +148,7 @@ class StartAudiochallengeApp {
       value.classList.add('disabled');
     }
 
-    const result = Boolean(answer === correctAnswer);
-    if (result) {
-      //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
-      //TODO Звук  ответа
-      const children = target.closest('.audiochallenge-container__variant')?.children as HTMLCollectionOf<HTMLElement>;
-      children[0].style.display = 'none';
-      children[1].style.display = 'block';
-    } else {
-      //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
-      //TODO Звук  ответа
-      target.closest('.audiochallenge-container__variant')?.classList.add('wrong');
-    }
-
-    await this.updateStatistic(result);
+    console.log(StartAudiochallengeApp.roundStatistic);
   }
 
   //TODO Функция получения данных о странице запуска приложения
@@ -276,8 +284,6 @@ class StartAudiochallengeApp {
       console.log("Точность:", StartAudiochallengeApp.roundStatistic.correctAnswers.length / StartAudiochallengeApp.roundStatistic.numberOfQuestions);
     }
   }
-
-  //TODO Функция пропуска вопроса (вызов при клике по кнопке “I don’t know”)
 }
 
 export default StartAudiochallengeApp;
