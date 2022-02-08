@@ -1,7 +1,7 @@
 import './audio.css';
 
 //*************************AUDIO************************ */
-const audio = new Audio();
+export const audio = new Audio() ;
 let currentVolume = audio.volume = 0.24;
 
 
@@ -32,8 +32,10 @@ export const updateVolume = (): void => {
     } else {
         volumeOnOffButton.classList.remove('mute');
     }
-audio.src = '../../../../assets/audio/correctanswer.mp3';
-audio.play();
+//audio.src = '../../../../assets/audio/correctanswer.mp3';
+const volumeAudio = new Audio(require('../../../../assets/audio/correctanswer.mp3'));
+volumeAudio.volume = audio.volume;
+volumeAudio.play();
 saveSettings();
 }
 

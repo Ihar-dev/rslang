@@ -44,6 +44,11 @@ stroke-dashoffset: 248.186;
     justify-content: center;
     align-items: center;
     font-size: 4vh;
+    fill: rgb(128, 128, 128);
+}
+
+.countdoun-ended {
+  fill: rgba(255, 99, 71, 0.671) 
 }
 
 .sprint-game-container {
@@ -161,7 +166,7 @@ stroke-dashoffset: 248.186;
 
 .sprint-wrong-button,
 .quit-round-button {
-    background-color: #ff6347ab;
+    background-color: hsla(9, 100%, 64%, 0.671);
 }
 
 .sprint-right-button,
