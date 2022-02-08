@@ -1,7 +1,7 @@
 //* Логика работы
 // 1.	Сброс статистики раунда перед началом игры - [DONE]
 // 2.	Сброс вариантов ответов перед началом игры и перед следующим вопросом - [DONE]
-// 3. Получение данных о странице запуска приложения
+// 3.	Получение данных о странице запуска приложения
 // 4.	Получение массива слова (20 шт.) с сервера для составления вопросов к игре - [DONE]
 // 5.	Составление массива слова (до 20 шт.) для вопросов к игре - [DOING]
 // 6.	Сохранение массива из пункта 4 в константу в приложении (можно объединить с пунктом 4) - [DONE]
@@ -117,7 +117,8 @@ class StartAudiochallengeApp {
     const dontKnowBtn = document.querySelector('.audiochallenge-container__dont-know') as HTMLElement;
     const nextBtn = document.querySelector('.audiochallenge-container__next') as HTMLElement;
 
-    if (answer === correctAnswer) {
+    const result = Boolean(answer === correctAnswer);
+    if (result) {
       //TODO Изменение статистики раунда
       //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
       //TODO Изменение стилей кнопок с подсветкой правильного ответа
@@ -129,12 +130,15 @@ class StartAudiochallengeApp {
       console.log('WRONG!'); //* For test
     }
 
+    await this.updateStatistic(result);
+
     playAudioBtn1.style.display = 'none';
     wordImage.style.display = 'block';
     wordContainer.style.display = 'flex';
     dontKnowBtn.style.display = 'none';
     nextBtn.style.display = 'flex';
-    //TODO Скрыть кнопку звука, показать блок со словом
+
+    //TODO Отключение кнопок (div варианты ответов)
   }
 
   //TODO Функция получения данных о странице запуска приложения
@@ -142,6 +146,24 @@ class StartAudiochallengeApp {
   //   StartAudiochallengeApp.wordGroup = '0';  
   //   StartAudiochallengeApp.wordPage = '0';  
   // }
+
+  //Функция обновления статистики раунда
+  private async updateStatistic(argument: boolean) {
+    const wordData = {
+      word: StartAudiochallengeApp.correctAnswer.word,
+      wordTranslate: StartAudiochallengeApp.correctAnswer.wordTranslate,
+    }
+    const roundStatistic = StartAudiochallengeApp.roundStatistic;
+
+    if (argument) {
+      roundStatistic.correctAnswers.push(wordData);
+      roundStatistic.correctAnswersSeries++;
+    } else {
+      roundStatistic.wrongAnswers.push(wordData);
+      roundStatistic.correctAnswersSeries = 0;
+    }
+    //TODO проверка серии ответов
+  }
 
   //Функция сброса статистики раунда перед его началом
   private async resetRoundStatistic() { 
