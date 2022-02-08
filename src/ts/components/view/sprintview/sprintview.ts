@@ -15,6 +15,9 @@ export const sprintView = () => {
 
 const getCountdoun = async(timer: number, container: HTMLElement, text = '', func: () => void) => {
     let sec = timer;
+    // const audio = new Audio();
+    // audio.src = '../../../../assets/audio/clock-ticking-2.mp3';
+    // audio.play();
 for (let i= 0; i <= timer; i++) {          
     setTimeout(() => {      
     container.innerHTML = ` 
@@ -56,11 +59,9 @@ export const startSprint = async() => {
     </div>`;
     renderQuestionContainer();
     const roundTimerContainer = document.querySelector('.sprint-round-countdoun')as HTMLElement;
-    getCountdoun(60, roundTimerContainer, '', roundOver);
-    getVolumeLocalStorage();
-    toggleMute();
-    const volume = document.getElementById('volume') as HTMLInputElement;
-    volume.addEventListener('input', updateVolume);  
+    getCountdoun(15, roundTimerContainer, '', roundOver);
+    getVolumeLocalStorage(); 
+    
 };
 
 const renderQuestionContainer = () => {
