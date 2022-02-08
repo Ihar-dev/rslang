@@ -10,7 +10,7 @@
 // 9.	Отрисовка шаблона страницы игры - [DONE]
 // 10.	Изменение отрисованного шаблона страницы игры на основе полученных данных - [DONE]
 // 11.	Произношение слова в начале вопроса (1 раз) - [DONE]
-// 12.	Проверка выбранного варианта ответа, изменение стилей страницы - [DOING]
+// 12.	Проверка выбранного варианта ответа, изменение стилей страницы - [DONE]
 // 13.	Изменение статистики раунда игры
 // 14.	Изменение данных о слове ({ "id слова" : { status: "learned" , correctAnswers: 3 } })
 // 15.	Проверка оставшихся слов для продолжения игры (если слова есть, то игра продолжается; если нет – то выводится статистика раунда игры, данные о словах сохраняются)
@@ -113,32 +113,32 @@ class StartAudiochallengeApp {
     const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
     const playAudioBtn1 = document.querySelector('.audiochallenge-container__play-audio-1') as HTMLElement;
     const wordImage = document.querySelector('.audiochallenge-container__word-image') as HTMLElement;
-    const wordContainer = document.querySelector('.audiochallenge-container__word-container') as HTMLElement;   
+    const wordContainer = document.querySelector('.audiochallenge-container__word-container') as HTMLElement;
+    const variantBtns = document.querySelectorAll('.audiochallenge-container__variant');
     const dontKnowBtn = document.querySelector('.audiochallenge-container__dont-know') as HTMLElement;
     const nextBtn = document.querySelector('.audiochallenge-container__next') as HTMLElement;
-
-    const result = Boolean(answer === correctAnswer);
-    if (result) {
-      //TODO Изменение статистики раунда
-      //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
-      //TODO Изменение стилей кнопок с подсветкой правильного ответа
-      console.log('OK!'); //* For test
-    } else {
-      //TODO Изменение статистики раунда
-      //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
-      //TODO Изменение стилей кнопок с подсветкой правильного ответа
-      console.log('WRONG!'); //* For test
-    }
-
-    await this.updateStatistic(result);
 
     playAudioBtn1.style.display = 'none';
     wordImage.style.display = 'block';
     wordContainer.style.display = 'flex';
     dontKnowBtn.style.display = 'none';
     nextBtn.style.display = 'flex';
+    for(const value of variantBtns) {
+      value.classList.add('disabled');
+    }
 
-    //TODO Отключение кнопок (div варианты ответов)
+    const result = Boolean(answer === correctAnswer);
+    if (result) {
+      //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
+      const children = target.closest('.audiochallenge-container__variant')?.children as HTMLCollectionOf<HTMLElement>;
+      children[0].style.display = 'none';
+      children[1].style.display = 'block';
+    } else {
+      //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
+      target.closest('.audiochallenge-container__variant')?.classList.add('wrong');
+    }
+
+    await this.updateStatistic(result);
   }
 
   //TODO Функция получения данных о странице запуска приложения
@@ -203,6 +203,7 @@ class StartAudiochallengeApp {
 
   //Функция создания 5 вариантов ответов (верный ответ и 4 неправильных ответа) в произвольном порядке
   private async getAnswerVariants() {
+    //! Есть ошибка промиса (нет свойства .wordTranslate)
     const wrongAnswersNumber = 4;
     const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
 
@@ -252,7 +253,7 @@ class StartAudiochallengeApp {
     await this.sayWord();
   }
 
-  //TODO Функция пропуска вопроса (при клике по кнопке “I don’t know”)
+  //TODO Функция пропуска вопроса (вызов при клике по кнопке “I don’t know”)
 
   //TODO Функция следующего вопроса (вызов при клике по кнопке ‘Next’)
 }

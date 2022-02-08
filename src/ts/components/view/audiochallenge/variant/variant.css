@@ -16,13 +16,11 @@
 }
 
 .audiochallenge-container__variant-number {
-  /* display: none; */
   display: block;
 }
 
 .audiochallenge-container__answer-indicator {
-  display: none;
-  /* display: block; */
+  display: none;  
   height: 30px;
   width: 30px;
 
@@ -33,4 +31,15 @@
 
 .audiochallenge-container__text {
   margin: 0.25em;
+}
+
+.disabled {
+  color: gray;
+
+  pointer-events: none;
+}
+
+.wrong {
+  border-radius: 5px;
+  background-color: rgba(255, 0, 0, 0.35);
 }

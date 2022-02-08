@@ -32,7 +32,6 @@
 }
 
 .audiochallenge-container__content {
-  background-color: aqua;
   padding: 5em;
 }
 
@@ -42,14 +41,12 @@
   justify-content: center;
   align-items: center;
 
-  background-color: blue;
   padding: 2em;
 }
 
 .audiochallenge-container__middle {
   display: flex;
 
-  background-color: red;
   padding: 2em;
 }
 
@@ -59,7 +56,6 @@
   justify-content: center;
   align-items: center;
 
-  background-color: yellow;
   padding: 2em;
 }
 
