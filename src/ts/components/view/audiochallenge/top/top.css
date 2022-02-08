@@ -1,5 +1,4 @@
 .audiochallenge-container__play-audio-1 {
-  /* display: none; */
   margin: 1em;
   height: 60px;
   width: 60px;
@@ -30,8 +29,7 @@
   background-size: cover;
 }
 
-.audiochallenge-container__word-conteiner {
-  /* display: flex; */
+.audiochallenge-container__word-container {
   display: none;
   align-items: center;
   margin: 1em;

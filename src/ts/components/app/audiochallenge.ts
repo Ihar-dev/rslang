@@ -1,33 +1,21 @@
 //* Логика работы
-
-//* 0. Сброс счётчиков правельных и неправильных ответов, сброс счетчика серии правельных ответов - ОК!
-
-//* 1. Отбираются слова для игры (для теста выбираем страницу и уровень заранее) - делается 1 раз после старта игры. Массив объектов (как с сервера). - getChunkOfWords() ОК!
-
-//* 2. Рандомно выбирается слово для игры из отобранных слов (пункт 1). Сохраняем его позицию в массиве слов (20 слов). - ОК!
-//* 3. Рандомно выбираются 4 ложных ответа. Ответы не должны повторятся между собой и правельным. Сохраняются в массив. - ОК!
-//* 4. Рандомно добавляем правельный ответ (слово) в массив с 4 ложными ответами => массив с 5 ответами; - ОК!
-
-//* 5. Рендеринг страницы (шаблона); - ОК!
-
-//* 6. Изменение страницы на основе выбранного слова: - ОК!
-//* - Вставка картинки, звука, слова на английсом в теги;
-//* - Вставка вариантов ответа в кнопки (ставка переводов);
-
-//* 7. При клике проверяем перевод слова на правельность (правельный ответ сохранён, выбранный ответ берём из клика по кнопке - событие). - ОК!
-
-//* 8. Изменение данных о слове: правильно / не правильно и т.п.
-
-//* 9. Отрисовка страницы с ответом (появление слова, индикаторы у кнопок и т.п.).
-
-//* 10. Удаление слова по позиции (которая была заранее сохранена) из массива слов для игры (пункт 1). - ОК!
-
-//* 11. Проверка массива слов для игры, если он пуст, то игра окончена, если нет - следующий раунд (повторяем действия начиная с пункта 2)
-
-//* 12. Если раунд окончен, вывод статистики
-
-//* 13. Сохранение прогресса по изучению слов в localStorage
-//* { "id слова" : { status: "learned" , correctAnswers: 3 } }
+// 1.	Сброс статистики раунда перед началом игры - [DONE]
+// 2.	Сброс вариантов ответов перед началом игры и перед следующим вопросом - [DONE]
+// 3. Получение данных о странице запуска приложения
+// 4.	Получение массива слова (20 шт.) с сервера для составления вопросов к игре - [DONE]
+// 5.	Составление массива слова (до 20 шт.) для вопросов к игре - [DOING]
+// 6.	Сохранение массива из пункта 4 в константу в приложении (можно объединить с пунктом 4) - [DONE]
+// 7.	Получение произвольного слова из готового массива слов для вопроса - [DONE]
+// 8.	Получение 5 вариантов ответов в произвольном порядке (1 верный и 4 неверных) - [DONE]
+// 9.	Отрисовка шаблона страницы игры - [DONE]
+// 10.	Изменение отрисованного шаблона страницы игры на основе полученных данных - [DONE]
+// 11.	Произношение слова в начале вопроса (1 раз) - [DONE]
+// 12.	Проверка выбранного варианта ответа, изменение стилей страницы - [DOING]
+// 13.	Изменение статистики раунда игры
+// 14.	Изменение данных о слове ({ "id слова" : { status: "learned" , correctAnswers: 3 } })
+// 15.	Проверка оставшихся слов для продолжения игры (если слова есть, то игра продолжается; если нет – то выводится статистика раунда игры, данные о словах сохраняются)
+// 16.	Следующий вопрос (повторить пункты 7 – 15)
+// 17.	Конец раунда(игры) - вывод статистики раунда и сохранение данных о словах в вопросах
 
 import AudiochallengeContent from '../view/audiochallenge/audiochallenge';
 import AudiochallengeTopContent from '../view/audiochallenge/top/top';
@@ -51,6 +39,19 @@ interface Word {
   textExampleTranslate: string
 }
 
+interface WordData {
+  word: string,
+  wordTranslate: string,
+}
+
+interface RoundStatistic {
+  numberOfQuestions: number,
+  correctAnswers: Array<WordData>,
+  wrongAnswers: Array<WordData>,
+  correctAnswersSeries: number,
+  bestCorrectAnswersSeries: number,
+}
+
 class StartAudiochallengeApp {
   private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
 
@@ -61,21 +62,22 @@ class StartAudiochallengeApp {
   private static correctAnswer: Word;
   private static answers: Array<string>;
 
-  private static roundStatistic = {
+  private static roundStatistic: RoundStatistic = {
     numberOfQuestions: 0,
-    correctAnswers: 0,
+    correctAnswers: [],
+    wrongAnswers: [],
     correctAnswersSeries: 0,
-    maxCorrectAnswersSeries: 0,
+    bestCorrectAnswersSeries: 0,
   }
 
-  //* Функция получения пандомного числа в заданном диапазоне
+  // Функция для получения случайного числа в заданном диапазоне
   public static getRandomNumber(min: number, max: number) {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
 
-  //* Функция рендеринга шаблона страницы с игрой (раунд)
-  public async render() {
+  //Функция для отрисовки шаблона страницы
+  public async renderPage() {
     const answersNumber = 5;
 
     const page = document.querySelector('.page-container') as HTMLElement;
@@ -92,11 +94,11 @@ class StartAudiochallengeApp {
 
     const bottom = document.querySelector('.audiochallenge-container__bottom') as HTMLElement;
     bottom.innerHTML = await AudiochallengeBottomContent.render();
-    //TODO Добавить контент в блок со статистикой
+    //TODO Добавить блок со статистикой раунда в конце игры
     // const statistic = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
   }
 
-  //* Функция для произношения слова
+  //Функция для произношения предложенного слова
   public async sayWord() {
     const audio = new Audio();
     audio.src = `${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.audio}`;
@@ -104,54 +106,71 @@ class StartAudiochallengeApp {
     audio.play();
   }
 
-  //* Функция сравнения ответа
+  //Функция проверки выбранного ответа на вопрос раунда игры
   public async checkAnswer(event: Event){
     const target = event.target as HTMLElement;
     const answer = target.closest('.audiochallenge-container__variant')?.lastElementChild?.innerHTML;
     const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
-    
+    const playAudioBtn1 = document.querySelector('.audiochallenge-container__play-audio-1') as HTMLElement;
+    const wordImage = document.querySelector('.audiochallenge-container__word-image') as HTMLElement;
+    const wordContainer = document.querySelector('.audiochallenge-container__word-container') as HTMLElement;   
+    const dontKnowBtn = document.querySelector('.audiochallenge-container__dont-know') as HTMLElement;
+    const nextBtn = document.querySelector('.audiochallenge-container__next') as HTMLElement;
+
     if (answer === correctAnswer) {
-      //TODO Действия после корректного ответа
-      console.log('OK!');
+      //TODO Изменение статистики раунда
+      //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
+      //TODO Изменение стилей кнопок с подсветкой правильного ответа
+      console.log('OK!'); //* For test
     } else {
-      //TODO Действия после неправильного ответа
-      console.log('WRONG!');
+      //TODO Изменение статистики раунда
+      //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
+      //TODO Изменение стилей кнопок с подсветкой правильного ответа
+      console.log('WRONG!'); //* For test
     }
+
+    playAudioBtn1.style.display = 'none';
+    wordImage.style.display = 'block';
+    wordContainer.style.display = 'flex';
+    dontKnowBtn.style.display = 'none';
+    nextBtn.style.display = 'flex';
+    //TODO Скрыть кнопку звука, показать блок со словом
   }
 
-  //TODO Функция получения данных о текщей страницы (группа и страница) запуска игры
-  public async getWordGroupAndPage() {
-    StartAudiochallengeApp.wordGroup = '0';  
-    StartAudiochallengeApp.wordPage = '0';  
-  }
+  //TODO Функция получения данных о странице запуска приложения
+  // public async getWordGroupAndPage() {
+  //   StartAudiochallengeApp.wordGroup = '0';  
+  //   StartAudiochallengeApp.wordPage = '0';  
+  // }
 
-  //* Функция сброса статистики (перед началом раунда)
+  //Функция сброса статистики раунда перед его началом
   private async resetRoundStatistic() { 
     StartAudiochallengeApp.roundStatistic.numberOfQuestions = 0;
-    StartAudiochallengeApp.roundStatistic.correctAnswers = 0;
+    StartAudiochallengeApp.roundStatistic.correctAnswers.length = 0;
+    StartAudiochallengeApp.roundStatistic.wrongAnswers.length = 0;
     StartAudiochallengeApp.roundStatistic.correctAnswersSeries = 0;
-    StartAudiochallengeApp.roundStatistic.maxCorrectAnswersSeries = 0;
+    StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries = 0;
   }
 
-  //* Функция сброса вариантов ответа (перед началом раунда)
+  //Функция сброса вариантов ответа раунда перед его началом
   private async resetAnswers() {
     StartAudiochallengeApp.answers = [];
   }
 
-  //* Функция получения массива слов в зависимости от заданных параметров (группа и страница)
-  private async getChunkOfWords(group: string, page: string) {    
+  //Функция получения массива слов (20 слов) с сервера
+  private async getWordsChunk(group: string, page: string) {    
     const wordСhunkPageLink = `${StartAudiochallengeApp.basePageLink}/words?group=${group}&page=${page}`;
     return (await fetch(wordСhunkPageLink)).json();
   }
 
-  //* Функция сохранения полученного массива слов для раунда
+  //Функция сохранения массива слов (20 слов) в приложении
   private async setWords(group: string, page: string) {
-    const data = await this.getChunkOfWords(group, page);
+    const data = await this.getWordsChunk(group, page);
     StartAudiochallengeApp.chunkOfWords = [...data];
     StartAudiochallengeApp.roundStatistic.numberOfQuestions = StartAudiochallengeApp.chunkOfWords.length;
   } 
   
-  //* Функция получения рандомного слова для раунда
+  //Функция получения произвольного слова из массива слов для игры
   private async getCorrectAnswer() {
     if (StartAudiochallengeApp.chunkOfWords.length) {
       const CorrectAnswerPosition =  StartAudiochallengeApp.getRandomNumber(0, StartAudiochallengeApp.chunkOfWords.length);
@@ -160,8 +179,8 @@ class StartAudiochallengeApp {
     }
   }
 
-  //* Функция получения вариантов ответа (массив из правильного и 4 неправильных ответов)
-  private async getAnswers() {
+  //Функция создания 5 вариантов ответов (верный ответ и 4 неправильных ответа) в произвольном порядке
+  private async getAnswerVariants() {
     const wrongAnswersNumber = 4;
     const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
 
@@ -170,32 +189,28 @@ class StartAudiochallengeApp {
       const maxPageNumber = 29;
       const group = String(StartAudiochallengeApp.getRandomNumber(0, maxGroupNumber));
       const page = String(StartAudiochallengeApp.getRandomNumber(0, maxPageNumber));
-      const wordСhunk: Array<Word> = await this.getChunkOfWords(group, page);
+      const wordСhunk: Array<Word> = await this.getWordsChunk(group, page);
       const variant = wordСhunk[StartAudiochallengeApp.getRandomNumber(0, wordСhunk.length - 1)].wordTranslate;
 
       if (!StartAudiochallengeApp.answers.includes(variant) && variant !== correctAnswer){
         StartAudiochallengeApp.answers.push(variant);
       }
 
-      await this.getAnswers();
+      await this.getAnswerVariants();
     } else {
       StartAudiochallengeApp.answers.splice(StartAudiochallengeApp.getRandomNumber(0, wrongAnswersNumber), 0, correctAnswer);
     }
   }
 
-  //* Функция изменения данных отрендеренной страницы на основе данных для раунда
+  //Функция изменения отрисованного шаблона страницы игры на основе полученных данных
   private async setDataToPage(){
     const img = document.querySelector('.audiochallenge-container__word-image') as HTMLTemplateElement;
     const word = document.querySelector('.audiochallenge-container__word') as HTMLTemplateElement;
     const variantsNumber = document.querySelectorAll('.audiochallenge-container__variant-number');
     const variantsText = document.querySelectorAll('.audiochallenge-container__text');
-
-    if (img) {
-      img.style.backgroundImage = `url(${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.image})`;
-    }
-    if (word) {
-      word.innerHTML = `${StartAudiochallengeApp.correctAnswer.word}`;
-    }
+  
+    img.style.backgroundImage = `url(${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.image})`;
+    word.innerHTML = `${StartAudiochallengeApp.correctAnswer.word}`;
 
     for (let i = 0; i < variantsText.length; i++) {
       variantsNumber[i].innerHTML = `${i+1}`;
@@ -203,17 +218,21 @@ class StartAudiochallengeApp {
     }
   }
 
-  //* Функция старта игры
+  //Функция для старта игры
   public async startGame() {
     await this.resetRoundStatistic();
     await this.resetAnswers();
     await this.setWords(StartAudiochallengeApp.wordGroup, StartAudiochallengeApp.wordPage);
     await this.getCorrectAnswer();
-    await this.getAnswers();
-    await this.render();
+    await this.getAnswerVariants();
+    await this.renderPage();
     await this.setDataToPage();
     await this.sayWord();
   }
+
+  //TODO Функция пропуска вопроса (при клике по кнопке “I don’t know”)
+
+  //TODO Функция следующего вопроса (вызов при клике по кнопке ‘Next’)
 }
 
 export default StartAudiochallengeApp;

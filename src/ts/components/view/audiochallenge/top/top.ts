@@ -5,7 +5,7 @@ const AudiochallengeTopContent = {
     const view = `
     <div class="audiochallenge-container__play-audio-1"></div>
     <div class="audiochallenge-container__word-image"></div>
-    <div class="audiochallenge-container__word-conteiner">
+    <div class="audiochallenge-container__word-container">
       <div class="audiochallenge-container__play-audio-2"></div>
       <div class="audiochallenge-container__word"></div>
     </div>`;
