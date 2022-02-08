@@ -11,7 +11,7 @@
 // 10.	Изменение отрисованного шаблона страницы игры на основе полученных данных - [DONE]
 // 11.	Произношение слова в начале вопроса (1 раз) - [DONE]
 // 12.	Проверка выбранного варианта ответа, изменение стилей страницы - [DONE]
-// 13.	Изменение статистики раунда игры
+// 13.	Изменение статистики раунда игры - [DONE]
 // 14.	Изменение данных о слове ({ "id слова" : { status: "learned" , correctAnswers: 3 } })
 // 15.	Проверка оставшихся слов для продолжения игры (если слова есть, то игра продолжается; если нет – то выводится статистика раунда игры, данные о словах сохраняются)
 // 16.	Следующий вопрос (повторить пункты 7 – 15)
@@ -130,11 +130,13 @@ class StartAudiochallengeApp {
     const result = Boolean(answer === correctAnswer);
     if (result) {
       //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
+      //TODO Звук  ответа
       const children = target.closest('.audiochallenge-container__variant')?.children as HTMLCollectionOf<HTMLElement>;
       children[0].style.display = 'none';
       children[1].style.display = 'block';
     } else {
       //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
+      //TODO Звук  ответа
       target.closest('.audiochallenge-container__variant')?.classList.add('wrong');
     }
 
@@ -143,8 +145,8 @@ class StartAudiochallengeApp {
 
   //TODO Функция получения данных о странице запуска приложения
   // public async getWordGroupAndPage() {
-  //   StartAudiochallengeApp.wordGroup = '0';  
-  //   StartAudiochallengeApp.wordPage = '0';  
+  //   StartAudiochallengeApp.wordGroup = '0';
+  //   StartAudiochallengeApp.wordPage = '0';
   // }
 
   //Функция обновления статистики раунда
@@ -162,7 +164,10 @@ class StartAudiochallengeApp {
       roundStatistic.wrongAnswers.push(wordData);
       roundStatistic.correctAnswersSeries = 0;
     }
-    //TODO проверка серии ответов
+
+    if (roundStatistic.correctAnswersSeries > roundStatistic.bestCorrectAnswersSeries) {
+      roundStatistic.bestCorrectAnswersSeries = roundStatistic.correctAnswersSeries;
+    }
   }
 
   //Функция сброса статистики раунда перед его началом
