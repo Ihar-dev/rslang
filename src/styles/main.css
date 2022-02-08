@@ -11,8 +11,8 @@
   width: 7vh;
   height: 7vh;
   border-radius: 1vh;
-  background-color: white;
-  background-image: url(../assets/img/white\ sugar.jpg);
+  background-color: none;
+  background-image: url(../assets/img/white\ sugar.png);
   background-repeat: no-repeat;
   background-size: cover;
   opacity: 0.8;
