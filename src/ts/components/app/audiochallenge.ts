@@ -42,6 +42,7 @@ interface Word {
 interface WordData {
   word: string,
   wordTranslate: string,
+  audio: string,
 }
 
 interface RoundStatistic {
@@ -160,6 +161,7 @@ class StartAudiochallengeApp {
     const wordData = {
       word: StartAudiochallengeApp.correctAnswer.word,
       wordTranslate: StartAudiochallengeApp.correctAnswer.wordTranslate,
+      audio: StartAudiochallengeApp.correctAnswer.audio,
     }
     const roundStatistic = StartAudiochallengeApp.roundStatistic;
 
