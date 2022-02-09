@@ -109,7 +109,7 @@ class StartAudiochallengeApp {
   //Функция проверки выбранного ответа на вопрос раунда игры
   public async checkAnswer(event: Event){
     const target = event.target as HTMLElement;
-    
+
     if (target.closest('.audiochallenge-container__variant')){
       const answer = target.closest('.audiochallenge-container__variant')?.lastElementChild?.innerHTML;
       const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
@@ -147,8 +147,6 @@ class StartAudiochallengeApp {
     for(const value of variantBtns) {
       value.classList.add('disabled');
     }
-
-    console.log(StartAudiochallengeApp.roundStatistic);
   }
 
   //TODO Функция получения данных о странице запуска приложения
@@ -208,15 +206,15 @@ class StartAudiochallengeApp {
   //Функция получения произвольного слова из массива слов для игры
   private async getCorrectAnswer() {
     if (StartAudiochallengeApp.chunkOfWords.length) {
-      const CorrectAnswerPosition =  StartAudiochallengeApp.getRandomNumber(0, StartAudiochallengeApp.chunkOfWords.length);
-      StartAudiochallengeApp.correctAnswer = StartAudiochallengeApp.chunkOfWords[CorrectAnswerPosition];
-      StartAudiochallengeApp.chunkOfWords.splice(CorrectAnswerPosition, 1);
+      const сorrectAnswerPosition =  StartAudiochallengeApp.getRandomNumber(0, StartAudiochallengeApp.chunkOfWords.length - 1);
+      console.log("======================================")
+      StartAudiochallengeApp.correctAnswer = StartAudiochallengeApp.chunkOfWords[сorrectAnswerPosition];
+      StartAudiochallengeApp.chunkOfWords.splice(сorrectAnswerPosition, 1);
     }
   }
 
   //Функция создания 5 вариантов ответов (верный ответ и 4 неправильных ответа) в произвольном порядке
   private async getAnswerVariants() {
-    //! Есть ошибка промиса (нет свойства .wordTranslate)
     const wrongAnswersNumber = 4;
     const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
 
@@ -267,7 +265,7 @@ class StartAudiochallengeApp {
   }
 
   //Функция для следующего слова
-  public async nextWord() {
+  public async nextWord() {    
     if (StartAudiochallengeApp.chunkOfWords.length) {
       await this.resetAnswers();
       await this.getCorrectAnswer();
