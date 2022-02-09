@@ -1,9 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Niconne&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 @media (orientation: landscape) {
 
   body.active {
     background-image: url("../../../../assets/img/start-image.jpg");
     background-size: cover;
     background-position: 100% 50%;
+  }
+
+  .header-container__menu {
+    top: 40%;
+    left: 40%;
   }
 
 }
@@ -16,6 +23,11 @@
     background-position: 100% 100%;
   }
 
+  .header-container__menu {
+    top: 25%;
+    left: 40%;
+  }
+
 }
 
 body.active {
@@ -25,42 +37,102 @@ body.active {
 }
 
 .header-container__menu {
-  display: flex;
-  flex-direction: column;
-  align-content: space-between;
-  flex-wrap: wrap;
-  row-gap: 40px;
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 400px;
   height: 400px;
-  border: solid 1px red;
-  top: 40%;
-  left: 40%;
   transform: translate(-50%, -50%);
 }
 
-.menu__toggle-button,
 .menu__book-button,
 .menu__audio-challenge-button,
 .menu__sprint-button,
 .menu__statistics-button,
 .menu__team-button,
 .menu__app-button {
-  position: relative;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  background-color: white;
+  cursor: pointer;
+  left: 0;
+  transform-origin: 200px;
+  transition: 0.5s;
+  transition-delay: calc(0.1s * var(--i));
+  transform: rotate(0deg) translateX(160px);
+}
+
+.header-container__menu.active div {
+  transform: rotate(calc(360deg / 6 * var(--i)));
+}
+
+.header-container__menu.active div div {
+  transform: rotate(calc(360deg / -6 * var(--i)));
+}
+
+.page-container__naming {
+  padding-left: 30px;
+  font-size: 60px;
+  line-height: 100px;
+  font-family: 'Niconne', cursive;
+  color: white;
+}
+
+.menu__toggle-button {
+  position: relative;
   width: 100px;
   height: 100px;
-  background-size: 60% 60%;
-  background-repeat: no-repeat;
-  background-position: center;
+  color: grey;
+  font-size: 25px;
+  line-height: 100px;
+  border-radius: 50%;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
   background-color: white;
+  z-index: 100;
   cursor: pointer;
 }
 
-.menu__book-button {
+.menu__book-button div {
   background-image: url("../../../../assets/svg/book-solid.svg");
 }
 
-.menu__audio-challenge-button {
+.menu__audio-challenge-button div {
   background-image: url("../../../../assets/svg/headphones-solid.svg");
+}
+
+.menu__sprint-button div {
+  background-image: url("../../../../assets/svg/person-running-solid.svg");
+}
+
+.menu__statistics-button div {
+  background-image: url("../../../../assets/svg/chart-line-solid.svg");
+}
+
+.menu__team-button div {
+  background-image: url("../../../../assets/svg/users-solid.svg");
+}
+
+.menu__app-button div {
+  background-image: url("../../../../assets/svg/road-solid.svg");
+}
+
+.menu__book-button div,
+.menu__audio-challenge-button div,
+.menu__sprint-button div,
+.menu__statistics-button div,
+.menu__team-button div,
+.menu__app-button div {
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  background-size: 60% 60%;
+  background-repeat: no-repeat;
+  background-position: center;
 }

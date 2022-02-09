@@ -5,6 +5,7 @@ const getListOfElementsByClassName = async (className: string): Promise < NodeLi
 const getElementById = (idName: string): HTMLElement | null => document.getElementById(idName);
 const setElementActive = async (element: HTMLElement): Promise < void > => element.classList.add(`active`);
 const setElementInactive = async (element: HTMLElement): Promise < void > => element.classList.remove(`active`);
+const toggleElement = async (element: HTMLElement): Promise < boolean > => element.classList.toggle(`active`);
 const classListContains = (element: HTMLElement, className: string): boolean => element.classList.contains(className);
 const getRandomElementForStringArray = (arr: string[]): string => arr[Math.floor(Math.random() * arr.length)];
 const getRandomHEXColorComponent = (): string => Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
@@ -23,6 +24,7 @@ export {
   getElementById,
   setElementActive,
   setElementInactive,
+  toggleElement,
   classListContains,
   getRandomElementForStringArray,
   getRandomHEXColor,

@@ -1,7 +1,7 @@
 const Main = {
   render: async () => {
     const view = `
-    <div class="page-container__start-plate"></div>
+    <div class="page-container__naming">RS Lang</div>
             `;
     return view;
   }

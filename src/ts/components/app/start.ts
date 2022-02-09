@@ -5,6 +5,7 @@ import {
   getElementById,
   setElementActive,
   setElementInactive,
+  toggleElement,
   classListContains,
   getRandomElementForStringArray,
   getRandomHEXColor,
@@ -20,6 +21,7 @@ class StartApp {
 
   public async render(): Promise < void > {
     await this.renderCoreComponents();
+    this.addListeners();
   }
 
   private async renderCoreComponents(): Promise < void > {
@@ -31,6 +33,14 @@ class StartApp {
     header.innerHTML = await Header.render();
     page.innerHTML = await Main.render();
     footer.innerHTML = await Footer.render();
+  }
+
+  private addListeners(): void {
+    const menuToggleButton = getElementByClassName('menu__toggle-button') as HTMLElement;
+    const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
+    menuToggleButton.addEventListener('click', () => {
+      toggleElement(menuContainer);
+    });
   }
 
 }
