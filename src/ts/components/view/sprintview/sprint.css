@@ -151,7 +151,7 @@ stroke-dashoffset: 248.186;
 }
 
 .sprint-wrong-button,
-.sprint-right-button,
+.sprint-wright-button,
 .next-round-button,
 .quit-round-button {
     width: 90%;
@@ -169,7 +169,7 @@ stroke-dashoffset: 248.186;
     background-color: hsla(9, 100%, 64%, 0.671);
 }
 
-.sprint-right-button,
+.sprint-wright-button,
 .next-round-button {
     background-color: #07fa44da;
 }

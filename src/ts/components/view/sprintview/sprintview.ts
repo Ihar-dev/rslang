@@ -1,6 +1,6 @@
 import './sprint.css';
-import { audio, getVolumeLocalStorage } from "../../app/audio/audio";
-import { roundOver } from "../../app/sprint";
+import { audio, getVolumeLocalStorage, currentVolume } from "../../app/audio/audio";
+import { roundOver, startSprintRound } from "../../app/sprint";
 export const sprintView = () => {
     const pageContainer = document.querySelector('.page-container__start-plate') as HTMLElement;
     const sprintContainer = document.createElement('div');
@@ -13,12 +13,14 @@ export const sprintView = () => {
     getCountdoun(5, welcomeSprintButton, 'GET READY', startSprint);
 }; 
 
+export const ticAudio = new Audio(require('../../../../assets/audio/clock-ticking-2.mp3'));
+
 const getCountdoun = async(timer: number, container: HTMLElement, text = '', func: () => void) => {
-    let sec = timer;
-    //const audio = new Audio(require('../../../../assets/audio/clock-ticking-2.mp3'));
-    audio.src = require('../../../../assets/audio/clock-ticking-2.mp3');
-    audio.loop = true;
-    audio.play();
+    let sec = timer;    
+    ticAudio.src = require('../../../../assets/audio/clock-ticking-2.mp3');
+    ticAudio.loop = true;
+    ticAudio.volume = currentVolume;
+    ticAudio.play();
 for (let i= 0; i <= timer; i++) {          
     setTimeout(() => {      
     container.innerHTML = ` 
@@ -31,12 +33,12 @@ for (let i= 0; i <= timer; i++) {
         const countdounText = document.querySelector('.circle-text') as HTMLElement;
         countdounText.classList.add('countdoun-ended');
         audio.pause();
-    audio.src = require('../../../../assets/audio/clock-ticking-fast.mp3');
-    audio.play();
+    ticAudio.src = require('../../../../assets/audio/clock-ticking-fast.mp3');
+    ticAudio.play();
     };
     sec--;    
      if (i == timer) { 
-         audio.pause();   
+         ticAudio.pause();   
       container.remove();  
         func();
     }
@@ -66,29 +68,9 @@ export const startSprint = async() => {
     </div>
     <div class="sprint-game-footer">
     </div>`;
-    renderQuestionContainer();
+    startSprintRound();
     const roundTimerContainer = document.querySelector('.sprint-round-countdoun')as HTMLElement;
-    getCountdoun(15, roundTimerContainer, '', roundOver);
-    getVolumeLocalStorage(); 
-    
+    getCountdoun(60, roundTimerContainer, '', roundOver);
+    getVolumeLocalStorage();     
 };
 
-const renderQuestionContainer = () => {
-    const questionBody = document.querySelector('.sprint-game-body') as HTMLElement;
-    const questionFooter = document.querySelector('.sprint-game-footer') as HTMLElement;
-    questionBody.innerHTML = `
-   <div class="sprint-round-right-answers-count">
-   <div class="sugar"></div>
-   </div>
-    <div class="sprint-round-right-answers-cup">
-    <div class="kettle"></div>
-    <div class="cup"></div>
-    </div>
-    <div class="sprint-question-word">Word</div>
-    <div class="sprint-answer-word">Слово</div> `;
-    questionFooter.innerHTML = `
-     <input type="button" value="WRONG" name="wrongbutton" class="sprint-wrong-button">
-      <input type="button" value="RIGHT" name="rightbutton" class="sprint-right-button">
-      <label for="wrongbutton"></label>
-      <label for="rightbutton"></label>`;    
-};

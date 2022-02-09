@@ -1,3 +1,10 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
 .sprint-game-sound-container {    
     background-image: url(../assets/svg/audio.svg);
     filter: invert(51%) sepia(1%) saturate(0%) hue-rotate(155deg) brightness(97%) contrast(90%);    

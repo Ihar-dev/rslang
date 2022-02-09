@@ -2,7 +2,7 @@ import './audio.css';
 
 //*************************AUDIO************************ */
 export const audio = new Audio() ;
-let currentVolume = audio.volume = 0.24;
+export let currentVolume = audio.volume = 0.24;
 
 
 
