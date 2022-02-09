@@ -2,7 +2,7 @@ const NavBar = {
   render: async () => {
     const view = `
     <div class="header-container__menu menu">
-      <div class="menu__toggle-button">MENU</div>
+      <button class="menu__toggle-button">MENU</button>
       <div style="--i:0;" class="menu__book-button" title="Study Book">
         <div></div>
       </div>
