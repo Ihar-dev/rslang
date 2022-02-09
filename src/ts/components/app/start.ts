@@ -1,4 +1,5 @@
 import {
+  getBody,
   getElementByClassName,
   getListOfElementsByClassName,
   getElementById,
@@ -22,6 +23,8 @@ class StartApp {
   }
 
   private async renderCoreComponents(): Promise < void > {
+    const body = getBody() as HTMLElement;
+    setElementActive(body);
     const header = getElementByClassName('header-container') as HTMLElement;
     const page = getElementByClassName('page-container') as HTMLElement;
     const footer = getElementByClassName('footer-container') as HTMLElement;

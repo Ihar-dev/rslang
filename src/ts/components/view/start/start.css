@@ -1,13 +1,6 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border: none;
-}
-
 @media (orientation: landscape) {
 
-  body {
+  body.active {
     background-image: url("../../../../assets/img/start-image.jpg");
     background-size: cover;
     background-position: 100% 50%;
@@ -17,7 +10,7 @@
 
 @media (orientation: portrait) {
 
-  body {
+  body.active {
     background-image: url("../../../../assets/img/start-image.jpg");
     background-size: auto 100%;
     background-position: 100% 100%;
@@ -25,8 +18,49 @@
 
 }
 
-body {
+body.active {
   height: 100vh;
   width: 100vw;
   background-repeat: no-repeat;
+}
+
+.header-container__menu {
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 40px;
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border: solid 1px red;
+  top: 40%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+}
+
+.menu__toggle-button,
+.menu__book-button,
+.menu__audio-challenge-button,
+.menu__sprint-button,
+.menu__statistics-button,
+.menu__team-button,
+.menu__app-button {
+  position: relative;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  background-size: 60% 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: white;
+  cursor: pointer;
+}
+
+.menu__book-button {
+  background-image: url("../../../../assets/svg/book-solid.svg");
+}
+
+.menu__audio-challenge-button {
+  background-image: url("../../../../assets/svg/headphones-solid.svg");
 }

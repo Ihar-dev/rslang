@@ -1,3 +1,4 @@
+const getBody = (): HTMLElement | null => document.querySelector(`body`);
 const getElementByClassName = (className: string): HTMLElement | null => document.querySelector(`.${className}`);
 const getListOfElementsByClassName = async (className: string): Promise < NodeListOf < HTMLElement > | null > =>
   document.querySelectorAll(`.${className}`);
@@ -16,6 +17,7 @@ const setAttributeForElements = (elements: HTMLElement[], attribute: string, val
 const applyStyle = (element: HTMLElement, style: string, value: string) => element.setAttribute(style, value);
 
 export {
+  getBody,
   getElementByClassName,
   getListOfElementsByClassName,
   getElementById,
