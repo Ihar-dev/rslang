@@ -55,8 +55,8 @@ interface RoundStatistic {
 class StartAudiochallengeApp {
   private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
 
-  private static wordGroup = '0';
-  private static wordPage = '0';
+  private static wordGroup = 0;
+  private static wordPage = 0;
 
   private static chunkOfWords: Array<Word>;
   private static correctAnswer: Word;
@@ -191,13 +191,13 @@ class StartAudiochallengeApp {
   }
 
   //Функция получения массива слов (20 слов) с сервера
-  private async getWordsChunk(group: string, page: string) {    
+  private async getWordsChunk(group: number, page: number) {    
     const wordСhunkPageLink = `${StartAudiochallengeApp.basePageLink}/words?group=${group}&page=${page}`;
     return (await fetch(wordСhunkPageLink)).json();
   }
 
   //Функция сохранения массива слов (20 слов) в приложении
-  private async setWords(group: string, page: string) {
+  private async setWords(group: number, page: number) {
     const data = await this.getWordsChunk(group, page);
     StartAudiochallengeApp.chunkOfWords = [...data];
     StartAudiochallengeApp.roundStatistic.numberOfQuestions = StartAudiochallengeApp.chunkOfWords.length;
@@ -207,7 +207,6 @@ class StartAudiochallengeApp {
   private async getCorrectAnswer() {
     if (StartAudiochallengeApp.chunkOfWords.length) {
       const сorrectAnswerPosition =  StartAudiochallengeApp.getRandomNumber(0, StartAudiochallengeApp.chunkOfWords.length - 1);
-      console.log("======================================")
       StartAudiochallengeApp.correctAnswer = StartAudiochallengeApp.chunkOfWords[сorrectAnswerPosition];
       StartAudiochallengeApp.chunkOfWords.splice(сorrectAnswerPosition, 1);
     }
@@ -221,8 +220,8 @@ class StartAudiochallengeApp {
     if (StartAudiochallengeApp.answers.length < wrongAnswersNumber) {
       const maxGroupNumber = 5;
       const maxPageNumber = 29;
-      const group = String(StartAudiochallengeApp.getRandomNumber(0, maxGroupNumber));
-      const page = String(StartAudiochallengeApp.getRandomNumber(0, maxPageNumber));
+      const group = StartAudiochallengeApp.getRandomNumber(0, maxGroupNumber);
+      const page = StartAudiochallengeApp.getRandomNumber(0, maxPageNumber);
       const wordСhunk: Array<Word> = await this.getWordsChunk(group, page);
       const variant = wordСhunk[StartAudiochallengeApp.getRandomNumber(0, wordСhunk.length - 1)].wordTranslate;
 

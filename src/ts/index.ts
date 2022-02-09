@@ -13,7 +13,7 @@ async function test() {
   await startAudiochallengeApp.startGame();
 }
 
-// test();
+test();
 
 document.addEventListener('click', (event) => {
   const target = event.target as HTMLElement;
