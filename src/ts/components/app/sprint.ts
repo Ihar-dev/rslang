@@ -1,6 +1,6 @@
 import { startSprint } from "../view/sprintview/sprintview";
 import StartApp from './start';
-import { currentVolume } from "./audio/audio";
+import { currentVolume, ticAudio, uncorrectAudio, correctAudio } from "./audio/audio";
 
 type word = {
     id: string,
@@ -83,7 +83,8 @@ const getAnswerWord = (tempWordsSet: Array<word>): word => {
 
 // --------------------END OF ROUND--------------------------------------
 
-export const roundOver = (): void=> {
+export const roundOver = (): void=> {  
+    ticAudio.pause(); 
    const questionBody = document.querySelector('.sprint-game-body') as HTMLElement; 
    const questionFooter = document.querySelector('.sprint-game-footer') as HTMLElement;
    questionFooter.innerHTML = `
@@ -93,6 +94,8 @@ export const roundOver = (): void=> {
    <p>ROUND OVER</p>`;
    const nextRoundButton = document.querySelector('.next-round-button') as HTMLElement;
    const quitRoundButton = document.querySelector('.quit-round-button') as HTMLElement;
+    const roundTimerContainer = document.querySelector('.sprint-round-countdoun') as HTMLElement;
+    roundTimerContainer?.remove();
    nextRoundButton.addEventListener('click', ()=>{
        page = page < 30? page++ : 0, group++;      
        startSprint();
@@ -157,9 +160,9 @@ const getWriteUnswer = () => {
     wrongButton.removeEventListener('click', getWriteUnswer);
     writeButton.removeEventListener('click', getWriteUnswer);
     wrongButton.removeEventListener('click', getWrongAnswer); 
-    const correctaudio = new Audio(require('../../../assets/audio/correctanswer.mp3'));
-    correctaudio.volume = currentVolume;
-    correctaudio.play();
+    correctAudio.src = require('../../../assets/audio/correctanswer.mp3');
+    //correctAudio.volume = currentVolume;
+    correctAudio.play();
     roundScore += 20;
     roundScoreContainer.textContent = `${roundScore}`
    const rightAnswersCountContainer = document.querySelector('.sprint-round-right-answers-count') as HTMLElement;
@@ -189,9 +192,9 @@ renderSprintQuestion();
 
 //---------------------GET WRONG ANSWER------------------------------------
 const getWrongAnswer = () => {
-    const uncorrectaudio = new Audio(require('../../../assets/audio/wronganswer.mp3'));
-    uncorrectaudio.volume = currentVolume;
-    uncorrectaudio.play();
+    uncorrectAudio.src = require('../../../assets/audio/wronganswer.mp3');   
+    //uncorrectAudio.volume = currentVolume;
+    uncorrectAudio.play();
     const rightAnswersCountContainer = document.querySelector('.sprint-round-right-answers-count') as HTMLElement;
     rightAnswersCountContainer.innerHTML = '';
     renderSprintQuestion();   

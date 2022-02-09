@@ -1,5 +1,5 @@
 import './sprint.css';
-import { audio, getVolumeLocalStorage, currentVolume } from "../../app/audio/audio";
+import { audio, getVolumeLocalStorage, ticAudio } from "../../app/audio/audio";
 import { roundOver, startSprintRound } from "../../app/sprint";
 export const sprintView = () => {
     const pageContainer = document.querySelector('.page-container__start-plate') as HTMLElement;
@@ -13,13 +13,13 @@ export const sprintView = () => {
     getCountdoun(5, welcomeSprintButton, 'GET READY', startSprint);
 }; 
 
-export const ticAudio = new Audio(require('../../../../assets/audio/clock-ticking-2.mp3'));
+
 
 const getCountdoun = async(timer: number, container: HTMLElement, text = '', func: () => void) => {
     let sec = timer;    
     ticAudio.src = require('../../../../assets/audio/clock-ticking-2.mp3');
     ticAudio.loop = true;
-    ticAudio.volume = currentVolume;
+   // ticAudio.volume = 1;
     ticAudio.play();
 for (let i= 0; i <= timer; i++) {          
     setTimeout(() => {      

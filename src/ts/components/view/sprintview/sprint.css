@@ -1,3 +1,10 @@
+.off {
+    display: none;
+}
+.hide {
+    opacity: 0;
+}
+
 .sprint-container {
     position: relative;
     width: 80vw;
