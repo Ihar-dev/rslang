@@ -1,0 +1,57 @@
+.game-difficulty-container__level-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2em;
+}
+
+.level-buttons__button {
+  height: 60px;
+  width: 60px;
+  margin: 0.25em;
+
+  color: black;
+  font-size: 2rem;
+
+  border-radius: 5px;
+  border: 3px solid black;
+  box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.level-buttons__button:hover {
+  transform: scale(1.2);
+}
+
+.level-buttons__level1 {
+  background-color: #00ff80;
+}
+
+.level-buttons__level2 {
+  background-color: #ffe800;
+}
+
+.level-buttons__level3 {
+  background-color: #ff8000;
+}
+
+.level-buttons__level4 {
+  background-color: #ff1212;
+}
+
+.level-buttons__level5 {
+  background-color: #de2576;
+}
+
+.level-buttons__level6 {
+  background-color: #9400ab;
+}
+
+@media (max-width: 640px) {
+  .level-buttons__button {
+    height: 50px;
+    width: 50px;
+  }
+}
