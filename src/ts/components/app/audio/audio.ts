@@ -25,7 +25,6 @@ export const toggleMute = (): void=> {
 //----------------CHANGE VOLUME----------------------------------
 
 export const updateVolume = (): void => {
-    getAllAudioElements();
     const volume = document.getElementById('volume') as HTMLInputElement;
     const volumeOnOffButton = document.querySelector('.sprint-game-sound-container') as HTMLElement;
     audio.volume = uncorrectAudio.volume = correctAudio.volume = ticAudio.volume = Number(volume.value);
@@ -62,9 +61,4 @@ export const getVolumeLocalStorage = (): void => {
     }
     toggleMute();
     volume.addEventListener('input', updateVolume);  
-};
-
-const getAllAudioElements = () =>{
-    const audioSet = document.getElementsByTagName('audio');
-    console.log(audioSet);
 };

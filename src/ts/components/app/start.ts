@@ -2,7 +2,6 @@ import Header from '../view/start/navbar'
 import Main from '../view/start/main';
 import Footer from '../view/start/footer';
 import '../view/start/start.css';
-import {sprintView} from '../view/sprintview/sprintview'
 class StartApp {
 
   public async render() {
@@ -12,8 +11,7 @@ class StartApp {
     header.innerHTML = await Header.render();
     page.innerHTML = await Main.render();
     footer.innerHTML = await Footer.render();
-    //повесить на listener кнопки Sprint
-    sprintView();
+    
   }
 
 }
