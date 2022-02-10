@@ -13,6 +13,13 @@
     right: 335px;
   }
 
+  .page-container__about-cont {
+    width: 42%;
+    text-align: left;
+    left: 28%;
+    top: 40%;
+  }
+
 }
 
 @media (orientation: portrait) {
@@ -28,6 +35,29 @@
     right: 5px;
   }
 
+  .page-container__about-cont {
+    width: 35%;
+    text-align: left;
+    left: 20%;
+    top: 10%;
+  }
+
+}
+
+.page-container__about-cont {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  line-height: 27px;
+}
+
+.page-container__about-cont::after {
+  padding: 4px;
+  border-radius: 5px;
+  content: "Узнать больше>>";
+  background-color: white;
+  cursor: pointer;
 }
 
 body.start {

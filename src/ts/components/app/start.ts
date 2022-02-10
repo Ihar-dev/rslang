@@ -41,7 +41,7 @@ class StartApp {
     if (!this.started) {
       const header = getElementByClassName('header-container') as HTMLElement;
       header.innerHTML = await Header.render();
-      this.addListeners();
+      this.addListeners(footer, page);
     };
     this.started = true;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
@@ -50,7 +50,7 @@ class StartApp {
     removeClassForElement(menuContainer, 'active');
   }
 
-  private addListeners(): void {
+  private addListeners(footer: HTMLElement, page: HTMLElement): void {
     const menuToggleButton = getElementByClassName('menu__toggle-button') as HTMLElement;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
     menuToggleButton.addEventListener('click', () => {
@@ -64,23 +64,25 @@ class StartApp {
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
     audioChallengeButton.addEventListener('click', () => {
-      this.resetStartForGames(menuContainer);
+      this.resetStartForGames(menuContainer, footer, page);
 
     })
 
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
     menuSprintButton.addEventListener('click', () => {
-      this.resetStartForGames(menuContainer);
+      this.resetStartForGames(menuContainer, footer, page);
       
     }) 
   }
 
-  private resetStartForGames(menuContainer: HTMLElement): void {
+  private resetStartForGames(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
     const body = getBody() as HTMLElement;
     removeClassForElement(body, 'start');
     removeClassForElement(menuContainer, 'start');
     addClassForElement(menuContainer, 'game');
     removeClassForElement(menuContainer, 'active');
+    footer.innerHTML = '';
+    page.innerHTML = '';
   }
 
 }
