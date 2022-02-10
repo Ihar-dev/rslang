@@ -59,9 +59,9 @@ class StartAudiochallengeApp {
   private static wordGroup = 0;
   private static wordPage = 0;
 
-  private static chunkOfWords: Array<Word>;
+  private static chunkOfWords: Word[];
   private static correctAnswer: Word;
-  private static answers: Array<string> = [];
+  private static answers: String[] = [];
 
   private static roundStatistic: RoundStatistic = {
     numberOfQuestions: 0,
@@ -72,13 +72,13 @@ class StartAudiochallengeApp {
   }
 
   // Функция для получения случайного числа в заданном диапазоне
-  public static getRandomNumber(min: number, max: number) {
+  public static getRandomNumber(min: number, max: number): number {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
 
   //Функция для отрисовки шаблона страницы
-  public async renderPage() {
+  public async renderPage(): Promise<void> {
     const answersNumber = 5;
 
     const page = document.querySelector('.page-container') as HTMLElement;
@@ -100,7 +100,7 @@ class StartAudiochallengeApp {
   }
 
   //Функция для произношения предложенного слова
-  public async sayWord() {
+  public async sayWord(): Promise<void> {
     const audio = new Audio();
     audio.src = `${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.audio}`;
     audio.currentTime = 0;
@@ -108,10 +108,10 @@ class StartAudiochallengeApp {
   }
 
   //Функция проверки выбранного ответа на вопрос раунда игры
-  public async checkAnswer(event: Event){
+  public async checkAnswer(event: Event): Promise<void> {
     const target = event.target as HTMLElement;
 
-    if (target.closest('.audiochallenge-container__variant')){
+    if (target.closest('.audiochallenge-container__variant')) {
       const answer = target.closest('.audiochallenge-container__variant')?.lastElementChild?.innerHTML;
       const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
       const result = Boolean(answer === correctAnswer);
@@ -136,7 +136,7 @@ class StartAudiochallengeApp {
     const playAudioBtn1 = document.querySelector('.audiochallenge-container__play-audio-1') as HTMLElement;
     const wordImage = document.querySelector('.audiochallenge-container__word-image') as HTMLElement;
     const wordContainer = document.querySelector('.audiochallenge-container__word-container') as HTMLElement;
-    const variantBtns = document.querySelectorAll('.audiochallenge-container__variant');
+    const variantBtns = document.querySelectorAll('.audiochallenge-container__variant') as NodeListOf<HTMLElement>;
     const dontKnowBtn = document.querySelector('.audiochallenge-container__dont-know') as HTMLElement;
     const nextBtn = document.querySelector('.audiochallenge-container__next') as HTMLElement;
 
@@ -157,7 +157,7 @@ class StartAudiochallengeApp {
   // }
 
   //Функция обновления статистики раунда
-  private async updateStatistic(argument: boolean) {
+  private async updateStatistic(argument: boolean): Promise<void> {
     const wordData = {
       word: StartAudiochallengeApp.correctAnswer.word,
       wordTranslate: StartAudiochallengeApp.correctAnswer.wordTranslate,
@@ -179,7 +179,7 @@ class StartAudiochallengeApp {
   }
 
   //Функция сброса статистики раунда перед его началом
-  private async resetRoundStatistic() { 
+  private async resetRoundStatistic(): Promise<void> { 
     StartAudiochallengeApp.roundStatistic.numberOfQuestions = 0;
     StartAudiochallengeApp.roundStatistic.correctAnswers.length = 0;
     StartAudiochallengeApp.roundStatistic.wrongAnswers.length = 0;
@@ -188,25 +188,25 @@ class StartAudiochallengeApp {
   }
 
   //Функция сброса вариантов ответа раунда перед его началом
-  private async resetAnswers() {
+  private async resetAnswers(): Promise<void> {
     StartAudiochallengeApp.answers.length = 0;
   }
 
   //Функция получения массива слов (20 слов) с сервера
-  private async getWordsChunk(group: number, page: number) {    
+  private async getWordsChunk(group: number, page: number): Promise<Word[]> {    
     const wordСhunkPageLink = `${StartAudiochallengeApp.basePageLink}/words?group=${group}&page=${page}`;
     return (await fetch(wordСhunkPageLink)).json();
   }
 
   //Функция сохранения массива слов (20 слов) в приложении
-  private async setWords(group: number, page: number) {
+  private async setWords(group: number, page: number): Promise<void> {
     const data = await this.getWordsChunk(group, page);
     StartAudiochallengeApp.chunkOfWords = [...data];
     StartAudiochallengeApp.roundStatistic.numberOfQuestions = StartAudiochallengeApp.chunkOfWords.length;
   } 
   
   //Функция получения произвольного слова из массива слов для игры
-  private async getCorrectAnswer() {
+  private async getCorrectAnswer(): Promise<void> {
     if (StartAudiochallengeApp.chunkOfWords.length) {
       const сorrectAnswerPosition =  StartAudiochallengeApp.getRandomNumber(0, StartAudiochallengeApp.chunkOfWords.length - 1);
       StartAudiochallengeApp.correctAnswer = StartAudiochallengeApp.chunkOfWords[сorrectAnswerPosition];
@@ -215,7 +215,7 @@ class StartAudiochallengeApp {
   }
 
   //Функция создания 5 вариантов ответов (верный ответ и 4 неправильных ответа) в произвольном порядке
-  private async getAnswerVariants() {
+  private async getAnswerVariants(): Promise<void> {
     const wrongAnswersNumber = 4;
     const correctAnswer = StartAudiochallengeApp.correctAnswer.wordTranslate;
 
@@ -238,7 +238,7 @@ class StartAudiochallengeApp {
   }
 
   //Функция изменения отрисованного шаблона страницы игры на основе полученных данных
-  private async setDataToPage(){
+  private async setDataToPage(): Promise<void> {
     const img = document.querySelector('.audiochallenge-container__word-image') as HTMLTemplateElement;
     const word = document.querySelector('.audiochallenge-container__word') as HTMLTemplateElement;
     const variantsNumber = document.querySelectorAll('.audiochallenge-container__variant-number');
@@ -254,7 +254,7 @@ class StartAudiochallengeApp {
   }
 
   //Функция для старта игры
-  public async startGame() {
+  public async startGame(): Promise<void> {
     await this.resetRoundStatistic();
     await this.resetAnswers();
     await this.setWords(StartAudiochallengeApp.wordGroup, StartAudiochallengeApp.wordPage);
@@ -266,7 +266,7 @@ class StartAudiochallengeApp {
   }
 
   //Функция для следующего слова
-  public async nextWord() {    
+  public async nextWord(): Promise<void> {    
     if (StartAudiochallengeApp.chunkOfWords.length) {
       await this.resetAnswers();
       await this.getCorrectAnswer();
