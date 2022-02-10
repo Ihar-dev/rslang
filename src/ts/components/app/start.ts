@@ -41,6 +41,10 @@ class StartApp {
     menuToggleButton.addEventListener('click', () => {
       toggleElement(menuContainer);
     });
+    const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
+    homeButton.addEventListener('click', () => {
+      this.render();
+    });
   }
 
 }

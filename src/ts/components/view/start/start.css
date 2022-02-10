@@ -51,7 +51,7 @@ body.active {
 .menu__sprint-button,
 .menu__statistics-button,
 .menu__team-button,
-.menu__app-button {
+.menu__home-button {
   position: absolute;
   display: flex;
   justify-content: center;
@@ -84,19 +84,39 @@ body.active {
   color: white;
 }
 
+.header-container__menu .menu__toggle-button::after {
+  content: "MENU";
+}
+
+.header-container__menu.active .menu__toggle-button::after {
+  content: "";
+}
+
+.header-container__menu.active .menu__toggle-button {
+  background-image: url("../../../../assets/svg/xmark-solid.svg");
+  background-size: 50% 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .menu__toggle-button {
   position: relative;
   width: 100px;
   height: 100px;
   color: grey;
-  font-size: 25px;
-  line-height: 100px;
+  font-size: 27px;
+  font-weight: 600;
+  line-height: 103px;
   border-radius: 50%;
   text-align: center;
   font-family: 'Roboto', sans-serif;
   background-color: white;
   z-index: 100;
   cursor: pointer;
+}
+
+.menu__home-button div {
+  background-image: url("../../../../assets/svg/house-solid.svg");
 }
 
 .menu__book-button div {
@@ -119,16 +139,12 @@ body.active {
   background-image: url("../../../../assets/svg/users-solid.svg");
 }
 
-.menu__app-button div {
-  background-image: url("../../../../assets/svg/road-solid.svg");
-}
-
 .menu__book-button div,
 .menu__audio-challenge-button div,
 .menu__sprint-button div,
 .menu__statistics-button div,
 .menu__team-button div,
-.menu__app-button div {
+.menu__home-button div {
   border-radius: 50%;
   width: 70px;
   height: 70px;
