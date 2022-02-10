@@ -26,8 +26,7 @@ module.exports = {
     extensions: ['.js', '.ts'],
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
@@ -49,5 +48,10 @@ module.exports = {
         type: 'asset/resource',
       }
     ],
-  }
+  },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+  },
 }
