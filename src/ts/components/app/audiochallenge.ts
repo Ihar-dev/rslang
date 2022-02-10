@@ -95,8 +95,6 @@ class StartAudiochallengeApp {
 
     const bottom = document.querySelector('.audiochallenge-container__bottom') as HTMLElement;
     bottom.innerHTML = await AudiochallengeBottomContent.render();
-    //TODO Добавить блок со статистикой раунда в конце игры
-    // const statistic = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
   }
 
   //Функция для произношения предложенного слова
@@ -282,6 +280,26 @@ class StartAudiochallengeApp {
       console.log("Лучшая серия:", StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries);
       console.log("Точность:", StartAudiochallengeApp.roundStatistic.correctAnswers.length / StartAudiochallengeApp.roundStatistic.numberOfQuestions);
     }
+  }
+
+  public addListeners(): void {
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('.audiochallenge-container__variant') || target.closest('.audiochallenge-container__dont-know')) {
+        this.checkAnswer(event);
+        console.log("answer");
+      }
+    
+      if (target.classList.contains('audiochallenge-container__next')) {
+        this.nextWord();
+        console.log("word");
+      }
+    
+      if (target.closest('.audiochallenge-container__play-audio-1') || target.classList.contains('audiochallenge-container__play-audio-2')) {
+        this.sayWord();
+        console.log("say word");
+      }
+    });
   }
 }
 

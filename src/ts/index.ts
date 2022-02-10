@@ -5,28 +5,13 @@ import StartAudiochallengeApp from './components/app/audiochallenge';
 // const startApp = new StartApp();
 // startApp.render();
 
-const startApp = new StartApp();
-const startAudiochallengeApp = new StartAudiochallengeApp();
+// const startApp = new StartApp();
+// const startAudiochallengeApp = new StartAudiochallengeApp();
 
-async function test() {
-  await startApp.render();
-  await startAudiochallengeApp.startGame();
-}
+// async function test() {
+//   await startApp.render();
+//   await startAudiochallengeApp.startGame();
+//   startAudiochallengeApp.addListeners(); 
+// }
 
-test();
-
-document.addEventListener('click', (event) => {
-  const target = event.target as HTMLElement;
-  if (target.closest('.audiochallenge-container__variant') || target.closest('.audiochallenge-container__dont-know')) {
-    startAudiochallengeApp.checkAnswer(event);
-  }
-
-  if (target.classList.contains('audiochallenge-container__next')) {
-    startAudiochallengeApp.nextWord();
-  }
-
-  if (target.closest('.audiochallenge-container__play-audio-1') || target.classList.contains('audiochallenge-container__play-audio-2')) {
-    startAudiochallengeApp.sayWord();
-  }
-  });
->>>>>>> 729c695 (feat: add function to play a sound of word)
+// test();
