@@ -1,5 +1,15 @@
 .audiochallenge-container__play-audio-1 {
-  margin: 1em;
+  position: absolute;
+  z-index: 10;
+
+  border-radius: 50%;
+  background-color: rgba(167, 167, 167, 0.35);
+
+  cursor: pointer;
+}
+
+.audiochallenge-container__play-audio-1 > div {
+  margin: 3em;
   height: 60px;
   width: 60px;
 
@@ -10,29 +20,35 @@
   transition: 0.5s;
 }
 
-.audiochallenge-container__play-audio-1:hover {
+.audiochallenge-container__play-audio-1:hover > div {
   background-color: goldenrod;
-  cursor: pointer;
+}
+
+.audiochallenge-container__play-audio-1:active > div {
+  transform: scale(0.9);
 }
 
 .audiochallenge-container__word-image {
-  display: none;
+  display: block;
 
-  margin: 1em;
-  height: 150px;
-  width: 150px;
+  height: 200px;
+  width: 200px;
 
-  border: 3px solid green;
-  border-radius: 50%; 
+  border: 5px solid #c0c0c0;
+  border-radius: 50%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+
+  visibility: hidden;
 }
 
 .audiochallenge-container__word-container {
-  display: none;
+  display: flex;
   align-items: center;
   margin: 1em;
+
+  visibility: hidden;
 }
 
 .audiochallenge-container__play-audio-2 {
@@ -45,13 +61,47 @@
   background-color: black;
 
   transition: 0.5s;
+  cursor: pointer;
 }
 
 .audiochallenge-container__play-audio-2:hover {
   background-color: goldenrod;
-  cursor: pointer;
 }
 
 .audiochallenge-container__word {
-  font-size: 46px;
+  font-size: 3rem;
+}
+
+@media (max-width: 1024px) {
+  .audiochallenge-container__word-image {
+    height: 160px;
+    width: 160px;
+  }
+}
+
+@media (max-width: 640px) {
+  .audiochallenge-container__play-audio-1 > div {
+    margin: 2.5em;
+    height: 50px;
+    width: 50px;
+  }
+
+  .audiochallenge-container__word-image {
+    height: 120px;
+    width: 120px;
+  }
+
+  .audiochallenge-container__word-container {
+    margin: 0.25em;
+  }
+
+  .audiochallenge-container__play-audio-2 {
+    margin: 0.5em;
+    height: 20px;
+    width: 20px;
+  }
+
+  .audiochallenge-container__word {
+    font-size: 2rem;
+  }
 }

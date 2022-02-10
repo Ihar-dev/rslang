@@ -25,7 +25,7 @@ document.addEventListener('click', (event) => {
     startAudiochallengeApp.nextWord();
   }
 
-  if (target.classList.contains('audiochallenge-container__play-audio-1') || target.classList.contains('audiochallenge-container__play-audio-2')) {
+  if (target.closest('.audiochallenge-container__play-audio-1') || target.classList.contains('audiochallenge-container__play-audio-2')) {
     startAudiochallengeApp.sayWord();
   }
   });

@@ -7,8 +7,10 @@
   align-items: center;
 
   width: 100%;
+  height: 100%;
 
-  background-color: azure;
+  background-blend-mode: screen;
+  background: linear-gradient(limegreen, transparent), linear-gradient(90deg, skyblue, transparent), linear-gradient(-90deg, coral, transparent);
 }
 
 .audiochallenge-container__close {
@@ -21,33 +23,34 @@
 
   -webkit-mask: url(../../../../assets/svg/audiochallenge__close-app.svg) no-repeat center;
   mask: url(../../../../assets/svg/audiochallenge__close-app.svg) no-repeat center;
-  background-color: black;
+  background-color: gray;
 
   transition: 0.5s;
 }
 
 .audiochallenge-container__close:hover {
-  background-color: goldenrod;
+  background-color: #9f1bd3;
   cursor: pointer;
 }
 
 .audiochallenge-container__content {
-  padding: 5em;
+  padding-bottom: 7em;
 }
 
 .audiochallenge-container__top {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  padding: 2em;
 }
 
 .audiochallenge-container__middle {
   display: flex;
-
-  padding: 2em;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1em 0 2em 0;
 }
 
 .audiochallenge-container__bottom {
@@ -55,10 +58,25 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  padding: 2em;
+  padding: 1em;
 }
 
 .audiochallenge-container__round-statistic {
   display: none;
+}
+
+@media (max-width: 1024px) {
+  .audiochallenge-container__content {
+    padding-bottom: 0;
+  }
+
+  .audiochallenge-container__middle {
+    padding: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .audiochallenge-container__bottom {
+    padding-top: 0.5em;
+  }
 }

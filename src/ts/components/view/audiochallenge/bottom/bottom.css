@@ -3,8 +3,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
-  height: 25px;
+  width: 160px;
+  height: 50px;
   padding: 1em;
 
   border: 3px solid black;
@@ -32,12 +32,13 @@
 
 .audiochallenge-container__dont-know:hover,
 .audiochallenge-container__next:hover {
-  border-color: goldenrod;
+  background-color: rgba(167, 167, 167, 0.35);
+  border-color: #9f1bd3;
 
   cursor: pointer;
 }
 
 .audiochallenge-container__next:hover::after {
-  background-color: goldenrod;
-  transform: translateX(20px);
+  background-color: #9f1bd3;
+  transform: translateX(30px);
 }

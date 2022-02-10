@@ -120,8 +120,8 @@ class StartAudiochallengeApp {
         //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
         //TODO Звук  ответа
         const children = target.closest('.audiochallenge-container__variant')?.children as HTMLCollectionOf<HTMLElement>;
-        children[0].style.display = 'none';
-        children[1].style.display = 'block';
+        children[0].style.visibility = 'hidden';
+        children[1].style.visibility = 'visible';
       } else {
         //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
         //TODO Звук  ответа
@@ -141,8 +141,8 @@ class StartAudiochallengeApp {
     const nextBtn = document.querySelector('.audiochallenge-container__next') as HTMLElement;
 
     playAudioBtn1.style.display = 'none';
-    wordImage.style.display = 'block';
-    wordContainer.style.display = 'flex';
+    wordImage.style.visibility = 'visible';
+    wordContainer.style.visibility = 'visible';
     dontKnowBtn.style.display = 'none';
     nextBtn.style.display = 'flex';
     for(const value of variantBtns) {
