@@ -5,45 +5,5 @@
   border: none;
 }
 
-.sprint-game-sound-container {    
-    background-image: url(../assets/svg/audio.svg);
-    filter: invert(51%) sepia(1%) saturate(0%) hue-rotate(155deg) brightness(97%) contrast(90%);    
-}
 
-.mute {
-  background-image: url(../assets/svg/mute.svg);  
-}
 
-.sugar {
-  width: 7vh;
-  height: 7vh;
-  border-radius: 1vh;
-  background-color: none;
-  background-image: url(../assets/img/white\ sugar.png);
-  background-repeat: no-repeat;
-  background-size: cover;
-  opacity: 0.8;
-}
-
-.kettle {  
-  width: 12vh;
-  height: 10vh;
-  border-radius: 1vh;
-  background-color: white;
-  background-image: url(../assets/img/teapot.jpg);
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.8;
-}
-
-.cup {  
-  width: 10vh;
-  height: 9vh;
-  margin-top: 1vh;
-  border-radius: 1vh;
-  background-color: white;
-  background-image: url(../assets/img/teacup2.png);
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.8;
-}

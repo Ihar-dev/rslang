@@ -1,6 +1,7 @@
-import { startSprint } from "../view/sprintview/sprintview";
+import  {newSprint}  from './start';
 import StartApp from './start';
-import { currentVolume, ticAudio, uncorrectAudio, correctAudio } from "./audio/audio";
+import { wordAudio, ticAudio, incorrectAudio, correctAudio } from "./audiocontrols";
+import SprintView from "../view/sprintview/sprintview";
 
 type word = {
     id: string,
@@ -23,37 +24,43 @@ type answer = {
     word: string,
     wordTranslate: string,
     answerString: string,
+    questionWord?: word,
+    wordForAnswer?: word,
 };
 
 
 let answer: answer = {word: '', wordTranslate: '', answerString: ''};
+let wordsSet: Array<word>;
+let roundScore: number;
 
 //-----------------Get CHUNK OF Words for Game---------------------------
 const baseUrl = 'https://rs-lang-work-team.herokuapp.com/';
 let page = 0;
 let group = 0;
 
-const getWordsChunk = async (page: number, group: number): Promise<Array<word>> => {
+class Sprint {
+
+ getWordsChunk = async (page: number, group: number): Promise<Array<word>> => {
     const response = await fetch(`${baseUrl}words?page=${page}&group=${group}`);
     const wordsChunk = response.ok? await response.json() as Array<word>: [];
     return wordsChunk;
-};
+}
 //----------------starting WordSet for develop training------------------
-let wordsSet: Array<word>;
+
 
 //----------------GET RANDOM NUMBER FUNCTION----------------------------
-const getRandomIntInclusive = (min: number, max: number): number => {
+getRandomIntInclusive = (min: number, max: number): number => {
    min = Math.ceil(min);
    max = Math.floor(max);
    return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
-};
+}
 
 //--------------get answer/question Object from given wordsSet--------------
 //--------------remove question word from wordsSet-----------------------
 
-const getSprintQuestion = async(): Promise<void> => {
+getSprintQuestion = async(): Promise<void> => {
     console.log(wordsSet)
-    const wordsSetFull = await getWordsChunk(page, group) as unknown as Array<word>;
+    const wordsSetFull = await this.getWordsChunk(page, group) as unknown as Array<word>;
     console.log(wordsSetFull);    
     const questionWord: word = wordsSet[0];
     console.log(questionWord)
@@ -62,28 +69,29 @@ const getSprintQuestion = async(): Promise<void> => {
     const answersSet: Array<word> = [];
     answersSet.push(questionWord);
     for (let i = 0; i<=1; i++) {
-        const answerWord = getAnswerWord(tempWordsSet);
+        const answerWord = this.getAnswerWord(tempWordsSet);
         answersSet.push(answerWord);
         tempWordsSet = tempWordsSet.filter(element => element !== answerWord);
     };
-    const index: number = getRandomIntInclusive(0, 2);
-    answer = {word: questionWord.word, wordTranslate: questionWord.wordTranslate, answerString: answersSet[index].wordTranslate};    
-    
-    console.log(answer);   
+    const index: number = this.getRandomIntInclusive(0, 2);
+    answer = {word: questionWord.word, wordTranslate: questionWord.wordTranslate, answerString: answersSet[index].wordTranslate,
+    questionWord: questionWord, wordForAnswer: answersSet[index],
+    }; 
+    //console.log(answer);   
 return;
-};
+}
 
 //----------------------get random word for wrong answer---------------
 
-const getAnswerWord = (tempWordsSet: Array<word>): word => {
-    const index: number = getRandomIntInclusive(0, tempWordsSet.length - 1)
+getAnswerWord = (tempWordsSet: Array<word>): word => {
+    const index: number = this.getRandomIntInclusive(0, tempWordsSet.length - 1)
     const answerWord = tempWordsSet[index];
     return answerWord;
-};
+}
 
 // --------------------END OF ROUND--------------------------------------
 
-export const roundOver = (): void=> {  
+public roundOver = (): void=> {  
     ticAudio.pause(); 
    const questionBody = document.querySelector('.sprint-game-body') as HTMLElement; 
    const questionFooter = document.querySelector('.sprint-game-footer') as HTMLElement;
@@ -94,23 +102,24 @@ export const roundOver = (): void=> {
    <p>ROUND OVER</p>`;
    const nextRoundButton = document.querySelector('.next-round-button') as HTMLElement;
    const quitRoundButton = document.querySelector('.quit-round-button') as HTMLElement;
-    const roundTimerContainer = document.querySelector('.sprint-round-countdoun') as HTMLElement;
+    const roundTimerContainer = document.querySelector('.sprint-round-countdown') as HTMLElement;
     roundTimerContainer?.remove();
    nextRoundButton.addEventListener('click', ()=>{
-       page = page < 30? page++ : 0, group++;      
-       startSprint();
+       page = page < 30? page++ : 0, group++;           
+       newSprint.startSprint();
     });   
    quitRoundButton.addEventListener('click', ()=>{
        const startApp = new StartApp();
        startApp.render();
    });
-};
+}
 
 //-----------------------RENDER QUESTION  CONTAINER---------------------------------
-const renderQuestionContainer = () => {
+renderQuestionContainer = () => {
     const questionBody = document.querySelector('.sprint-game-body') as HTMLElement;
     const questionFooter = document.querySelector('.sprint-game-footer') as HTMLElement;
     questionBody.innerHTML = `
+    <div class="word-audio"></div>
    <div class="sprint-round-right-answers-count">
    </div>
     <div class="sprint-round-right-answers-cup">
@@ -123,48 +132,50 @@ const renderQuestionContainer = () => {
       <input type="button" value="RIGHT" name="rightbutton" class="sprint-wright-button">
       <label for="wrongbutton"></label>
       <label for="rightbutton"></label>`;    
-};
+}
 
 //-----------------RENDER QUESTION---------------------------------
-const renderSprintQuestion = async() => {
+renderSprintQuestion = async() => {
     if (wordsSet.length == 0) {
-        roundOver();
+        this.roundOver();
         return;
     };
-    await getSprintQuestion();
+    await this.getSprintQuestion();
     const wordContainer = document.querySelector('.sprint-question-word') as HTMLElement;
     const answerContainer = document.querySelector('.sprint-answer-word') as HTMLElement;
     wordContainer.textContent = answer.word;
     answerContainer.textContent = answer.answerString;
-    getUserAnswer();
-};
+    const playWordAudioBtn = document.querySelector('.word-audio') as HTMLElement;
+    playWordAudioBtn.addEventListener('click', this.playWordAudio)
+    this.getUserAnswer();
+}
 
-//--------------------------GET USER UNSWER-----------------------------
-const getUserAnswer = () => {
+//--------------------------GET USER ANSWER-----------------------------
+getUserAnswer = () => {
     const writeButton = document.querySelector('.sprint-wright-button') as HTMLElement;
     const wrongButton = document.querySelector('.sprint-wrong-button') as HTMLElement;
     if (answer.answerString == answer.wordTranslate) {
-    writeButton.addEventListener('click', getWriteUnswer);
-    wrongButton.addEventListener('click', getWrongAnswer);
+    writeButton.addEventListener('click', this.getWriteAnswer);
+    wrongButton.addEventListener('click', this.getWrongAnswer);
     } else {
-     writeButton.addEventListener('click', getWrongAnswer);
-    wrongButton.addEventListener('click', getWriteUnswer);   
+     writeButton.addEventListener('click', this.getWrongAnswer);
+    wrongButton.addEventListener('click', this.getWriteAnswer);   
     }
-};
-
-const getWriteUnswer = () => {
-    const roundScoreContainer = document.querySelector('.sprint-round-score-container') as HTMLElement;
-    const writeButton = document.querySelector('.sprint-wright-button') as HTMLElement;
-    const wrongButton = document.querySelector('.sprint-wrong-button') as HTMLElement;
-    writeButton.removeEventListener('click', getWrongAnswer);
-    wrongButton.removeEventListener('click', getWriteUnswer);
-    writeButton.removeEventListener('click', getWriteUnswer);
-    wrongButton.removeEventListener('click', getWrongAnswer); 
+}
+ //--------------------------GET WRITE ANSWER---------------------------------------
+getWriteAnswer = () => {
+    const roundScoreContainer: HTMLElement = document.querySelector('.sprint-round-score-container') as HTMLElement;
+    const writeButton: HTMLElement = document.querySelector('.sprint-wright-button') as HTMLElement;
+    const wrongButton: HTMLElement = document.querySelector('.sprint-wrong-button') as HTMLElement;
+    writeButton.removeEventListener('click', this.getWrongAnswer);
+    wrongButton.removeEventListener('click', this.getWriteAnswer);
+    writeButton.removeEventListener('click', this.getWriteAnswer);
+    wrongButton.removeEventListener('click', this.getWrongAnswer); 
     correctAudio.src = require('../../../assets/audio/correctanswer.mp3');
     //correctAudio.volume = currentVolume;
     correctAudio.play();
     roundScore += 20;
-    roundScoreContainer.textContent = `${roundScore}`
+    roundScoreContainer.textContent = `${roundScore}`;
    const rightAnswersCountContainer = document.querySelector('.sprint-round-right-answers-count') as HTMLElement;
    const cupContainer = document.querySelector('.sprint-round-right-answers-cup') as HTMLElement;
     const writeAnswersCount = rightAnswersCountContainer.childNodes as NodeList;
@@ -187,27 +198,33 @@ const getWriteUnswer = () => {
             element.remove()});
       }
    }
-renderSprintQuestion();
-};
+    this.renderSprintQuestion();
+}
 
 //---------------------GET WRONG ANSWER------------------------------------
-const getWrongAnswer = () => {
-    uncorrectAudio.src = require('../../../assets/audio/wronganswer.mp3');   
-    //uncorrectAudio.volume = currentVolume;
-    uncorrectAudio.play();
+getWrongAnswer = () => {
+    incorrectAudio.src = require('../../../assets/audio/wronganswer.mp3');   
+    incorrectAudio.play();
     const rightAnswersCountContainer = document.querySelector('.sprint-round-right-answers-count') as HTMLElement;
     rightAnswersCountContainer.innerHTML = '';
-    renderSprintQuestion();   
-};
+    this.renderSprintQuestion();   
+}
 
+//--------------------------GET WORD SOUND--------------------------------
+playWordAudio = () => {
+  wordAudio.src = require(baseUrl + answer.questionWord?.audio);
+  wordAudio.play();  
+}
 //---------------------------START SPRINT ROUND------------------------------
-let roundScore: number;
 
-export const startSprintRound = async()=> {
+
+public startSprintRound = async()=> {
     roundScore = 0;
-    wordsSet = await getWordsChunk(page, group) as unknown as Array<word>;
-    renderQuestionContainer();
-    await renderSprintQuestion();
-    
+    wordsSet = await this.getWordsChunk(page, group) as unknown as Array<word>;
+    this.renderQuestionContainer();
+    await this.renderSprintQuestion();
+}
 
-};
+}
+
+export default Sprint;

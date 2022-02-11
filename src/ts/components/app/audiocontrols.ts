@@ -1,11 +1,14 @@
-import './audio.css';
+import '../view/sprintview/audiocontrols.css';
 
 //*************************AUDIO************************ */
-export const audio = new Audio() ;
+
+//добавлять  новое аудио **************************************/
+const audio = new Audio() ;
 export let currentVolume = audio.volume = 0.24;
-export const ticAudio = new Audio(require('../../../../assets/audio/clock-ticking-2.mp3'));
-export const uncorrectAudio = new Audio();
+export const ticAudio = new Audio(require('../../../assets/audio/clock-ticking-2.mp3'));
+export const incorrectAudio = new Audio();
 export const correctAudio = new Audio();
+export const wordAudio = new Audio();
 
 
 //--------------------------SOUND ON/OFF----------------------------------
@@ -27,16 +30,16 @@ export const toggleMute = (): void=> {
 export const updateVolume = (): void => {
     const volume = document.getElementById('volume') as HTMLInputElement;
     const volumeOnOffButton = document.querySelector('.sprint-game-sound-container') as HTMLElement;
-    audio.volume = uncorrectAudio.volume = correctAudio.volume = ticAudio.volume = Number(volume.value);
+    audio.volume = incorrectAudio.volume = correctAudio.volume = ticAudio.volume = Number(volume.value);
     volume.style.background = `linear-gradient(to right, #24809E 0%, #24809E ${Number(volume.value)*100}%, #808080 ${Number(volume.value)*100}%, #808080 100%)`;
     if (audio.volume === 0) {
         volumeOnOffButton.classList.add('mute');
     } else {
         volumeOnOffButton.classList.remove('mute');
     }
-//audio.src = '../../../../assets/audio/correctanswer.mp3';
-const volumeAudio = new Audio(require('../../../../assets/audio/correctanswer.mp3'));
-volumeAudio.volume = audio.volume = uncorrectAudio.volume = correctAudio.volume;
+const volumeAudio = new Audio(require('../../../assets/audio/correctanswer.mp3'));
+//добавлять новое аудио в начало выражения********************/
+volumeAudio.volume  = incorrectAudio.volume = correctAudio.volume = wordAudio.volume = audio.volume;
 volumeAudio.play();
 saveSettings();
 }

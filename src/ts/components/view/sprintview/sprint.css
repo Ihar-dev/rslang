@@ -38,7 +38,7 @@
 stroke-dashoffset: 248.186;
 }
 
-.countdoun-svg {
+.countdown-svg {
     /* width: 15vh;
     height: 15vh; */
     fill: none;
@@ -54,7 +54,7 @@ stroke-dashoffset: 248.186;
     fill: rgb(128, 128, 128);
 }
 
-.countdoun-ended {
+.countdown-ended {
   fill: rgba(255, 99, 71, 0.671) 
 }
 
@@ -83,7 +83,7 @@ stroke-dashoffset: 248.186;
     color: white;
 }
 
-.sprint-game-countdoun-container {
+.sprint-game-countdown-container {
     position: relative;
     width: 5vh;
     height: 5vh;
@@ -179,4 +179,38 @@ stroke-dashoffset: 248.186;
 .sprint-wright-button,
 .next-round-button {
     background-color: #07fa44da;
+}
+
+.sugar {
+  width: 7vh;
+  height: 7vh;
+  border-radius: 1vh;
+  background-color: none;
+  background-image: url(../../../../assets/img/white\ sugar.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.8;
+}
+
+.kettle {  
+  width: 12vh;
+  height: 10vh;
+  border-radius: 1vh;
+  background-color: white;
+  background-image: url(../../../../assets/img/teapot.jpg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
+}
+
+.cup {  
+  width: 10vh;
+  height: 9vh;
+  margin-top: 1vh;
+  border-radius: 1vh;
+  background-color: white;
+  background-image: url(../../../../assets/img/teacup2.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
 }
