@@ -1,7 +1,7 @@
 import './audiochallenge.css';
 
 const AudiochallengeContent = {
-  render: async () => {
+  render: async (): Promise<string> => {
     const view = `
     <div class="audiochallenge-container">
       <div class="audiochallenge-container__close"></div>

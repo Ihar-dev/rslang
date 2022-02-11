@@ -1,7 +1,7 @@
 import './top.css';
 
 const AudiochallengeTopContent = {
-  render: async () => {
+  render: async (): Promise<string> => {
     const view = `
     <div class="audiochallenge-container__play-audio-1"><div></div></div>
     <div class="audiochallenge-container__word-image"></div>

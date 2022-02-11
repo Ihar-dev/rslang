@@ -1,7 +1,7 @@
 import './variant.css';
 
 const AudiochallengeVarianContent = {
-  render: async () => {
+  render: async (): Promise<string> => {
     const view = `
     <div class="audiochallenge-container__variant">
       <div class="audiochallenge-container__variant-number"></div>

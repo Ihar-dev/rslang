@@ -39,16 +39,10 @@ interface Word {
   textExampleTranslate: string
 }
 
-interface WordData {
-  word: string,
-  wordTranslate: string,
-  audio: string,
-}
-
 interface RoundStatistic {
   numberOfQuestions: number,
-  correctAnswers: Array<WordData>,
-  wrongAnswers: Array<WordData>,
+  correctAnswers: Array<Word>,
+  wrongAnswers: Array<Word>,
   correctAnswersSeries: number,
   bestCorrectAnswersSeries: number,
 }
@@ -156,18 +150,13 @@ class StartAudiochallengeApp {
 
   //Функция обновления статистики раунда
   private async updateStatistic(argument: boolean): Promise<void> {
-    const wordData = {
-      word: StartAudiochallengeApp.correctAnswer.word,
-      wordTranslate: StartAudiochallengeApp.correctAnswer.wordTranslate,
-      audio: StartAudiochallengeApp.correctAnswer.audio,
-    }
     const roundStatistic = StartAudiochallengeApp.roundStatistic;
 
     if (argument) {
-      roundStatistic.correctAnswers.push(wordData);
+      roundStatistic.correctAnswers.push(StartAudiochallengeApp.correctAnswer);
       roundStatistic.correctAnswersSeries++;
     } else {
-      roundStatistic.wrongAnswers.push(wordData);
+      roundStatistic.wrongAnswers.push(StartAudiochallengeApp.correctAnswer);
       roundStatistic.correctAnswersSeries = 0;
     }
 
@@ -287,17 +276,14 @@ class StartAudiochallengeApp {
       const target = event.target as HTMLElement;
       if (target.closest('.audiochallenge-container__variant') || target.closest('.audiochallenge-container__dont-know')) {
         this.checkAnswer(event);
-        console.log("answer");
       }
     
       if (target.classList.contains('audiochallenge-container__next')) {
         this.nextWord();
-        console.log("word");
       }
     
       if (target.closest('.audiochallenge-container__play-audio-1') || target.classList.contains('audiochallenge-container__play-audio-2')) {
         this.sayWord();
-        console.log("say word");
       }
     });
   }
