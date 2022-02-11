@@ -63,6 +63,13 @@
 
 .audiochallenge-container__round-statistic {
   display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  user-select: none;
 }
 
 @media (max-width: 1024px) {

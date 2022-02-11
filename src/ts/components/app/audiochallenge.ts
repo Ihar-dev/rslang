@@ -22,6 +22,11 @@ import AudiochallengeTopContent from '../view/audiochallenge/top/top';
 import AudiochallengeVarianContent from '../view/audiochallenge/variant/variant';
 import AudiochallengeBottomContent from '../view/audiochallenge/bottom/bottom';
 
+import AudiochallengeStatisticContent from '../view/audiochallenge/statistic/statistic';
+import AudiochallengeStatisticResultsContent from '../view/audiochallenge/statistic/results/results';
+import AudiochallengeStatisticTableContent from '../view/audiochallenge/statistic/table/table';
+import AudiochallengeStatisticControlsContent from '../view/audiochallenge/statistic/controls/controls';
+
 interface Word {
   id: string,
   group: number,
@@ -66,13 +71,13 @@ class StartAudiochallengeApp {
   }
 
   // Функция для получения случайного числа в заданном диапазоне
-  public static getRandomNumber(min: number, max: number): number {
+  private static getRandomNumber(min: number, max: number): number {
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
   }
 
-  //Функция для отрисовки шаблона страницы
-  public async renderPage(): Promise<void> {
+  //Функция для отрисовки шаблона страницы игры
+  private async renderPage(): Promise<void> {
     const answersNumber = 5;
 
     const page = document.querySelector('.page-container') as HTMLElement;
@@ -91,8 +96,43 @@ class StartAudiochallengeApp {
     bottom.innerHTML = await AudiochallengeBottomContent.render();
   }
 
+  //Функция для отрисовки шаблона страницы статистики
+  public async renderStatistic(): Promise<void> {
+    const correctAnswers = StartAudiochallengeApp.roundStatistic.correctAnswers.length;
+    const wrongAnswers = StartAudiochallengeApp.roundStatistic.wrongAnswers.length;
+    const bestAnswersSeries = StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries;
+    const accuracyPercents = correctAnswers / StartAudiochallengeApp.roundStatistic.numberOfQuestions * 100;
+    
+    const page = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
+    page.innerHTML = await AudiochallengeStatisticContent.render();
+    
+    const results = document.querySelector('.round-statistic__results') as HTMLElement;
+    results.innerHTML = await AudiochallengeStatisticResultsContent.render(correctAnswers, wrongAnswers, bestAnswersSeries, accuracyPercents);
+
+    const wordsContainer = document.querySelector('.round-statistic__words') as HTMLElement;
+
+    if (correctAnswers) {
+      wordsContainer.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderCorrect());
+      const correctAnswersTable = document.querySelector('.round-statistic__table_correct-answers tbody') as HTMLElement;
+      for (let word of StartAudiochallengeApp.roundStatistic.correctAnswers) {
+        correctAnswersTable.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderLine(word.word, word.transcription, word.wordTranslate));
+      }
+    }
+
+    if (wrongAnswers) {
+      wordsContainer.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderWrong());
+      const wrongAnswersTable = document.querySelector('.round-statistic__table_wrong-answers tbody') as HTMLElement;
+      for (let word of StartAudiochallengeApp.roundStatistic.wrongAnswers) {
+        wrongAnswersTable.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderLine(word.word, word.transcription, word.wordTranslate));
+      }
+    }
+
+    const controls = document.querySelector('.round-statistic__controls') as HTMLElement;
+    controls.innerHTML = await AudiochallengeStatisticControlsContent.render();    
+  }
+
   //Функция для произношения предложенного слова
-  public async sayWord(): Promise<void> {
+  private async sayWord(): Promise<void> {
     const audio = new Audio();
     audio.src = `${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.audio}`;
     audio.currentTime = 0;
@@ -100,7 +140,7 @@ class StartAudiochallengeApp {
   }
 
   //Функция проверки выбранного ответа на вопрос раунда игры
-  public async checkAnswer(event: Event): Promise<void> {
+  private async checkAnswer(event: Event): Promise<void> {
     const target = event.target as HTMLElement;
 
     if (target.closest('.audiochallenge-container__variant')) {
@@ -253,7 +293,7 @@ class StartAudiochallengeApp {
   }
 
   //Функция для следующего слова
-  public async nextWord(): Promise<void> {    
+  private async nextWord(): Promise<void> {    
     if (StartAudiochallengeApp.chunkOfWords.length) {
       await this.resetAnswers();
       await this.getCorrectAnswer();
@@ -263,11 +303,9 @@ class StartAudiochallengeApp {
       await this.sayWord();
     } else {
       //TODO Страница статистики
-      console.log("Game over");
-      console.log("Правильно ответил:", StartAudiochallengeApp.roundStatistic.correctAnswers);
-      console.log("Ошибся:", StartAudiochallengeApp.roundStatistic.wrongAnswers);
-      console.log("Лучшая серия:", StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries);
-      console.log("Точность:", StartAudiochallengeApp.roundStatistic.correctAnswers.length / StartAudiochallengeApp.roundStatistic.numberOfQuestions);
+      await this.renderStatistic();
+      (document.querySelector('.audiochallenge-container__content') as HTMLElement).style.display = 'none';
+      (document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement).style.display = 'flex';
     }
   }
 
