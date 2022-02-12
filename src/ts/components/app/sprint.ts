@@ -212,7 +212,7 @@ getWrongAnswer = () => {
 
 //--------------------------GET WORD SOUND--------------------------------
 playWordAudio = () => {
-  wordAudio.src = require(baseUrl + answer.questionWord?.audio);
+  wordAudio.src = `${baseUrl}${answer.questionWord?.audio}`;
   wordAudio.play();  
 }
 //---------------------------START SPRINT ROUND------------------------------
