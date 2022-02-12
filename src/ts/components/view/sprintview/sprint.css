@@ -1,0 +1,216 @@
+.off {
+    display: none;
+}
+.hide {
+    opacity: 0;
+}
+
+.sprint-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(81, 165, 221);
+    background-image: url(https://c.pxhere.com/photos/02/f1/westminster_big_ben_london-1069141.jpg!d);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.welcome-sprint-button {
+    position: absolute;
+    left: calc(50% - 10vh);
+    top: calc(50% - 10vh);
+    width: 20vh;
+    height: 20vh;
+    border-radius: 50%;
+    border: none;    
+    background-color: transparent;
+    backdrop-filter: blur(3px);
+    color: white;
+    font-size: 3vh;
+}
+
+/* .circle-background,*/
+.circle-progress {
+stroke-dashoffset: 248.186;
+}
+
+.countdown-svg {
+    /* width: 15vh;
+    height: 15vh; */
+    fill: none;
+}
+
+.circle-text {
+    width: 15vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 4vh;
+    fill: rgb(128, 128, 128);
+}
+
+.countdown-ended {
+  fill: rgba(255, 99, 71, 0.671) 
+}
+
+.sprint-game-container {
+    position: relative;
+    min-width: 300px;
+    max-width: 1000px;
+    width: 40vw;
+    height: 60vh;
+    margin: 0 auto;
+    border-radius: 25px;
+    background-color: rgba(249, 249, 250, 0.507);
+    backdrop-filter: blur(5px);
+}
+
+.sprint-game-header {
+    height: 10%;
+    display: grid;
+    grid-template-columns: 0.5fr 1.5fr 0.3fr 1fr;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2%;
+    border-bottom: solid #808080 2px;
+    padding: 0 5px;
+    font-size: 3vh;
+    color: white;
+}
+
+.sprint-game-countdown-container {
+    position: relative;
+    width: 5vh;
+    height: 5vh;
+    background-color: transparent;
+    /* backdrop-filter: blur(3px); */
+}
+
+.sprint-round-score-container{
+    font-size: 5vh;
+    color: rgb(40, 195, 138);
+    text-align: center;
+}
+
+.sprint-game-sound-container {
+    height: 80%;
+   /* background-image: url(../assets/svg/audio.svg);  */
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.sprint-game-body {
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 5vh;
+    color: #808080;
+}
+
+.sprint-round-right-answers-count {
+    width: 60%;
+    height: 8vh;
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1vh;
+}
+
+.sprint-round-right-answers-cup {
+    width: 80%;
+    height: 10vh;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1vh;
+}
+
+.sprint-question-word {
+    height: 10vh;
+    font-size: 8vh;
+    color:purple;
+    font-weight: 700;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.sprint-answer-word {
+    height: 8vh;
+    margin: 2vh;
+    font-size: 6vh;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.sprint-game-footer {
+    bottom: 0px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 8vh 3vh; 
+    border-top: solid #808080 3px;   
+}
+
+.sprint-wrong-button,
+.sprint-wright-button,
+.next-round-button,
+.quit-round-button {
+    width: 90%;
+    max-width: 350px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 400;
+    font-size: 2rem;
+    margin: 1vh;
+}
+
+.sprint-wrong-button,
+.quit-round-button {
+    background-color: hsla(9, 100%, 64%, 0.671);
+}
+
+.sprint-wright-button,
+.next-round-button {
+    background-color: #07fa44da;
+}
+
+.sugar {
+  width: 7vh;
+  height: 7vh;
+  border-radius: 1vh;
+  background-color: none;
+  background-image: url(../../../../assets/img/white\ sugar.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.8;
+}
+
+.kettle {  
+  width: 12vh;
+  height: 10vh;
+  border-radius: 1vh;
+  background-color: white;
+  background-image: url(../../../../assets/img/teapot.jpg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
+}
+
+.cup {  
+  width: 10vh;
+  height: 9vh;
+  margin-top: 1vh;
+  border-radius: 1vh;
+  background-color: white;
+  background-image: url(../../../../assets/img/teacup2.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
+}

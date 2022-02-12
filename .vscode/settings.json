@@ -1,3 +1,15 @@
 {
-  "liveServer.settings.port": 5501
+  "liveServer.settings.port": 5501,
+  "cSpell.words": [
+    "audiocontrols",
+    "correctanswer",
+    "COUNTDOUNCIRCLELENGTH",
+    "endround",
+    "MINIMUMSECONDSCOUNTDOUN",
+    "rightbutton",
+    "sprintview",
+    "wronganswer",
+    "wrongbutton",
+    "xmark"
+  ]
 }

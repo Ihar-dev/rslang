@@ -17,7 +17,8 @@ import Header from '../view/start/navbar'
 import Main from '../view/start/main';
 import Footer from '../view/start/footer';
 import '../view/start/start.css';
-
+import SprintView from '../view/sprintview/sprintview';
+export const newSprint = new SprintView;
 
 class StartApp {
 
@@ -67,13 +68,7 @@ class StartApp {
       this.resetStartForGames(menuContainer, footer, page);
 
     })
-
-    const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
-    menuSprintButton.addEventListener('click', () => {
-      this.resetStartForGames(menuContainer, footer, page);
-
-    })
-
+    
     const logButton = getElementByClassName('page-container__log-button') as HTMLElement;
     const authorCont = getElementByClassName('page-container__author-cont') as HTMLElement;
     const innerCont = getElementByClassName('author-cont__inner-cont') as HTMLElement;
@@ -89,6 +84,12 @@ class StartApp {
         }, 300);
       };
     });
+
+    const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
+    menuSprintButton.addEventListener('click', async() => {
+      this.resetStartForGames(menuContainer, footer, page);
+      await newSprint.getGameDifficulty();
+    }) 
   }
 
   private resetStartForGames(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
