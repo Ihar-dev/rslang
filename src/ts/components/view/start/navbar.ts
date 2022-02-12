@@ -1,6 +1,15 @@
 const NavBar = {
   render: async () => {
     const view = `
+    <div class="page-container__top-cont">
+      <div class="page-container__naming">RS Lang</div>
+      <div class="page-container__log-button" title="Вход"></div>
+    </div>
+    <div class="page-container__author-cont author-cont">
+      <div class="author-cont__inner-cont">
+
+      </div>
+    </div>
     <div class="header-container__menu menu">
       <button class="menu__toggle-button"></button>
       <div style="--i:0;" class="menu__home-button" title="Home">

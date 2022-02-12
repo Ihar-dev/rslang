@@ -56,7 +56,7 @@ class StartApp {
     menuToggleButton.addEventListener('click', () => {
       toggleElement(menuContainer);
     });
-    
+
     const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
     homeButton.addEventListener('click', () => {
       this.render();
@@ -71,8 +71,24 @@ class StartApp {
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
     menuSprintButton.addEventListener('click', () => {
       this.resetStartForGames(menuContainer, footer, page);
-      
-    }) 
+
+    })
+
+    const logButton = getElementByClassName('page-container__log-button') as HTMLElement;
+    const authorCont = getElementByClassName('page-container__author-cont') as HTMLElement;
+    const innerCont = getElementByClassName('author-cont__inner-cont') as HTMLElement;
+    logButton.addEventListener('click', () => {
+      setElementActive(authorCont);
+      setElementActive(innerCont);
+    });
+    authorCont.addEventListener('click', (event) => {
+      if (event.target === event.currentTarget) {
+        setElementInactive(innerCont);
+        setTimeout(() => {
+          setElementInactive(authorCont);
+        }, 300);
+      };
+    });
   }
 
   private resetStartForGames(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
