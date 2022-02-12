@@ -1,0 +1,43 @@
+.audiochallenge-container__dont-know,
+.audiochallenge-container__next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 160px;
+  height: 50px;
+  padding: 1em;
+
+  border: 3px solid black;
+  border-radius: 5px;
+
+  transition: 0.5s;
+}
+
+.audiochallenge-container__next {
+  display: none;
+}
+
+.audiochallenge-container__next::after {
+  content: "";
+
+  width: 140px;
+  height: 40px;
+  -webkit-mask: url(../../../../../assets/svg/audiochallenge__next.svg) no-repeat center;
+  mask: url(../../../../../assets/svg/audiochallenge__next.svg) no-repeat center;
+  background-color: black;
+
+  transition: 0.5s;
+}
+
+.audiochallenge-container__dont-know:hover,
+.audiochallenge-container__next:hover {
+  background-color: rgba(167, 167, 167, 0.35);
+  border-color: #9f1bd3;
+
+  cursor: pointer;
+}
+
+.audiochallenge-container__next:hover::after {
+  background-color: #9f1bd3;
+  transform: translateX(30px);
+}
