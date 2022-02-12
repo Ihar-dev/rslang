@@ -1,6 +1,6 @@
 import './level-buttons.css';
 
-const GameDifficultyBtuttonsContent = {
+const GameDifficultyButtonsContent = {
   render: async () => {
     const buttonsNumber = 6;
     let buttons = '';
@@ -18,4 +18,4 @@ const GameDifficultyBtuttonsContent = {
   }
 };
 
-export default GameDifficultyBtuttonsContent;
+export default GameDifficultyButtonsContent;

@@ -8,8 +8,9 @@ const audio = new Audio() ;
 export let currentVolume = audio.volume;
 export const ticAudio = new Audio(require('../../../assets/audio/clock-ticking-2.mp3'));
 export const incorrectAudio = new Audio();
-export const correctAudio = new Audio();
+export const correctAudio = new Audio(require('../../../assets/audio/correctanswer.mp3'));
 export const wordAudio = new Audio();
+export const endRoundAudio = new Audio(require('../../../assets/audio/endround.mp3'))
 
 
 //--------------------------SOUND ON/OFF----------------------------------
@@ -42,8 +43,8 @@ const volumeAudio = new Audio(require('../../../assets/audio/correctanswer.mp3')
 
 //При создании Нового  добавлять новое аудио в начало выражения  ***************/
 
-volumeAudio.volume  = incorrectAudio.volume = correctAudio.volume = wordAudio.volume = audio.volume;
-volumeAudio.play();
+volumeAudio.volume  = endRoundAudio.volume = incorrectAudio.volume = correctAudio.volume = wordAudio.volume = audio.volume;
+//volumeAudio.play();
 saveSettings();
 }
 

@@ -70,9 +70,9 @@ class StartApp {
     })
 
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
-    menuSprintButton.addEventListener('click', () => {
+    menuSprintButton.addEventListener('click', async() => {
       this.resetStartForGames(menuContainer);
-      
+      await newSprint.getGameDifficulty();
     }) 
   }
 

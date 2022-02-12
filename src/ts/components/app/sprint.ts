@@ -1,7 +1,8 @@
 import  {newSprint}  from './start';
 import StartApp from './start';
-import { wordAudio, ticAudio, incorrectAudio, correctAudio } from "./audiocontrols";
-import SprintView from "../view/sprintview/sprintview";
+import { wordAudio, ticAudio, incorrectAudio, correctAudio, endRoundAudio } from "./audiocontrols";
+import {timeOuts} from "../view/sprintview/sprintview";
+import OpenGameDifficultyPage from "./game-difficulty";
 
 type word = {
     id: string,
@@ -68,7 +69,7 @@ getSprintQuestion = async(): Promise<void> => {
     let tempWordsSet = wordsSetFull.filter(element => element !== questionWord);
     const answersSet: Array<word> = [];
     answersSet.push(questionWord);
-    for (let i = 0; i<=1; i++) {
+    for (let i = 0; i <= 2; i++) {
         const answerWord = this.getAnswerWord(tempWordsSet);
         answersSet.push(answerWord);
         tempWordsSet = tempWordsSet.filter(element => element !== answerWord);
@@ -91,21 +92,24 @@ getAnswerWord = (tempWordsSet: Array<word>): word => {
 
 // --------------------END OF ROUND--------------------------------------
 
-public roundOver = (): void=> {  
-    ticAudio.pause(); 
+public roundOver = (): void=> {
+   this.clearCountDownTimeouts();  
+    ticAudio.pause();
+    endRoundAudio.play(); 
    const questionBody = document.querySelector('.sprint-game-body') as HTMLElement; 
    const questionFooter = document.querySelector('.sprint-game-footer') as HTMLElement;
    questionFooter.innerHTML = `
     <button class="next-round-button">NEXT ROUND?</button>
    <button class="quit-round-button">CANCEL</button>`;
    questionBody.innerHTML = `
-   <p>ROUND OVER</p>`;
+   <p>ROUND OVER</p>
+   <p>Your Score-${roundScore} </p>`;
    const nextRoundButton = document.querySelector('.next-round-button') as HTMLElement;
    const quitRoundButton = document.querySelector('.quit-round-button') as HTMLElement;
     const roundTimerContainer = document.querySelector('.sprint-round-countdown') as HTMLElement;
     roundTimerContainer?.remove();
    nextRoundButton.addEventListener('click', ()=>{
-       page = page < 30? page++ : 0, group++;           
+       page = page < 60? page++ : 0;           
        newSprint.startSprint();
     });   
    quitRoundButton.addEventListener('click', ()=>{
@@ -113,6 +117,31 @@ public roundOver = (): void=> {
        startApp.render();
    });
 }
+
+//--------------------------CLEAR TIMEOUTS------------------------------
+clearCountDownTimeouts = (): void => {
+    timeOuts.forEach((element)=>{
+        clearTimeout(element);
+    })
+}
+
+//--------------------------EXIT SPRINT LISTEN--------------------------
+exitSprintListen = (): void => {
+      const menuContainer: HTMLElement = document.querySelector('.header-container__menu') as HTMLElement;
+      menuContainer.classList.remove('off');
+      const menuButtons: NodeList = menuContainer.childNodes as NodeList;
+      menuButtons.forEach(element => {
+          const button = element as HTMLElement;
+          button.outerHTML;
+          if (button.className !== 'menu__toggle-button') {
+          button.addEventListener('click', (): void => {
+              this.roundOver();
+              const quitRoundButton = document.querySelector('.quit-round-button') as HTMLElement;
+              quitRoundButton.click();
+          })
+        }
+      });
+  }
 
 //-----------------------RENDER QUESTION  CONTAINER---------------------------------
 renderQuestionContainer = () => {
@@ -172,13 +201,12 @@ getWriteAnswer = () => {
     writeButton.removeEventListener('click', this.getWriteAnswer);
     wrongButton.removeEventListener('click', this.getWrongAnswer); 
     correctAudio.src = require('../../../assets/audio/correctanswer.mp3');
-    //correctAudio.volume = currentVolume;
     correctAudio.play();
     roundScore += 20;
     roundScoreContainer.textContent = `${roundScore}`;
    const rightAnswersCountContainer = document.querySelector('.sprint-round-right-answers-count') as HTMLElement;
    const cupContainer = document.querySelector('.sprint-round-right-answers-cup') as HTMLElement;
-    const writeAnswersCount = rightAnswersCountContainer.childNodes as NodeList;
+    const writeAnswersCount: NodeList = rightAnswersCountContainer.childNodes as NodeList;
    const cupNode = document.querySelectorAll('.cup') as NodeList;
    if (writeAnswersCount.length < 3) {
        const sugar = document.createElement('div');
@@ -219,11 +247,28 @@ playWordAudio = () => {
 
 
 public startSprintRound = async()=> {
+    
     roundScore = 0;
     wordsSet = await this.getWordsChunk(page, group) as unknown as Array<word>;
     this.renderQuestionContainer();
     await this.renderSprintQuestion();
 }
+
+public async getGameDifficulty (): Promise<void> {
+    const openDifficulty = new OpenGameDifficultyPage;
+        await openDifficulty.render('Choose the game level');
+    const difficultyButtons: NodeList = document.querySelectorAll('.level-buttons__button');
+    const difficultyContainer: HTMLElement = document.querySelector('.game-difficulty-container') as HTMLElement;
+    difficultyButtons.forEach((element) => {
+      const button: HTMLElement = element as HTMLElement;
+      button.addEventListener('click', (): void=>{
+        const GameDifficultyLevel: number = Number(button.textContent);
+        group = GameDifficultyLevel;
+        difficultyContainer.remove();
+        newSprint.sprintView();
+      });
+    });
+  } 
 
 }
 
