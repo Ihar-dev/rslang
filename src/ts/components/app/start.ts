@@ -12,9 +12,7 @@ class StartApp {
     const footer = document.querySelector('.footer-container') as HTMLElement;
     header.innerHTML = await Header.render();
     page.innerHTML = await Main.render();
-    footer.innerHTML = await Footer.render();   
-    
-    newSprint.sprintView();
+    footer.innerHTML = await Footer.render();
   }
 
 }
