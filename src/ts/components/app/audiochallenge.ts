@@ -101,10 +101,10 @@ class StartAudiochallengeApp {
     const correctAnswers = StartAudiochallengeApp.roundStatistic.correctAnswers.length;
     const wrongAnswers = StartAudiochallengeApp.roundStatistic.wrongAnswers.length;
     const bestAnswersSeries = StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries;
-    const accuracyPercents = correctAnswers / StartAudiochallengeApp.roundStatistic.numberOfQuestions * 100;
+    const accuracyPercents = Math.round(correctAnswers / StartAudiochallengeApp.roundStatistic.numberOfQuestions * 100);
     
-    const page = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
-    page.innerHTML = await AudiochallengeStatisticContent.render();
+    const statisticPage = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
+    statisticPage.innerHTML = await AudiochallengeStatisticContent.render();
     
     const results = document.querySelector('.round-statistic__results') as HTMLElement;
     results.innerHTML = await AudiochallengeStatisticResultsContent.render(correctAnswers, wrongAnswers, bestAnswersSeries, accuracyPercents);
