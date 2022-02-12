@@ -27,10 +27,10 @@ const AudiochallengeStatisticTableContent = {
     return view;
   },
 
-  renderLine: async (word: string, transcription: string, wordTranslate: string): Promise<string> => {
+  renderLine: async (audio: string, word: string, transcription: string, wordTranslate: string): Promise<string> => {
     const view = `
     <tr>
-      <td></td>
+      <td class="round-statistic__audio" data-audio="${audio}"></td>
       <td>${word}</td>
       <td>${transcription}</td>
       <td>${wordTranslate}</td>

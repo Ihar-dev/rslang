@@ -98,6 +98,7 @@ class StartAudiochallengeApp {
 
   //Функция для отрисовки шаблона страницы статистики
   public async renderStatistic(): Promise<void> {
+    const audiochallengeContent = document.querySelector('.audiochallenge-container__content') as HTMLElement;
     const correctAnswers = StartAudiochallengeApp.roundStatistic.correctAnswers.length;
     const wrongAnswers = StartAudiochallengeApp.roundStatistic.wrongAnswers.length;
     const bestAnswersSeries = StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries;
@@ -115,7 +116,7 @@ class StartAudiochallengeApp {
       wordsContainer.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderCorrect());
       const correctAnswersTable = document.querySelector('.round-statistic__table_correct-answers tbody') as HTMLElement;
       for (let word of StartAudiochallengeApp.roundStatistic.correctAnswers) {
-        correctAnswersTable.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderLine(word.word, word.transcription, word.wordTranslate));
+        correctAnswersTable.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderLine(word.audio ,word.word, word.transcription, word.wordTranslate));
       }
     }
 
@@ -123,12 +124,15 @@ class StartAudiochallengeApp {
       wordsContainer.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderWrong());
       const wrongAnswersTable = document.querySelector('.round-statistic__table_wrong-answers tbody') as HTMLElement;
       for (let word of StartAudiochallengeApp.roundStatistic.wrongAnswers) {
-        wrongAnswersTable.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderLine(word.word, word.transcription, word.wordTranslate));
+        wrongAnswersTable.insertAdjacentHTML('beforeend', await AudiochallengeStatisticTableContent.renderLine(word.audio, word.word, word.transcription, word.wordTranslate));
       }
     }
 
     const controls = document.querySelector('.round-statistic__controls') as HTMLElement;
-    controls.innerHTML = await AudiochallengeStatisticControlsContent.render();    
+    controls.innerHTML = await AudiochallengeStatisticControlsContent.render();   
+    
+    audiochallengeContent.style.display = 'none';
+    statisticPage.style.display = 'flex';
   }
 
   //Функция для произношения предложенного слова
@@ -138,6 +142,8 @@ class StartAudiochallengeApp {
     audio.currentTime = 0;
     audio.play();
   }
+
+  //TODO функция проигрывания аудио
 
   //Функция проверки выбранного ответа на вопрос раунда игры
   private async checkAnswer(event: Event): Promise<void> {
@@ -293,7 +299,10 @@ class StartAudiochallengeApp {
   }
 
   //Функция для следующего слова
-  private async nextWord(): Promise<void> {    
+  private async nextWord(): Promise<void> {
+    const nextBtn = document.querySelector('.audiochallenge-container__next') as HTMLElement;
+    nextBtn.classList.add('disabled');
+
     if (StartAudiochallengeApp.chunkOfWords.length) {
       await this.resetAnswers();
       await this.getCorrectAnswer();
@@ -304,8 +313,6 @@ class StartAudiochallengeApp {
     } else {
       //TODO Страница статистики
       await this.renderStatistic();
-      (document.querySelector('.audiochallenge-container__content') as HTMLElement).style.display = 'none';
-      (document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement).style.display = 'flex';
     }
   }
 
