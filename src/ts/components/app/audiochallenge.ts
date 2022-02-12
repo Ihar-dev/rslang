@@ -3,7 +3,7 @@
 // 2.	Сброс вариантов ответов перед началом игры и перед следующим вопросом - [DONE]
 // 3.	Получение данных о странице запуска приложения
 // 4.	Получение массива слова (20 шт.) с сервера для составления вопросов к игре - [DONE]
-// 5.	Составление массива слова (до 20 шт.) для вопросов к игре - [DOING]
+// 5.	Составление массива слова (до 20 шт.) для вопросов к игре
 // 6.	Сохранение массива из пункта 4 в константу в приложении (можно объединить с пунктом 4) - [DONE]
 // 7.	Получение произвольного слова из готового массива слов для вопроса - [DONE]
 // 8.	Получение 5 вариантов ответов в произвольном порядке (1 верный и 4 неверных) - [DONE]
@@ -15,7 +15,7 @@
 // 14.	Изменение данных о слове ({ "id слова" : { status: "learned" , correctAnswers: 3 } })
 // 15.	Проверка оставшихся слов для продолжения игры (если слова есть, то игра продолжается; если нет – то выводится статистика раунда игры, данные о словах сохраняются) - [DONE]
 // 16.	Следующий вопрос (повторить пункты 7 – 15) - [DONE]
-// 17.	Конец раунда(игры) - вывод статистики раунда и сохранение данных о словах в вопросах
+// 17.	Конец раунда(игры) - вывод статистики раунда и сохранение данных о словах в вопросах - [DONE]
 
 import AudiochallengeContent from '../view/audiochallenge/audiochallenge';
 import AudiochallengeTopContent from '../view/audiochallenge/top/top';
@@ -26,6 +26,10 @@ import AudiochallengeStatisticContent from '../view/audiochallenge/statistic/sta
 import AudiochallengeStatisticResultsContent from '../view/audiochallenge/statistic/results/results';
 import AudiochallengeStatisticTableContent from '../view/audiochallenge/statistic/table/table';
 import AudiochallengeStatisticControlsContent from '../view/audiochallenge/statistic/controls/controls';
+
+const correctAnswerSound = require('../../../assets/audio/correctanswer.mp3');
+const wrongAnswerSound = require('../../../assets/audio/wronganswer.mp3');
+const endRoundSound = require('../../../assets/audio/endround.mp3');
 
 interface Word {
   id: string,
@@ -76,6 +80,28 @@ class StartAudiochallengeApp {
     return Math.floor(rand);
   }
 
+  //Функция для проигрывания аудио
+  private async playAudio(path: string): Promise<void> {
+    const audio = new Audio();
+    audio.src = path;
+    audio.currentTime = 0;
+    audio.play();
+  }
+
+  //Функция сброса статистики раунда перед его началом
+  private async resetRoundStatistic(): Promise<void> { 
+    StartAudiochallengeApp.roundStatistic.numberOfQuestions = 0;
+    StartAudiochallengeApp.roundStatistic.correctAnswers.length = 0;
+    StartAudiochallengeApp.roundStatistic.wrongAnswers.length = 0;
+    StartAudiochallengeApp.roundStatistic.correctAnswersSeries = 0;
+    StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries = 0;
+  }
+  
+  //Функция сброса вариантов ответа раунда перед его началом
+  private async resetAnswers(): Promise<void> {
+    StartAudiochallengeApp.answers.length = 0;
+  }
+
   //Функция для отрисовки шаблона страницы игры
   private async renderPage(): Promise<void> {
     const answersNumber = 5;
@@ -96,14 +122,30 @@ class StartAudiochallengeApp {
     bottom.innerHTML = await AudiochallengeBottomContent.render();
   }
 
+  //Функция изменения отрисованного шаблона страницы игры на основе полученных данных
+  private async setDataToPage(): Promise<void> {
+    const img = document.querySelector('.audiochallenge-container__word-image') as HTMLTemplateElement;
+    const word = document.querySelector('.audiochallenge-container__word') as HTMLTemplateElement;
+    const variantsNumber = document.querySelectorAll('.audiochallenge-container__variant-number');
+    const variantsText = document.querySelectorAll('.audiochallenge-container__text');
+  
+    img.style.backgroundImage = `url(${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.image})`;
+    word.innerHTML = `${StartAudiochallengeApp.correctAnswer.word}`;
+
+    for (let i = 0; i < variantsText.length; i++) {
+      variantsNumber[i].innerHTML = `${i+1}`;
+      variantsText[i].innerHTML = `${StartAudiochallengeApp.answers[i]}`;
+    }
+  }
+
   //Функция для отрисовки шаблона страницы статистики
-  public async renderStatistic(): Promise<void> {
+  private async renderStatistic(): Promise<void> {
     const audiochallengeContent = document.querySelector('.audiochallenge-container__content') as HTMLElement;
     const correctAnswers = StartAudiochallengeApp.roundStatistic.correctAnswers.length;
     const wrongAnswers = StartAudiochallengeApp.roundStatistic.wrongAnswers.length;
     const bestAnswersSeries = StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries;
     const accuracyPercents = Math.round(correctAnswers / StartAudiochallengeApp.roundStatistic.numberOfQuestions * 100);
-    
+
     const statisticPage = document.querySelector('.audiochallenge-container__round-statistic') as HTMLElement;
     statisticPage.innerHTML = await AudiochallengeStatisticContent.render();
     
@@ -135,16 +177,6 @@ class StartAudiochallengeApp {
     statisticPage.style.display = 'flex';
   }
 
-  //Функция для произношения предложенного слова
-  private async sayWord(): Promise<void> {
-    const audio = new Audio();
-    audio.src = `${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.audio}`;
-    audio.currentTime = 0;
-    audio.play();
-  }
-
-  //TODO функция проигрывания аудио
-
   //Функция проверки выбранного ответа на вопрос раунда игры
   private async checkAnswer(event: Event): Promise<void> {
     const target = event.target as HTMLElement;
@@ -156,18 +188,19 @@ class StartAudiochallengeApp {
 
       if (result) {
         //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
-        //TODO Звук  ответа
+        this.playAudio(correctAnswerSound);
         const children = target.closest('.audiochallenge-container__variant')?.children as HTMLCollectionOf<HTMLElement>;
         children[0].style.visibility = 'hidden';
         children[1].style.visibility = 'visible';
       } else {
         //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
-        //TODO Звук  ответа
+        this.playAudio(wrongAnswerSound);
         target.closest('.audiochallenge-container__variant')?.classList.add('wrong');
       }
-  
+
       await this.updateStatistic(result);
     } else if (target.closest('.audiochallenge-container__dont-know')) {
+      this.playAudio(wrongAnswerSound);
       await this.updateStatistic(false);
     }
 
@@ -194,37 +227,6 @@ class StartAudiochallengeApp {
   //   StartAudiochallengeApp.wordPage = '0';
   // }
 
-  //Функция обновления статистики раунда
-  private async updateStatistic(argument: boolean): Promise<void> {
-    const roundStatistic = StartAudiochallengeApp.roundStatistic;
-
-    if (argument) {
-      roundStatistic.correctAnswers.push(StartAudiochallengeApp.correctAnswer);
-      roundStatistic.correctAnswersSeries++;
-    } else {
-      roundStatistic.wrongAnswers.push(StartAudiochallengeApp.correctAnswer);
-      roundStatistic.correctAnswersSeries = 0;
-    }
-
-    if (roundStatistic.correctAnswersSeries > roundStatistic.bestCorrectAnswersSeries) {
-      roundStatistic.bestCorrectAnswersSeries = roundStatistic.correctAnswersSeries;
-    }
-  }
-
-  //Функция сброса статистики раунда перед его началом
-  private async resetRoundStatistic(): Promise<void> { 
-    StartAudiochallengeApp.roundStatistic.numberOfQuestions = 0;
-    StartAudiochallengeApp.roundStatistic.correctAnswers.length = 0;
-    StartAudiochallengeApp.roundStatistic.wrongAnswers.length = 0;
-    StartAudiochallengeApp.roundStatistic.correctAnswersSeries = 0;
-    StartAudiochallengeApp.roundStatistic.bestCorrectAnswersSeries = 0;
-  }
-
-  //Функция сброса вариантов ответа раунда перед его началом
-  private async resetAnswers(): Promise<void> {
-    StartAudiochallengeApp.answers.length = 0;
-  }
-
   //Функция получения массива слов (20 слов) с сервера
   private async getWordsChunk(group: number, page: number): Promise<Word[]> {    
     const wordСhunkPageLink = `${StartAudiochallengeApp.basePageLink}/words?group=${group}&page=${page}`;
@@ -237,7 +239,7 @@ class StartAudiochallengeApp {
     StartAudiochallengeApp.chunkOfWords = [...data];
     StartAudiochallengeApp.roundStatistic.numberOfQuestions = StartAudiochallengeApp.chunkOfWords.length;
   } 
-  
+
   //Функция получения произвольного слова из массива слов для игры
   private async getCorrectAnswer(): Promise<void> {
     if (StartAudiochallengeApp.chunkOfWords.length) {
@@ -270,19 +272,20 @@ class StartAudiochallengeApp {
     }
   }
 
-  //Функция изменения отрисованного шаблона страницы игры на основе полученных данных
-  private async setDataToPage(): Promise<void> {
-    const img = document.querySelector('.audiochallenge-container__word-image') as HTMLTemplateElement;
-    const word = document.querySelector('.audiochallenge-container__word') as HTMLTemplateElement;
-    const variantsNumber = document.querySelectorAll('.audiochallenge-container__variant-number');
-    const variantsText = document.querySelectorAll('.audiochallenge-container__text');
-  
-    img.style.backgroundImage = `url(${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.image})`;
-    word.innerHTML = `${StartAudiochallengeApp.correctAnswer.word}`;
+  //Функция обновления статистики раунда
+  private async updateStatistic(argument: boolean): Promise<void> {
+    const roundStatistic = StartAudiochallengeApp.roundStatistic;
 
-    for (let i = 0; i < variantsText.length; i++) {
-      variantsNumber[i].innerHTML = `${i+1}`;
-      variantsText[i].innerHTML = `${StartAudiochallengeApp.answers[i]}`;
+    if (argument) {
+      roundStatistic.correctAnswers.push(StartAudiochallengeApp.correctAnswer);
+      roundStatistic.correctAnswersSeries++;
+    } else {
+      roundStatistic.wrongAnswers.push(StartAudiochallengeApp.correctAnswer);
+      roundStatistic.correctAnswersSeries = 0;
+    }
+
+    if (roundStatistic.correctAnswersSeries > roundStatistic.bestCorrectAnswersSeries) {
+      roundStatistic.bestCorrectAnswersSeries = roundStatistic.correctAnswersSeries;
     }
   }
 
@@ -295,7 +298,9 @@ class StartAudiochallengeApp {
     await this.getAnswerVariants();
     await this.renderPage();
     await this.setDataToPage();
-    await this.sayWord();
+
+    const audioPath = `${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.audio}`;
+    await this.playAudio(audioPath);
   }
 
   //Функция для следующего слова
@@ -309,10 +314,12 @@ class StartAudiochallengeApp {
       await this.getAnswerVariants();
       await this.renderPage();
       await this.setDataToPage();
-      await this.sayWord();
+
+      const audioPath = `${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.audio}`;
+      await this.playAudio(audioPath);
     } else {
-      //TODO Страница статистики
       await this.renderStatistic();
+      await this.playAudio(endRoundSound);
     }
   }
 
@@ -322,14 +329,37 @@ class StartAudiochallengeApp {
       if (target.closest('.audiochallenge-container__variant') || target.closest('.audiochallenge-container__dont-know')) {
         this.checkAnswer(event);
       }
-    
+
       if (target.classList.contains('audiochallenge-container__next')) {
         this.nextWord();
       }
-    
+
       if (target.closest('.audiochallenge-container__play-audio-1') || target.classList.contains('audiochallenge-container__play-audio-2')) {
-        this.sayWord();
+        const audioPath = `${StartAudiochallengeApp.basePageLink}/${StartAudiochallengeApp.correctAnswer.audio}`;
+        this.playAudio(audioPath);
       }
+
+      if(target.closest('.round-statistic__audio')) {
+        const audioPath = `${StartAudiochallengeApp.basePageLink}/${target.dataset.audio}`;
+        this.playAudio(audioPath);
+      }
+
+      if(target.closest('.round-statistic__replay')) {
+        console.log('replay');
+      }
+
+      if(target.closest('.round-statistic__book')) {
+        console.log('book');
+      }
+
+      if(target.closest('.round-statistic__back')) {
+        console.log('back');
+      }
+
+      if(target.classList.contains('audiochallenge-container__close')) {
+        console.log('close');
+      }
+
     });
   }
 }
