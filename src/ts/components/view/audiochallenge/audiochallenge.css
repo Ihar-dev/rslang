@@ -86,4 +86,8 @@
   .audiochallenge-container__bottom {
     padding-top: 0.5em;
   }
+
+  .audiochallenge-container__round-statistic {
+    font-size: 0.8rem;
+  }
 }

@@ -31,3 +31,15 @@
 .round-statistic__words::-webkit-scrollbar-thumb:hover {
   background-color: white;
 }
+
+@media (max-width: 1024px) {
+  .round-statistic__header {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .round-statistic__header {
+    font-size: 1.4rem;
+  }
+}

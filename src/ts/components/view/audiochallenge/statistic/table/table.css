@@ -32,3 +32,11 @@
   background-color: goldenrod;
   cursor: pointer;
 }
+
+@media (max-width: 640px) {
+  .round-statistic__table th {
+    padding: 10px 0;
+
+    font-size: 1rem;
+  }
+}

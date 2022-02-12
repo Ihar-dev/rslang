@@ -67,3 +67,28 @@
 .round-statistic__back:hover::after {
   content: "Меню";
 }
+
+@media (max-width: 1024px) {
+  .round-statistic__button {
+    height: 50px;
+    width: 50px;
+  }
+
+  .round-statistic__button:hover::after {
+    bottom: -25px;
+
+    font-size: 0.8rem;
+    line-height: 1.1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .round-statistic__button {
+    height: 40px;
+    width: 40px;
+  }
+
+  .round-statistic__button:hover::after {
+    bottom: -20px;
+  }
+}
