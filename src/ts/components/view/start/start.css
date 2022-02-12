@@ -38,7 +38,7 @@ body.start {
 
 .header-container__menu.game {
   top: -100px;
-  right: -100px;
+  right: 0px;
 }
 
 .header-container__menu.active.game {
@@ -54,6 +54,7 @@ body.start {
   width: 400px;
   height: 400px;
   transition: top 0.5s, right 0.5s;
+  z-index: 2;
 }
 
 .menu__book-button,
@@ -87,11 +88,13 @@ body.start {
 }
 
 .page-container__naming {
+  position: absolute;
   padding-left: 30px;
   font-size: 60px;
   line-height: 100px;
   font-family: 'Niconne', cursive;
   color: white;
+  z-index: 2;
 }
 
 .header-container__menu .menu__toggle-button::after {

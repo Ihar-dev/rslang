@@ -1,15 +1,15 @@
 import './sprint.css';
 import { getVolumeLocalStorage, ticAudio } from "../../app/audiocontrols";
 import  Sprint  from "../../app/sprint";
-
+import  OpenGameDifficultyPage from "../../app/game-difficulty";
 
 class SprintView extends Sprint {
 
 
-public sprintView = () => {
-    //-----time before start--------
-    const getReadyTime: number = 5;
-    const pageContainer: HTMLElement = document.querySelector('.page-container__start-plate') as HTMLElement;
+public sprintView = () => {  
+    OpenGameDifficultyPage.render();  
+    const getReadyTime: number = 5;  //-----time before start--------
+    const pageContainer: HTMLElement = document.querySelector('.page-container') as HTMLElement;
     const sprintContainer: HTMLElement = document.createElement('div');
     sprintContainer.classList.add('sprint-container');
     pageContainer.append(sprintContainer);
