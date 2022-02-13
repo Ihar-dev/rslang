@@ -122,7 +122,6 @@ body.start {
 }
 
 .page-container__naming {
-  position: absolute;
   padding-left: 30px;
   font-size: 60px;
   line-height: 100px;
