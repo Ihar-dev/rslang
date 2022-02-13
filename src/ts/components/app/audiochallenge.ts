@@ -28,6 +28,7 @@ import AudiochallengeStatisticTableContent from '../view/audiochallenge/statisti
 import AudiochallengeStatisticControlsContent from '../view/audiochallenge/statistic/controls/controls';
 
 import OpenGameDifficultyPage from './game-difficulty';
+import StartApp from './start';
 
 const correctAnswerSound = require('../../../assets/audio/correctanswer.mp3');
 const wrongAnswerSound = require('../../../assets/audio/wronganswer.mp3');
@@ -372,7 +373,7 @@ class StartAudiochallengeApp {
       }
 
       if(target.closest('.round-statistic__replay')) {
-        console.log('replay');
+        this.startGame(event);
       }
 
       if(target.closest('.round-statistic__book')) {
@@ -380,7 +381,8 @@ class StartAudiochallengeApp {
       }
 
       if(target.closest('.round-statistic__back')) {
-        console.log('back');
+        const startApp = new StartApp();
+        startApp.render();
       }
 
       // if(target.classList.contains('audiochallenge-container__close')) {
