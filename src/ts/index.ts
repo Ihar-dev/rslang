@@ -4,5 +4,3 @@ import StartAudiochallengeApp from './components/app/audiochallenge';
 
 const startApp = new StartApp();
 startApp.render();
-const startAudiochallengeApp = new StartAudiochallengeApp();
-startAudiochallengeApp.addListeners(); 

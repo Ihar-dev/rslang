@@ -46,6 +46,7 @@ class StartApp {
       const header = getElementByClassName('header-container') as HTMLElement;
       header.innerHTML = await Header.render();
       this.addListeners(footer, page);
+      startAudiochallengeApp.addListeners(); 
     };
     this.started = true;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;

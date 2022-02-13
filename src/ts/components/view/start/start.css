@@ -215,9 +215,11 @@ body.start {
 }
 
 .page-container__top-cont {
+  position: absolute;
   display: flex;
   align-content: flex-start;
   align-items: center;
+  width: 100%;
   column-gap: 30px;
 }
 
