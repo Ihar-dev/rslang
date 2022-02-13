@@ -27,6 +27,8 @@ import AudiochallengeStatisticResultsContent from '../view/audiochallenge/statis
 import AudiochallengeStatisticTableContent from '../view/audiochallenge/statistic/table/table';
 import AudiochallengeStatisticControlsContent from '../view/audiochallenge/statistic/controls/controls';
 
+import OpenGameDifficultyPage from './game-difficulty';
+
 const correctAnswerSound = require('../../../assets/audio/correctanswer.mp3');
 const wrongAnswerSound = require('../../../assets/audio/wronganswer.mp3');
 const endRoundSound = require('../../../assets/audio/endround.mp3');
@@ -102,6 +104,20 @@ class StartAudiochallengeApp {
     StartAudiochallengeApp.answers.length = 0;
   }
 
+  //Функция для отрисовки страницы выбора сложности  игры
+  public async renderGameDifficultyPage(): Promise<void> {
+    const openGameDifficultyPage = new OpenGameDifficultyPage();
+    const header = 'Аудиовызов';
+    const text1 = 'Тренировка Аудиовызов развивает словарный запас.';
+    const text2 = 'Вы должны выбрать перевод услышанного слова.';
+    await openGameDifficultyPage.render(header, text1, text2);
+
+    const levelButtons = document.querySelectorAll('.level-buttons__button') as NodeListOf<HTMLElement>;
+    for (let button of levelButtons) {
+      button.classList.add('audiochallenge__game-difficulty');
+    }
+  }
+  
   //Функция для отрисовки шаблона страницы игры
   private async renderPage(): Promise<void> {
     const answersNumber = 5;
@@ -221,12 +237,6 @@ class StartAudiochallengeApp {
     }
   }
 
-  //TODO Функция получения данных о странице запуска приложения
-  // public async getWordGroupAndPage() {
-  //   StartAudiochallengeApp.wordGroup = '0';
-  //   StartAudiochallengeApp.wordPage = '0';
-  // }
-
   //Функция получения массива слов (20 слов) с сервера
   private async getWordsChunk(group: number, page: number): Promise<Word[]> {    
     const wordСhunkPageLink = `${StartAudiochallengeApp.basePageLink}/words?group=${group}&page=${page}`;
@@ -289,10 +299,20 @@ class StartAudiochallengeApp {
     }
   }
 
+  //TODO Функция старта игры из главного меню
+  // 1. Отрисовка станицы с выбором сложности
+  // 2. Запуск игры по клику на сложности
+
+  // public async getWordGroupAndPage() {
+  //   StartAudiochallengeApp.wordGroup = '0';
+  //   StartAudiochallengeApp.wordPage = '0';
+  // }
+
   //Функция для старта игры
   public async startGame(): Promise<void> {
     await this.resetRoundStatistic();
     await this.resetAnswers();
+    //TODO Получени данных сложности и страницы игры (для слов)
     await this.setWords(StartAudiochallengeApp.wordGroup, StartAudiochallengeApp.wordPage);
     await this.getCorrectAnswer();
     await this.getAnswerVariants();
@@ -344,6 +364,11 @@ class StartAudiochallengeApp {
         this.playAudio(audioPath);
       }
 
+      if(target.closest('.audiochallenge__game-difficulty')) {
+        console.log(target.innerHTML);
+        //TODO Запуск игры
+      }
+
       if(target.closest('.round-statistic__replay')) {
         console.log('replay');
       }
@@ -356,9 +381,9 @@ class StartAudiochallengeApp {
         console.log('back');
       }
 
-      if(target.classList.contains('audiochallenge-container__close')) {
-        console.log('close');
-      }
+      // if(target.classList.contains('audiochallenge-container__close')) {
+      //   console.log('close');
+      // }
 
     });
   }
