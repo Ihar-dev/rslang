@@ -20,6 +20,9 @@ import '../view/start/start.css';
 import SprintView from '../view/sprintview/sprintview';
 export const newSprint = new SprintView;
 
+import StartAudiochallengeApp from './audiochallenge';
+const startAudiochallengeApp = new StartAudiochallengeApp();
+
 class StartApp {
 
   started: boolean;
@@ -43,6 +46,7 @@ class StartApp {
       const header = getElementByClassName('header-container') as HTMLElement;
       header.innerHTML = await Header.render();
       this.addListeners(footer, page);
+      startAudiochallengeApp.addListeners(); 
     };
     this.started = true;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
@@ -66,7 +70,7 @@ class StartApp {
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
     audioChallengeButton.addEventListener('click', () => {
       this.resetStartForGames(menuContainer, footer, page);
-
+      startAudiochallengeApp.renderGameDifficultyPage();
     })
     
     const logButton = getElementByClassName('page-container__log-button') as HTMLElement;

@@ -1,6 +1,7 @@
 .round-statistic__table {
   margin-right: 0.5em;
   border-collapse: collapse;
+  width: 100%;
 }
 
 .round-statistic__table th {
