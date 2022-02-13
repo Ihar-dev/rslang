@@ -1,7 +1,7 @@
 //* Логика работы
 // 1.	Сброс статистики раунда перед началом игры - [DONE]
 // 2.	Сброс вариантов ответов перед началом игры и перед следующим вопросом - [DONE]
-// 3.	Получение данных о странице запуска приложения
+// 3.	Получение данных о странице запуска приложения - [DOING]
 // 4.	Получение массива слова (20 шт.) с сервера для составления вопросов к игре - [DONE]
 // 5.	Составление массива слова (до 20 шт.) для вопросов к игре
 // 6.	Сохранение массива из пункта 4 в константу в приложении (можно объединить с пунктом 4) - [DONE]
@@ -102,6 +102,18 @@ class StartAudiochallengeApp {
   //Функция сброса вариантов ответа раунда перед его началом
   private async resetAnswers(): Promise<void> {
     StartAudiochallengeApp.answers.length = 0;
+  }
+
+  //Функция получения номеров страниц и группы слов для игры
+  private async getWordGroupAndPage(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (target.closest('.audiochallenge__game-difficulty')) {
+      StartAudiochallengeApp.wordGroup = Number(target.innerHTML) - 1;
+      StartAudiochallengeApp.wordPage = StartAudiochallengeApp.getRandomNumber(0, 29);
+    } else {
+      // StartAudiochallengeApp.wordGroup = Number(target.innerHTML) - 1;
+      // StartAudiochallengeApp.wordPage = StartAudiochallengeApp.getRandomNumber(0, 29);
+    }
   }
 
   //Функция для отрисовки страницы выбора сложности  игры
@@ -299,20 +311,11 @@ class StartAudiochallengeApp {
     }
   }
 
-  //TODO Функция старта игры из главного меню
-  // 1. Отрисовка станицы с выбором сложности
-  // 2. Запуск игры по клику на сложности
-
-  // public async getWordGroupAndPage() {
-  //   StartAudiochallengeApp.wordGroup = '0';
-  //   StartAudiochallengeApp.wordPage = '0';
-  // }
-
   //Функция для старта игры
-  public async startGame(): Promise<void> {
+  public async startGame(event: MouseEvent): Promise<void> {
     await this.resetRoundStatistic();
     await this.resetAnswers();
-    //TODO Получени данных сложности и страницы игры (для слов)
+    await this.getWordGroupAndPage(event)
     await this.setWords(StartAudiochallengeApp.wordGroup, StartAudiochallengeApp.wordPage);
     await this.getCorrectAnswer();
     await this.getAnswerVariants();
@@ -344,7 +347,7 @@ class StartAudiochallengeApp {
   }
 
   public addListeners(): void {
-    document.addEventListener('click', (event) => {
+    document.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (target.closest('.audiochallenge-container__variant') || target.closest('.audiochallenge-container__dont-know')) {
         this.checkAnswer(event);
@@ -365,8 +368,7 @@ class StartAudiochallengeApp {
       }
 
       if(target.closest('.audiochallenge__game-difficulty')) {
-        console.log(target.innerHTML);
-        //TODO Запуск игры
+        this.startGame(event);
       }
 
       if(target.closest('.round-statistic__replay')) {
