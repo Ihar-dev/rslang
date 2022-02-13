@@ -7,7 +7,7 @@ const NavBar = {
     </div>
     <div class="page-container__author-cont author-cont">
       <div class="author-cont__inner-cont">
-
+        <div class="page-container__naming">RS Lang</div>
       </div>
     </div>
     <div class="header-container__menu menu">
