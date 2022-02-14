@@ -1,7 +1,6 @@
-import  {newSprint}  from './start';
 import StartApp from './start';
 import { wordAudio, ticAudio, incorrectAudio, correctAudio, endRoundAudio } from "./audiocontrols";
-import {timeOuts} from "../view/sprintview/sprintview";
+import {timeOuts, newSprint} from "../view/sprintview/sprintview";
 import OpenGameDifficultyPage from "./game-difficulty";
 
 type word = {
