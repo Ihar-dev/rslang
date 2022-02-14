@@ -63,7 +63,7 @@ class StartAudioChallengeApp {
   private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
 
   private static wordGroup = 0;
-  private static wordPage = 0;
+  private static wordPage: number | null = null;
 
   private static chunkOfWords: Word[];
   private static correctAnswer: Word;
@@ -92,7 +92,7 @@ class StartAudioChallengeApp {
   }
 
   //Функция сброса статистики раунда перед его началом
-  private async resetRoundStatistic(): Promise<void> { 
+  private async resetRoundData(): Promise<void> { 
     StartAudioChallengeApp.roundStatistic.numberOfQuestions = 0;
     StartAudioChallengeApp.roundStatistic.correctAnswers.length = 0;
     StartAudioChallengeApp.roundStatistic.wrongAnswers.length = 0;
@@ -102,7 +102,7 @@ class StartAudioChallengeApp {
   
   //Функция сброса вариантов ответа раунда перед его началом
   private async resetAnswers(): Promise<void> {
-    StartAudioChallengeApp.answers.length = 0;
+    StartAudioChallengeApp.answers.length = 0;    
   }
 
   //Функция получения номеров страниц и группы слов для игры
@@ -110,11 +110,9 @@ class StartAudioChallengeApp {
     const target = event.target as HTMLElement;
     if (target.closest('.audio-challenge__game-difficulty')) {
       StartAudioChallengeApp.wordGroup = Number(target.innerHTML) - 1;
-      StartAudioChallengeApp.wordPage = StartAudioChallengeApp.getRandomNumber(0, 29);
-    } else {
-      // StartAudiochallengeApp.wordGroup = Number(target.innerHTML) - 1;
-      // StartAudiochallengeApp.wordPage = StartAudiochallengeApp.getRandomNumber(0, 29);
+      StartAudioChallengeApp.wordPage = null;
     }
+    //TODO Добавить условие на запуск приложения из учебника
   }
 
   //Функция для отрисовки страницы выбора сложности  игры
@@ -257,8 +255,17 @@ class StartAudioChallengeApp {
   }
 
   //Функция сохранения массива слов (20 слов) в приложении
-  private async setWords(group: number, page: number): Promise<void> {
-    const data = await this.getWordsChunk(group, page);
+  private async setWords(group: number, page: number | null): Promise<void> {
+    let data: Word[];
+    if (page === null) {
+      const minNumber = 0;
+      const maxPageNumber = 29;
+      const randomPageNumber = StartAudioChallengeApp.getRandomNumber(minNumber, maxPageNumber);
+      data = await this.getWordsChunk(group, randomPageNumber);
+    } else {
+      data = await this.getWordsChunk(group, page);
+    }
+
     StartAudioChallengeApp.chunkOfWords = [...data];
     StartAudioChallengeApp.roundStatistic.numberOfQuestions = StartAudioChallengeApp.chunkOfWords.length;
   } 
@@ -313,9 +320,9 @@ class StartAudioChallengeApp {
 
   //Функция для старта игры
   public async startGame(event: MouseEvent): Promise<void> {
-    await this.resetRoundStatistic();
+    await this.resetRoundData();
     await this.resetAnswers();
-    await this.getWordGroupAndPage(event)
+    await this.getWordGroupAndPage(event);
     await this.setWords(StartAudioChallengeApp.wordGroup, StartAudioChallengeApp.wordPage);
     await this.getCorrectAnswer();
     await this.getAnswerVariants();
