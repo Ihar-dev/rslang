@@ -42,7 +42,7 @@ class StartApp {
     if (!this.started) {
       const header = getElementByClassName('header-container') as HTMLElement;
       header.innerHTML = await Header.render();
-      this.addListeners(footer, page);
+      this.addListeners();
     };
     this.started = true;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
@@ -51,13 +51,13 @@ class StartApp {
     removeClassForElement(menuContainer, 'active');
   }
 
-  private addListeners(footer: HTMLElement, page: HTMLElement): void {
+  private addListeners(): void {
     const menuToggleButton = getElementByClassName('menu__toggle-button') as HTMLElement;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
     menuToggleButton.addEventListener('click', () => {
       toggleElement(menuContainer);
     });
-
+    
     const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
     homeButton.addEventListener('click', () => {
       this.render();
@@ -65,41 +65,23 @@ class StartApp {
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
     audioChallengeButton.addEventListener('click', () => {
-      this.resetStartForGames(menuContainer, footer, page);
+      this.resetStartForGames(menuContainer);
 
     })
-    
-    const logButton = getElementByClassName('page-container__log-button') as HTMLElement;
-    const authorCont = getElementByClassName('page-container__author-cont') as HTMLElement;
-    const innerCont = getElementByClassName('author-cont__inner-cont') as HTMLElement;
-    logButton.addEventListener('click', () => {
-      setElementActive(authorCont);
-      setElementActive(innerCont);
-    });
-    authorCont.addEventListener('click', (event) => {
-      if (event.target === event.currentTarget) {
-        setElementInactive(innerCont);
-        setTimeout(() => {
-          setElementInactive(authorCont);
-        }, 300);
-      };
-    });
 
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
     menuSprintButton.addEventListener('click', async() => {
-      this.resetStartForGames(menuContainer, footer, page);
+      this.resetStartForGames(menuContainer);
       await newSprint.getGameDifficulty();
     }) 
   }
 
-  private resetStartForGames(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
+  private resetStartForGames(menuContainer: HTMLElement): void {
     const body = getBody() as HTMLElement;
     removeClassForElement(body, 'start');
     removeClassForElement(menuContainer, 'start');
     addClassForElement(menuContainer, 'game');
     removeClassForElement(menuContainer, 'active');
-    footer.innerHTML = '';
-    page.innerHTML = '';
   }
 
 }
