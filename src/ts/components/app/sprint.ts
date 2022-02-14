@@ -262,7 +262,7 @@ public async getGameDifficulty (): Promise<void> {
     difficultyButtons.forEach((element) => {
       const button: HTMLElement = element as HTMLElement;
       button.addEventListener('click', (): void=>{
-        const GameDifficultyLevel: number = Number(button.textContent);
+        const GameDifficultyLevel: number = Number(button.textContent - 1);
         group = GameDifficultyLevel;
         difficultyContainer.remove();
         newSprint.sprintView();
