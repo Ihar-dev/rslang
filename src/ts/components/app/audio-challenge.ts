@@ -276,23 +276,22 @@ class StartAudioChallengeApp {
   private async getAnswerVariants(): Promise<void> {
     const wrongAnswersNumber = 4;
     const correctAnswer = StartAudioChallengeApp.correctAnswer.wordTranslate;
+    const minNumber = 0;
+    const maxGroupNumber = 5;
+    const maxPageNumber = 29;
 
-    if (StartAudioChallengeApp.answers.length < wrongAnswersNumber) {
-      const maxGroupNumber = 5;
-      const maxPageNumber = 29;
-      const group = StartAudioChallengeApp.getRandomNumber(0, maxGroupNumber);
-      const page = StartAudioChallengeApp.getRandomNumber(0, maxPageNumber);
+    while (StartAudioChallengeApp.answers.length < wrongAnswersNumber) {
+      const group = StartAudioChallengeApp.getRandomNumber(minNumber, maxGroupNumber);
+      const page = StartAudioChallengeApp.getRandomNumber(minNumber, maxPageNumber);
       const wordСhunk: Array<Word> = await this.getWordsChunk(group, page);
-      const variant = wordСhunk[StartAudioChallengeApp.getRandomNumber(0, wordСhunk.length - 1)].wordTranslate;
+      const variant = wordСhunk[StartAudioChallengeApp.getRandomNumber(minNumber, wordСhunk.length - 1)].wordTranslate;
 
       if (!StartAudioChallengeApp.answers.includes(variant) && variant !== correctAnswer){
         StartAudioChallengeApp.answers.push(variant);
       }
-
-      await this.getAnswerVariants();
-    } else {
-      StartAudioChallengeApp.answers.splice(StartAudioChallengeApp.getRandomNumber(0, wrongAnswersNumber), 0, correctAnswer);
     }
+
+    StartAudioChallengeApp.answers.splice(StartAudioChallengeApp.getRandomNumber(minNumber, wrongAnswersNumber), 0, correctAnswer);
   }
 
   //Функция обновления статистики раунда
