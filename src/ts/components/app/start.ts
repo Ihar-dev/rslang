@@ -20,6 +20,9 @@ import '../view/start/start.css';
 import SprintView from '../view/sprintview/sprintview';
 export const newSprint = new SprintView;
 
+import StartAudiochallengeApp from './audiochallenge';
+const startAudiochallengeApp = new StartAudiochallengeApp();
+
 class StartApp {
 
   started: boolean;
@@ -42,7 +45,8 @@ class StartApp {
     if (!this.started) {
       const header = getElementByClassName('header-container') as HTMLElement;
       header.innerHTML = await Header.render();
-      this.addListeners();
+      this.addListeners(footer, page);
+      startAudiochallengeApp.addListeners(); 
     };
     this.started = true;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
@@ -51,13 +55,13 @@ class StartApp {
     removeClassForElement(menuContainer, 'active');
   }
 
-  private addListeners(): void {
+  private addListeners(footer: HTMLElement, page: HTMLElement): void {
     const menuToggleButton = getElementByClassName('menu__toggle-button') as HTMLElement;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
     menuToggleButton.addEventListener('click', () => {
       toggleElement(menuContainer);
     });
-    
+
     const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
     homeButton.addEventListener('click', () => {
       this.render();
@@ -65,23 +69,41 @@ class StartApp {
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
     audioChallengeButton.addEventListener('click', () => {
-      this.resetStartForGames(menuContainer);
-
+      this.resetStartForGames(menuContainer, footer, page);
+      startAudiochallengeApp.renderGameDifficultyPage();
     })
+    
+    const logButton = getElementByClassName('page-container__log-button') as HTMLElement;
+    const authorCont = getElementByClassName('page-container__author-cont') as HTMLElement;
+    const innerCont = getElementByClassName('author-cont__inner-cont') as HTMLElement;
+    logButton.addEventListener('click', () => {
+      setElementActive(authorCont);
+      setElementActive(innerCont);
+    });
+    authorCont.addEventListener('click', (event) => {
+      if (event.target === event.currentTarget) {
+        setElementInactive(innerCont);
+        setTimeout(() => {
+          setElementInactive(authorCont);
+        }, 300);
+      };
+    });
 
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
     menuSprintButton.addEventListener('click', async() => {
-      this.resetStartForGames(menuContainer);
+      this.resetStartForGames(menuContainer, footer, page);
       await newSprint.getGameDifficulty();
     }) 
   }
 
-  private resetStartForGames(menuContainer: HTMLElement): void {
+  private resetStartForGames(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
     const body = getBody() as HTMLElement;
     removeClassForElement(body, 'start');
     removeClassForElement(menuContainer, 'start');
     addClassForElement(menuContainer, 'game');
     removeClassForElement(menuContainer, 'active');
+    footer.innerHTML = '';
+    page.innerHTML = '';
   }
 
 }

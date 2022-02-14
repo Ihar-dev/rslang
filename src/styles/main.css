@@ -4,3 +4,60 @@
   padding: 0;
   border: none;
 }
+
+.footer-container__footer-add {
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  width: 100vw;
+  height: 11.11vh;
+  justify-content: center;
+  column-gap: 3vw;
+  align-items: center;
+  color: white;
+}
+
+.footer-container__img-github-Ihar,
+.footer-container__img-github-Vitali,
+.footer-container__img-github-Alexandr,
+.footer-container__img-rs_school {
+  background-size: 80%;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 7vh;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  font-size: 2vh;
+  line-height: 15vh;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  transition: transform 0.25s cubic-bezier(0.35, 1.29, 1, 1);
+  cursor: pointer;
+}
+
+.footer-container__img-github-Ihar,
+.footer-container__img-github-Vitali,
+.footer-container__img-github-Alexandr {
+  width: 7vh;
+  border-radius: 50%;
+  background-image: url("../assets/img/github-logo.png");
+}
+
+.footer-container__img-rs_school {
+  width: 19vh;
+  background-image: url("../assets/svg/rs_school_js2.svg");
+}
+
+.footer-container__img-github-Ihar:hover,
+.footer-container__img-github-Vitali:hover,
+.footer-container__img-github-Alexandr:hover,
+.footer-container__img-rs_school:hover {
+  transform: scale(1.1);
+}
+
+.footer-container__year {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2vh;
+  width: 7vh;
+}
