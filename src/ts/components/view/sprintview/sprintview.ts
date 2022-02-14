@@ -95,4 +95,5 @@ class SprintView extends Sprint {
 
 };
 
-export default SprintView;
+export const newSprint = new SprintView;
+//export default SprintView;
