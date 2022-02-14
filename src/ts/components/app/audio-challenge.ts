@@ -1,22 +1,3 @@
-//* Логика работы
-// 1.	Сброс статистики раунда перед началом игры - [DONE]
-// 2.	Сброс вариантов ответов перед началом игры и перед следующим вопросом - [DONE]
-// 3.	Получение данных о странице запуска приложения - [DOING]
-// 4.	Получение массива слова (20 шт.) с сервера для составления вопросов к игре - [DONE]
-// 5.	Составление массива слова (до 20 шт.) для вопросов к игре
-// 6.	Сохранение массива из пункта 4 в константу в приложении (можно объединить с пунктом 4) - [DONE]
-// 7.	Получение произвольного слова из готового массива слов для вопроса - [DONE]
-// 8.	Получение 5 вариантов ответов в произвольном порядке (1 верный и 4 неверных) - [DONE]
-// 9.	Отрисовка шаблона страницы игры - [DONE]
-// 10.	Изменение отрисованного шаблона страницы игры на основе полученных данных - [DONE]
-// 11.	Произношение слова в начале вопроса (1 раз) - [DONE]
-// 12.	Проверка выбранного варианта ответа, изменение стилей страницы - [DONE]
-// 13.	Изменение статистики раунда игры - [DONE]
-// 14.	Изменение данных о слове ({ "id слова" : { status: "learned" , correctAnswers: 3 } })
-// 15.	Проверка оставшихся слов для продолжения игры (если слова есть, то игра продолжается; если нет – то выводится статистика раунда игры, данные о словах сохраняются) - [DONE]
-// 16.	Следующий вопрос (повторить пункты 7 – 15) - [DONE]
-// 17.	Конец раунда(игры) - вывод статистики раунда и сохранение данных о словах в вопросах - [DONE]
-
 import AudioChallengeContent from '../view/audio-challenge/audio-challenge';
 import AudioChallengeTopContent from '../view/audio-challenge/top/top';
 import AudioChallengeVarianContent from '../view/audio-challenge/variant/variant';
@@ -60,15 +41,13 @@ interface RoundStatistic {
 }
 
 class StartAudioChallengeApp {
+  private static isGameStart = false;
   private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
-
   private static wordGroup = 0;
   private static wordPage: number | null = null;
-
   private static chunkOfWords: Word[];
   private static correctAnswer: Word;
   private static answers: String[] = [];
-
   private static roundStatistic: RoundStatistic = {
     numberOfQuestions: 0,
     correctAnswers: [],
@@ -127,6 +106,7 @@ class StartAudioChallengeApp {
     for (let button of levelButtons) {
       button.classList.add('audio-challenge__game-difficulty');
     }
+    this.addListeners();
   }
   
   //Функция для отрисовки шаблона страницы игры
@@ -328,6 +308,7 @@ class StartAudioChallengeApp {
     await this.getAnswerVariants();
     await this.renderPage();
     await this.setDataToPage();
+    this.addListeners();
 
     const audioPath = `${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.audio}`;
     await this.playAudio(audioPath);
@@ -354,47 +335,51 @@ class StartAudioChallengeApp {
   }
 
   public addListeners(): void {
-    document.addEventListener('click', (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (target.closest('.audio-challenge-container__variant') || target.closest('.audio-challenge-container__dont-know')) {
-        this.checkAnswer(event);
+    if (!StartAudioChallengeApp.isGameStart) {
+      const delegation = (event: MouseEvent): void => {
+        const target = event.target as HTMLElement;
+        if (target.closest('.audio-challenge-container__variant') || target.closest('.audio-challenge-container__dont-know')) {
+          this.checkAnswer(event);
+        }
+
+        if (target.classList.contains('audio-challenge-container__next')) {
+          this.nextWord();
+        }
+
+        if (target.closest('.audio-challenge-container__play-audio-1') || target.classList.contains('audio-challenge-container__play-audio-2')) {
+          const audioPath = `${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.audio}`;
+          this.playAudio(audioPath);
+        }
+
+        if(target.closest('.round-statistic__audio')) {
+          const audioPath = `${StartAudioChallengeApp.basePageLink}/${target.dataset.audio}`;
+          this.playAudio(audioPath);
+        }
+
+        if(target.closest('.audio-challenge__game-difficulty')) {
+          this.startGame(event);
+        }
+
+        if(target.closest('.round-statistic__replay')) {
+          this.startGame(event);
+        }
+
+        if(target.closest('.round-statistic__book')) {
+          console.log('book');
+        }
+
+        if(target.closest('.round-statistic__back')) {
+          // startApp.render();
+        }
+
+        // if(target.classList.contains('audio-challenge-container__close')) {
+        //   console.log('close');
+        // }
+
       }
-
-      if (target.classList.contains('audio-challenge-container__next')) {
-        this.nextWord();
-      }
-
-      if (target.closest('.audio-challenge-container__play-audio-1') || target.classList.contains('audio-challenge-container__play-audio-2')) {
-        const audioPath = `${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.audio}`;
-        this.playAudio(audioPath);
-      }
-
-      if(target.closest('.round-statistic__audio')) {
-        const audioPath = `${StartAudioChallengeApp.basePageLink}/${target.dataset.audio}`;
-        this.playAudio(audioPath);
-      }
-
-      if(target.closest('.audio-challenge__game-difficulty')) {
-        this.startGame(event);
-      }
-
-      if(target.closest('.round-statistic__replay')) {
-        this.startGame(event);
-      }
-
-      if(target.closest('.round-statistic__book')) {
-        console.log('book');
-      }
-
-      if(target.closest('.round-statistic__back')) {
-        // startApp.render();
-      }
-
-      // if(target.classList.contains('audio-challenge-container__close')) {
-      //   console.log('close');
-      // }
-
-    });
+      document.addEventListener('click', delegation);
+      StartAudioChallengeApp.isGameStart = true; 
+    }
   }
 }
 
