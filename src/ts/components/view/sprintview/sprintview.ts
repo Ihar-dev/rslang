@@ -5,6 +5,7 @@ import {
     correctAudio,
 } from "../../app/audiocontrols";
 import Sprint from "../../app/sprint";
+import { sprintRoundStatistic, word } from "../../app/statistic";
 
 export const timeOuts: Array<NodeJS.Timeout> = []; 
 
@@ -93,6 +94,94 @@ class SprintView extends Sprint {
         getVolumeLocalStorage();
     }
 
-};
+    public renderRoundStatistic = () => {  
+      const sprintContainer: HTMLElement = document.querySelector('.sprint-container') as HTMLElement;      
+        const roundStatisticContainer: HTMLElement = document.createElement('div');
+        roundStatisticContainer.classList.add('round-statistic-container');
+        sprintContainer.append(roundStatisticContainer);
+        roundStatisticContainer.innerHTML = this.renderRoundStatisticContainer();
+        const wordsTableContainer: HTMLElement = document.querySelector('.round-statistic__words') as HTMLElement;
+        wordsTableContainer.innerHTML = `${SprintView.correctAnswersTable}
+        ${this.renderWordsTable(sprintRoundStatistic.correctAnswers)}
+        ${SprintView.wrongAnswersTable}
+        ${this.renderWordsTable(sprintRoundStatistic.wrongAnswers)}`;
+        const wrongButton: HTMLElement = document.querySelector('.sprint-wrong-button') as HTMLElement;
+        wrongButton.addEventListener('click', ()=>{
+          roundStatisticContainer.remove();
+        });
 
-export default SprintView;
+    }
+
+    static correctAnswersTable = `
+    <table class="round-statistic__table round-statistic__table_correct-answers">
+      <thead>
+        <tr>
+          <th colspan="4">Write answers</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>`;
+
+static wrongAnswersTable = `
+    <table class="round-statistic__table round-statistic__table_wrong-answers">
+    <thead>
+      <tr>
+        <th colspan="4">Wrong answers</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>`;
+  
+renderLine = (questionWord: word): string => {
+    const view = `
+    <tr>
+      <td class="round-statistic__audio" data-audio="${questionWord.audio}"></td>
+      <td>${questionWord.word}</td>
+      <td>${questionWord.transcription}</td>
+      <td>${questionWord.wordTranslate}</td>
+  </tr>
+`;
+    return view;
+  }
+
+renderRoundStatisticContainer = ():string =>{
+    const accuracy = (sprintRoundStatistic.correctAnswers.length / sprintRoundStatistic.numberOfQuestions);
+  const roundStatisticViewHTML = `
+        <div class="round-statistic__results">
+    <h3 class="round-statistic__header">Результаты</h3>
+    <table class="round-statistic__statistic">
+      <tr>
+        <th>Правильных ответов:</th>
+        <th class="round-statistic__correct-answers">${sprintRoundStatistic.correctAnswers.length}</th>
+      </tr>
+      <tr>
+        <th>Неправильных ответов:</th>
+        <th class="round-statistic__wrong-answers">${sprintRoundStatistic.wrongAnswers.length}</th>
+      </tr>
+      <tr>
+        <th>Лучшая серия ответов:</th>
+        <th class="round-statistic__best-answers-series">${sprintRoundStatistic.bestCorrectAnswersSeries}</th>
+      </tr>
+      <tr>
+        <th>Точность:</th>
+        <th class="round-statistic__accuracy">${accuracy * 100}%</th>
+      </tr>
+    </table>
+    <div class="round-statistic__words"></div>
+    </div>
+    <button class="sprint-wrong-button">CLOSE</button>`;
+    return roundStatisticViewHTML;
+}
+
+renderWordsTable = (wordSet: word[]): string => {
+let tableText: string = '';
+ wordSet.forEach(element => {
+     const tableString = this.renderLine(element);
+     tableText += tableString;
+ });
+ return tableText;
+}
+
+};
+export const newSprint = new SprintView;
+//export default SprintView;
