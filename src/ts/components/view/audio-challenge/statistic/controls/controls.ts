@@ -1,6 +1,6 @@
 import './controls.css';
 
-const AudiochallengeStatisticControlsContent = {
+const AudioChallengeStatisticControlsContent = {
   render: async (): Promise<string> => {
     const view = `
     <div class="round-statistic__button round-statistic__replay"><div></div></div>
@@ -10,4 +10,4 @@ const AudiochallengeStatisticControlsContent = {
   }
 };
 
-export default AudiochallengeStatisticControlsContent;
+export default AudioChallengeStatisticControlsContent;

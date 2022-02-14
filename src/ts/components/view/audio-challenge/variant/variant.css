@@ -1,4 +1,4 @@
-.audiochallenge-container__variant {
+.audio-challenge-container__variant {
   position: relative;
 
   display: flex;
@@ -10,17 +10,17 @@
   transition: 0.5s;
 }
 
-.audiochallenge-container__variant:hover {
+.audio-challenge-container__variant:hover {
   border-radius: 5px;
   background-color: rgba(167, 167, 167, 0.35);
   cursor: pointer;
 }
 
-.audiochallenge-container__variant:active {
+.audio-challenge-container__variant:active {
   transform: scale(0.9);
 }
 
-.audiochallenge-container__variant-number {
+.audio-challenge-container__variant-number {
   display: block;
   margin-right: 0.4em;
 
@@ -29,7 +29,7 @@
   visibility: visible;
 }
 
-.audiochallenge-container__answer-indicator {
+.audio-challenge-container__answer-indicator {
   position: absolute;
   left: 5px;
 
@@ -37,14 +37,14 @@
   height: 30px;
   width: 30px;
 
-  -webkit-mask: url(../../../../../assets/svg/audiochallenge__answer-indicator.svg) no-repeat center;
-  mask: url(../../../../../assets/svg/audiochallenge__answer-indicator.svg) no-repeat center;
+  -webkit-mask: url(../../../../../assets/svg/audio-challenge__answer-indicator.svg) no-repeat center;
+  mask: url(../../../../../assets/svg/audio-challenge__answer-indicator.svg) no-repeat center;
   background-color: green;
 
   visibility: hidden;
 }
 
-.audiochallenge-container__text {
+.audio-challenge-container__text {
   margin: 0.25em;
 
   font-size: 1.2rem;
@@ -62,19 +62,19 @@
 }
 
 @media (max-width: 1024px) {
-  .audiochallenge-container__variant-number {
+  .audio-challenge-container__variant-number {
     font-size: 1.2rem;
   }
 }
 
 @media (max-width: 640px) {
-  .audiochallenge-container__variant {
+  .audio-challenge-container__variant {
     margin: 0.25em 0.5em;
     padding: 0.5em 0.75em;
   }
 
-  .audiochallenge-container__variant-number,
-  .audiochallenge-container__text {
+  .audio-challenge-container__variant-number,
+  .audio-challenge-container__text {
     font-size: 1rem;
   }
 }

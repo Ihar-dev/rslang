@@ -1,5 +1,5 @@
-.audiochallenge-container__dont-know,
-.audiochallenge-container__next {
+.audio-challenge-container__dont-know,
+.audio-challenge-container__next {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,31 +13,31 @@
   transition: 0.5s;
 }
 
-.audiochallenge-container__next {
+.audio-challenge-container__next {
   display: none;
 }
 
-.audiochallenge-container__next::after {
+.audio-challenge-container__next::after {
   content: "";
 
   width: 140px;
   height: 40px;
-  -webkit-mask: url(../../../../../assets/svg/audiochallenge__next.svg) no-repeat center;
-  mask: url(../../../../../assets/svg/audiochallenge__next.svg) no-repeat center;
+  -webkit-mask: url(../../../../../assets/svg/audio-challenge__next.svg) no-repeat center;
+  mask: url(../../../../../assets/svg/audio-challenge__next.svg) no-repeat center;
   background-color: black;
 
   transition: 0.5s;
 }
 
-.audiochallenge-container__dont-know:hover,
-.audiochallenge-container__next:hover {
+.audio-challenge-container__dont-know:hover,
+.audio-challenge-container__next:hover {
   background-color: rgba(167, 167, 167, 0.35);
   border-color: #9f1bd3;
 
   cursor: pointer;
 }
 
-.audiochallenge-container__next:hover::after {
+.audio-challenge-container__next:hover::after {
   background-color: #9f1bd3;
   transform: translateX(30px);
 }
