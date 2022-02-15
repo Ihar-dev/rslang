@@ -20,8 +20,8 @@ import Footer from '../view/start/footer';
 import '../view/start/start.css';
 
 import {newSprint} from '../view/sprintview/sprintview';
-import StartAudiochallengeApp from './audiochallenge';
-const startAudiochallengeApp = new StartAudiochallengeApp();
+import StartAudioChallengeApp from './audio-challenge';
+const startAudioChallengeApp = new StartAudioChallengeApp();
 
 class StartApp {
 
@@ -75,7 +75,7 @@ class StartApp {
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
     audioChallengeButton.addEventListener('click', () => {
       this.resetStartForGames(menuContainer, footer, page);
-      startAudiochallengeApp.renderGameDifficultyPage();
+      startAudioChallengeApp.renderGameDifficultyPage();
     });
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
     menuSprintButton.addEventListener('click', async() => {

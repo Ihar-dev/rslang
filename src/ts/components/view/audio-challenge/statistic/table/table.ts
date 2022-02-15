@@ -1,6 +1,6 @@
 import './table.css';
 
-const AudiochallengeStatisticTableContent = {
+const AudioChallengeStatisticTableContent = {
   renderCorrect: async (): Promise<string> => {
     const view = `
     <table class="round-statistic__table round-statistic__table_correct-answers">
@@ -40,4 +40,4 @@ const AudiochallengeStatisticTableContent = {
   },
 };
 
-export default AudiochallengeStatisticTableContent;
+export default AudioChallengeStatisticTableContent;

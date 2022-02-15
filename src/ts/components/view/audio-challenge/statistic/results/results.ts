@@ -1,6 +1,6 @@
 import './results.css';
 
-const AudiochallengeStatisticResultsContent = {
+const AudioChallengeStatisticResultsContent = {
   render: async (correctAnswers: number, wrongAnswers: number, bestAnswersSeries: number, accuracy: number): Promise<string> => {
     const view = `
     <h3 class="round-statistic__header">Результаты</h3>
@@ -27,4 +27,4 @@ const AudiochallengeStatisticResultsContent = {
   }
 };
 
-export default AudiochallengeStatisticResultsContent;
+export default AudioChallengeStatisticResultsContent;
