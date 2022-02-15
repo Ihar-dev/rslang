@@ -6,7 +6,7 @@ const AudioChallengeBottomContent = {
     <div class="audio-challenge-container__dont-know">
       <span>I don't know</span>
     </div>
-    <div class="audio-challenge-container__next"></div>`;
+    <div class="audio-challenge-container__next hidden"></div>`;
     return view;
   }
 };

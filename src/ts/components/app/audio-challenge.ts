@@ -85,8 +85,7 @@ class StartAudioChallengeApp {
   }
 
   //Функция получения номеров страниц и группы слов для игры
-  private async getWordGroupAndPage(event: MouseEvent) {
-    const target = event.target as HTMLElement;
+  private async getWordGroupAndPage(target: HTMLElement) {
     if (target.closest('.audio-challenge__game-difficulty')) {
       StartAudioChallengeApp.wordGroup = Number(target.innerHTML) - 1;
       StartAudioChallengeApp.wordPage = null;
@@ -185,9 +184,7 @@ class StartAudioChallengeApp {
   }
 
   //Функция проверки выбранного ответа на вопрос раунда игры
-  private async checkAnswer(event: Event): Promise<void> {
-    const target = event.target as HTMLElement;
-
+  private async checkAnswer(target: HTMLElement): Promise<void> {
     if (target.closest('.audio-challenge-container__variant')) {
       const answer = target.closest('.audio-challenge-container__variant')?.lastElementChild?.innerHTML;
       const correctAnswer = StartAudioChallengeApp.correctAnswer.wordTranslate;
@@ -221,8 +218,8 @@ class StartAudioChallengeApp {
     playAudioBtn1.style.display = 'none';
     wordImage.style.visibility = 'visible';
     wordContainer.style.visibility = 'visible';
-    dontKnowBtn.style.display = 'none';
-    nextBtn.style.display = 'flex';
+    dontKnowBtn.classList.add('hidden');
+    nextBtn.classList.remove('hidden');
     for(const value of variantBtns) {
       value.classList.add('disabled');
     }
@@ -299,10 +296,10 @@ class StartAudioChallengeApp {
   }
 
   //Функция для старта игры
-  public async startGame(event: MouseEvent): Promise<void> {
+  public async startGame(target: HTMLElement): Promise<void> {
     await this.resetRoundData();
     await this.resetAnswers();
-    await this.getWordGroupAndPage(event);
+    await this.getWordGroupAndPage(target);
     await this.setWords(StartAudioChallengeApp.wordGroup, StartAudioChallengeApp.wordPage);
     await this.getCorrectAnswer();
     await this.getAnswerVariants();
@@ -328,6 +325,7 @@ class StartAudioChallengeApp {
 
       const audioPath = `${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.audio}`;
       await this.playAudio(audioPath);
+      this.addListeners();
     } else {
       await this.renderStatistic();
       await this.playAudio(endRoundSound);
@@ -336,17 +334,17 @@ class StartAudioChallengeApp {
 
   public addListeners(): void {
     if (!StartAudioChallengeApp.isGameStart) {
-      const delegation = (event: MouseEvent): void => {
+      const delegationMouseEvents = (event: MouseEvent): void => {
         const target = event.target as HTMLElement;
         if (target.closest('.audio-challenge-container__variant') || target.closest('.audio-challenge-container__dont-know')) {
-          this.checkAnswer(event);
+          this.checkAnswer(target);
         }
 
-        if (target.classList.contains('audio-challenge-container__next')) {
+        if (target.closest('.audio-challenge-container__next')) {
           this.nextWord();
         }
 
-        if (target.closest('.audio-challenge-container__play-audio-1') || target.classList.contains('audio-challenge-container__play-audio-2')) {
+        if (target.closest('.audio-challenge-container__play-audio-1') || target.closest('.audio-challenge-container__play-audio-2')) {
           const audioPath = `${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.audio}`;
           this.playAudio(audioPath);
         }
@@ -357,11 +355,11 @@ class StartAudioChallengeApp {
         }
 
         if(target.closest('.audio-challenge__game-difficulty')) {
-          this.startGame(event);
+          this.startGame(target);
         }
 
         if(target.closest('.round-statistic__replay')) {
-          this.startGame(event);
+          this.startGame(target);
         }
 
         if(target.closest('.round-statistic__book')) {
@@ -377,7 +375,72 @@ class StartAudioChallengeApp {
         // }
 
       }
-      document.addEventListener('click', delegation);
+
+      const delegationKeyboardEvents = (event: KeyboardEvent): void => {
+        const gameDifficultyPage = document.querySelector('.audio-challenge__game-difficulty');
+        const audioChallengePage = document.querySelector('.audio-challenge-container__content');
+        const gameDifficultyButtons = document.querySelectorAll('.audio-challenge__game-difficulty') as NodeListOf<HTMLElement>;
+        const audioChallengeAnswerButtons = document.querySelectorAll('.audio-challenge-container__variant') as NodeListOf<HTMLElement>;
+        const dontKnowBtn = document.querySelector('.audio-challenge-container__dont-know') as HTMLElement;
+        const nextBtn = document.querySelector('.audio-challenge-container__next') as HTMLElement;
+        
+        if (gameDifficultyPage) {
+          switch (event.key) {
+            case '1':
+              this.startGame(gameDifficultyButtons[0]);
+              break;
+            case '2':
+              this.startGame(gameDifficultyButtons[1]);
+              break;
+            case '3':
+              this.startGame(gameDifficultyButtons[2]);
+              break;
+            case '4':
+              this.startGame(gameDifficultyButtons[3]);
+              break;
+            case '5':
+              this.startGame(gameDifficultyButtons[4]);
+              break;
+            case '6':
+              this.startGame(gameDifficultyButtons[5]);
+              break;
+          }
+        }
+
+        if (audioChallengePage) {
+          if (!audioChallengeAnswerButtons[0].classList.contains('disabled')) {
+            switch (event.key) {
+              case '1':
+                this.checkAnswer(audioChallengeAnswerButtons[0]);
+                break;
+              case '2':
+                this.checkAnswer(audioChallengeAnswerButtons[1]);
+                break;
+              case '3':
+                this.checkAnswer(audioChallengeAnswerButtons[2]);
+                break;
+              case '4':
+                this.checkAnswer(audioChallengeAnswerButtons[3]);
+                break;
+              case '5':
+                this.checkAnswer(audioChallengeAnswerButtons[4]);
+                break;
+            }
+          }          
+          switch (event.key) {
+            case 'Enter':
+              if (!dontKnowBtn.classList.contains('hidden')) {
+                this.checkAnswer(dontKnowBtn);
+              } else if (!nextBtn.classList.contains('hidden')) {
+                this.nextWord();
+              }
+              break;
+          }
+        }
+      }
+
+      document.addEventListener('click', delegationMouseEvents);
+      document.addEventListener('keyup', delegationKeyboardEvents);
       StartAudioChallengeApp.isGameStart = true; 
     }
   }

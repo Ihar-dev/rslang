@@ -13,10 +13,6 @@
   transition: 0.5s;
 }
 
-.audio-challenge-container__next {
-  display: none;
-}
-
 .audio-challenge-container__next::after {
   content: "";
 
@@ -40,4 +36,9 @@
 .audio-challenge-container__next:hover::after {
   background-color: #9f1bd3;
   transform: translateX(30px);
+}
+
+.hidden {
+  display: none;
+  pointer-events: none;
 }
