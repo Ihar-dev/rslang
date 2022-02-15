@@ -51,14 +51,15 @@ let wordsSet: Array<word>;
 let roundScore: number;
 
 //-----------------Get CHUNK OF Words for Game---------------------------
-const baseUrl = 'https://rs-lang-work-team.herokuapp.com/';
+
 let page = 0;
 let group = 0;
 
 class Sprint {
+    static baseUrl = 'https://rs-lang-work-team.herokuapp.com/';
 
  getWordsChunk = async (page: number, group: number): Promise<Array<word>> => {
-    const response = await fetch(`${baseUrl}words?page=${page}&group=${group}`);
+    const response = await fetch(`${Sprint.baseUrl}words?page=${page}&group=${group}`);
     const wordsChunk = response.ok? await response.json() as Array<word>: [];
     return wordsChunk;
 }
@@ -273,7 +274,7 @@ getWrongAnswer = () => {
 
 //--------------------------GET WORD SOUND--------------------------------
 playWordAudio = () => {
-  wordAudio.src = `${baseUrl}${answer.questionWord?.audio}`;
+  wordAudio.src = `${Sprint.baseUrl}${answer.questionWord?.audio}`;
   wordAudio.play();  
 }
 //--------------------------RESET ROUND STATISTIC ONSTART------------------

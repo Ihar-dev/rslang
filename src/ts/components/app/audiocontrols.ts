@@ -4,7 +4,7 @@ import '../view/sprintview/audiocontrols.css';
 
 //добавлять  новое аудио **************************************/
 
-const audio = new Audio() ;
+export const audio = new Audio() ;
 export let currentVolume = audio.volume;
 export const ticAudio = new Audio(require('../../../assets/audio/clock-ticking-2.mp3'));
 export const incorrectAudio = new Audio();

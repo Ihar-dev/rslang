@@ -47,6 +47,6 @@
   background-image: url(../../../../assets/svg/mute.svg);  
 }
 
-.filter-grey {
+.filter-gray {
  filter: invert(51%) sepia(1%) saturate(0%) hue-rotate(155deg) brightness(97%) contrast(90%);   
 }
