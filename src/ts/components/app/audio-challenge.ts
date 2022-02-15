@@ -261,20 +261,26 @@ class StartAudioChallengeApp {
     const wrongAnswersNumber = 4;
     const correctAnswer = StartAudioChallengeApp.correctAnswer.wordTranslate;
     const minNumber = 0;
-    const maxGroupNumber = 5;
     const maxPageNumber = 29;
 
-    while (StartAudioChallengeApp.answers.length < wrongAnswersNumber) {
-      const group = StartAudioChallengeApp.getRandomNumber(minNumber, maxGroupNumber);
+    while (StartAudioChallengeApp.answers.length < wrongAnswersNumber) {  
       const page = StartAudioChallengeApp.getRandomNumber(minNumber, maxPageNumber);
-      const wordСhunk: Array<Word> = await this.getWordsChunk(group, page);
-      const variant = wordСhunk[StartAudioChallengeApp.getRandomNumber(minNumber, wordСhunk.length - 1)].wordTranslate;
+      const wordСhunk: Array<Word> = await this.getWordsChunk(StartAudioChallengeApp.wordGroup, page);
 
-      if (!StartAudioChallengeApp.answers.includes(variant) && variant !== correctAnswer){
-        StartAudioChallengeApp.answers.push(variant);
+      const getVariant = (): string => {
+        return wordСhunk[StartAudioChallengeApp.getRandomNumber(minNumber, wordСhunk.length - 1)].wordTranslate;
       }
-    }
+      const setVariant = (variant: string): void => {
+        if (!StartAudioChallengeApp.answers.includes(variant) && variant !== correctAnswer){
+          StartAudioChallengeApp.answers.push(variant);
+        }
+      }
 
+      const variant1 =  getVariant();
+      const variant2 =  getVariant();
+      setVariant(variant1);
+      setVariant(variant2);
+    }
     StartAudioChallengeApp.answers.splice(StartAudioChallengeApp.getRandomNumber(minNumber, wrongAnswersNumber), 0, correctAnswer);
   }
 
@@ -315,7 +321,7 @@ class StartAudioChallengeApp {
   private async nextWord(): Promise<void> {
     const nextBtn = document.querySelector('.audio-challenge-container__next') as HTMLElement;
     nextBtn.classList.add('disabled');
-    
+
     if (StartAudioChallengeApp.chunkOfWords.length) {
       await this.resetAnswers();
       await this.getCorrectAnswer();
