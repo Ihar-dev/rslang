@@ -146,7 +146,7 @@ class StartAudioChallengeApp {
 
   //Функция для отрисовки шаблона страницы статистики
   private async renderStatistic(): Promise<void> {
-    const audiochallengeContent = document.querySelector('.audio-challenge-container__content') as HTMLElement;
+    const audioChallengeContent = document.querySelector('.audio-challenge-container__content') as HTMLElement;
     const correctAnswers = StartAudioChallengeApp.roundStatistic.correctAnswers.length;
     const wrongAnswers = StartAudioChallengeApp.roundStatistic.wrongAnswers.length;
     const bestAnswersSeries = StartAudioChallengeApp.roundStatistic.bestCorrectAnswersSeries;
@@ -179,7 +179,7 @@ class StartAudioChallengeApp {
     const controls = document.querySelector('.round-statistic__controls') as HTMLElement;
     controls.innerHTML = await AudioChallengeStatisticControlsContent.render();   
     
-    audiochallengeContent.style.display = 'none';
+    audioChallengeContent.style.display = 'none';
     statisticPage.style.display = 'flex';
   }
 
@@ -211,7 +211,7 @@ class StartAudioChallengeApp {
     const playAudioBtn1 = document.querySelector('.audio-challenge-container__play-audio-1') as HTMLElement;
     const wordImage = document.querySelector('.audio-challenge-container__word-image') as HTMLElement;
     const wordContainer = document.querySelector('.audio-challenge-container__word-container') as HTMLElement;
-    const variantBtns = document.querySelectorAll('.audio-challenge-container__variant') as NodeListOf<HTMLElement>;
+    const variantButtons = document.querySelectorAll('.audio-challenge-container__variant') as NodeListOf<HTMLElement>;
     const dontKnowBtn = document.querySelector('.audio-challenge-container__dont-know') as HTMLElement;
     const nextBtn = document.querySelector('.audio-challenge-container__next') as HTMLElement;
 
@@ -220,15 +220,15 @@ class StartAudioChallengeApp {
     wordContainer.style.visibility = 'visible';
     dontKnowBtn.classList.add('hidden');
     nextBtn.classList.remove('hidden');
-    for(const value of variantBtns) {
+    for(const value of variantButtons) {
       value.classList.add('disabled');
     }
   }
 
   //Функция получения массива слов (20 слов) с сервера
   private async getWordsChunk(group: number, page: number): Promise<Word[]> {    
-    const wordСhunkPageLink = `${StartAudioChallengeApp.basePageLink}/words?group=${group}&page=${page}`;
-    return (await fetch(wordСhunkPageLink)).json();
+    const wordChunkPageLink = `${StartAudioChallengeApp.basePageLink}/words?group=${group}&page=${page}`;
+    return (await fetch(wordChunkPageLink)).json();
   }
 
   //Функция сохранения массива слов (20 слов) в приложении
