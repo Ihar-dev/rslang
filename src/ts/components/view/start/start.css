@@ -359,7 +359,7 @@ body.start {
   align-content: space-between;
   column-gap: 15px;
   align-self: flex-start;
-  margin-top: 60px;
+  margin-top: 70px;
 }
 
 .author-cont__cross-button {
@@ -369,4 +369,33 @@ body.start {
   position: absolute;
   background-image: url("../../../../assets/svg/xmark-solid.svg");
   z-index: 250;
+}
+
+.author-cont__message-text {
+  position: absolute;
+  top: 430px;
+  text-align: center;
+  font-size: 0;
+  line-height: 25px;
+  font-family: 'Roboto', sans-serif;
+  transition: font-size 0.5s;
+}
+
+.author-cont__message-text.active {
+  font-size: 18px;
+}
+
+.author-cont__message-text.red-text {
+  color: red;
+}
+
+.author-cont__message-text.green-text {
+  color: green;
+}
+
+.page-container__user-name {
+  font-size: 25px;
+  line-height: 30px;
+  font-family: 'Roboto', sans-serif;
+  color: white;
 }
