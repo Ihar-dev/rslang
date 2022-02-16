@@ -1,0 +1,94 @@
+.round-statistic__button {
+  position: relative;
+
+  height: 60px;
+  width: 60px;
+  margin: 1em;
+
+  cursor: pointer;
+}
+
+.round-statistic__button > div {
+  width: 100%;
+  height: 100%;
+
+  background-color: black;
+
+  transition: 0.5s;
+}
+
+.round-statistic__button:hover::after {
+  position: absolute;
+  bottom: -30px;
+
+  width: 100%;
+
+  color: black;
+  font-size: 1rem;
+  line-height: 1.2rem;
+  text-align: center;
+}
+
+.round-statistic__replay > div {
+  -webkit-mask: url(../../../../../../assets/svg/round-statistic__replay.svg) no-repeat center;
+  mask: url(../../../../../../assets/svg/round-statistic__replay.svg) no-repeat center;
+}
+
+.round-statistic__replay:hover > div {
+  transform: rotate(-90deg);
+}
+
+.round-statistic__replay:hover::after {
+  content: "Заново";
+}
+
+.round-statistic__book > div {
+  -webkit-mask: url(../../../../../../assets/svg/round-statistic__book.svg) no-repeat center;
+  mask: url(../../../../../../assets/svg/round-statistic__book.svg) no-repeat center;
+}
+
+.round-statistic__book:hover > div {
+  transform: rotate(20deg);
+}
+
+.round-statistic__book:hover::after {
+  content: "Учебник";
+}
+
+.round-statistic__back > div {
+  -webkit-mask: url(../../../../../../assets/svg/round-statistic__back.svg) no-repeat center;
+  mask: url(../../../../../../assets/svg/round-statistic__back.svg) no-repeat center;
+}
+
+.round-statistic__back:hover > div {
+  transform: translateX(10px);
+}
+
+.round-statistic__back:hover::after {
+  content: "Меню";
+}
+
+@media (max-width: 1024px) {
+  .round-statistic__button {
+    height: 50px;
+    width: 50px;
+  }
+
+  .round-statistic__button:hover::after {
+    bottom: -25px;
+
+    font-size: 0.8rem;
+    line-height: 1.1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .round-statistic__button {
+    height: 40px;
+    width: 40px;
+  }
+
+  .round-statistic__button:hover::after {
+    bottom: -20px;
+  }
+}
