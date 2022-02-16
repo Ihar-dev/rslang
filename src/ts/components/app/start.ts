@@ -323,4 +323,7 @@ class StartApp {
 
 }
 
-export default StartApp;
+export {
+  StartApp,
+  settings
+};
