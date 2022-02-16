@@ -22,7 +22,6 @@ import '../view/start/start.css';
 import {newSprint} from '../view/sprintview/sprintview';
 import StartAudioChallengeApp from './audio-challenge';
 const startAudioChallengeApp = new StartAudioChallengeApp();
-
 type user = {
   name ? : string,
   email: string,
