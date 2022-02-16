@@ -197,3 +197,4 @@ class SprintView extends Sprint {
 };
 
 export const newSprint = new SprintView;
+

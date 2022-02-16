@@ -10,6 +10,7 @@ import {
     timeOuts,
     newSprint
 } from "../view/sprintview/sprintview";
+
 import OpenGameDifficultyPage from "./game-difficulty";
 import {
     sprintRoundStatistic
