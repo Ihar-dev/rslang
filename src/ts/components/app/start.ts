@@ -22,6 +22,10 @@ import '../view/start/start.css';
 import {newSprint} from '../view/sprintview/sprintview';
 import StartAudioChallengeApp from './audio-challenge';
 const startAudioChallengeApp = new StartAudioChallengeApp();
+
+import {StudyBook} from './study-book';
+const studyBook = new StudyBook();
+
 type user = {
   name ? : string,
   email: string,
@@ -68,6 +72,7 @@ class StartApp {
   private async renderCoreComponents(): Promise < void > {
     const body = getBody() as HTMLElement;
     addClassForElement(body, 'start');
+    removeClassForElement(body, 'book');
     const page = getElementByClassName('page-container') as HTMLElement;
     const footer = getElementByClassName('footer-container') as HTMLElement;
     page.innerHTML = await Main.render();
@@ -116,10 +121,17 @@ class StartApp {
       this.resetStartForGames(menuContainer, footer, page);
       startAudioChallengeApp.renderGameDifficultyPage();
     });
+
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
     menuSprintButton.addEventListener('click', async () => {
       this.resetStartForGames(menuContainer, footer, page);
       newSprint.getGameDifficulty();
+    });
+
+    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
+    bookButton.addEventListener('click', () => {
+      this.resetStartForBook(menuContainer, footer, page);
+      studyBook.render();
     });
   }
 
@@ -319,6 +331,14 @@ class StartApp {
     removeClassForElement(menuContainer, 'active');
     footer.innerHTML = '';
     page.innerHTML = '';
+  }
+
+  private resetStartForBook(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
+    const body = getBody() as HTMLElement;
+    addClassForElement(body, 'book');
+    removeClassForElement(menuContainer, 'start');
+    addClassForElement(menuContainer, 'game');
+    removeClassForElement(menuContainer, 'active');
   }
 
 }

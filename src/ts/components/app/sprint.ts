@@ -1,4 +1,4 @@
-import StartApp from './start';
+import {StartApp} from './start';
 import { wordAudio, ticAudio, incorrectAudio, correctAudio, endRoundAudio } from "./audiocontrols";
 import {timeOuts, newSprint} from "../view/sprintview/sprintview";
 import OpenGameDifficultyPage from "./game-difficulty";

@@ -1,0 +1,26 @@
+body.book {
+  width: 99vw;
+  background-attachment: fixed;
+}
+
+.page-container__book-cont {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 99vw;
+  padding: 50px;
+  row-gap: 35px;
+  column-gap: 35px;
+  top: 100px;
+}
+
+.book-cont__word-card {
+  width: 400px;
+  height: 450px;
+  background: radial-gradient(118.88% 606.86% at 0% 0%, rgba(36, 197, 219, 0.15) 0%, rgba(36, 197, 219, 0) 100%);
+  border: 2px solid rgba(36, 197, 219, 0.26);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
