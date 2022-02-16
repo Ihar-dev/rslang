@@ -114,7 +114,7 @@ class Sprint {
         const nextRoundButton = document.querySelector('.next-round-button') as HTMLElement;
         const quitRoundButton = document.querySelector('.quit-round-button') as HTMLElement;
         const roundTimerContainer = document.querySelector('.sprint-round-countdown') as HTMLElement;
-        roundTimerContainer?.remove();
+        if (roundTimerContainer) roundTimerContainer.remove();
         nextRoundButton.addEventListener('click', () => {
             page = page < 60 ? page++ : 0;
             newSprint.startSprint();
