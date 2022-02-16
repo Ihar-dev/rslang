@@ -23,6 +23,7 @@ import {newSprint} from '../view/sprintview/sprintview';
 import StartAudioChallengeApp from './audio-challenge';
 const startAudioChallengeApp = new StartAudioChallengeApp();
 
+
 class StartApp {
 
   started: boolean;
@@ -130,6 +131,31 @@ class StartApp {
     setTimeout(() => {
       setElementInactive(authorCont);
     }, 300);
+=======
+      startAudiochallengeApp.renderGameDifficultyPage();
+    })
+    
+    const logButton = getElementByClassName('page-container__log-button') as HTMLElement;
+    const authorCont = getElementByClassName('page-container__author-cont') as HTMLElement;
+    const innerCont = getElementByClassName('author-cont__inner-cont') as HTMLElement;
+    logButton.addEventListener('click', () => {
+      setElementActive(authorCont);
+      setElementActive(innerCont);
+    });
+    authorCont.addEventListener('click', (event) => {
+      if (event.target === event.currentTarget) {
+        setElementInactive(innerCont);
+        setTimeout(() => {
+          setElementInactive(authorCont);
+        }, 300);
+      };
+    });
+
+    const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
+    menuSprintButton.addEventListener('click', async() => {
+      this.resetStartForGames(menuContainer, footer, page);
+      await newSprint.getGameDifficulty();
+    }) 
   }
 
   private resetStartForGames(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
