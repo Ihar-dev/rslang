@@ -9,7 +9,7 @@ import Sprint from "../../app/sprint";
 import {
   sprintRoundStatistic,
   word
-} from "../../app/statistic";
+} from "../../app/sprint-statistic";
 
 export const timeOuts: Array < NodeJS.Timeout > = [];
 
@@ -33,7 +33,7 @@ class SprintView extends Sprint {
   }
 
   private getCountdown = async (timer: number, container: HTMLElement, text = '', func: () => void) => {
-    const COUNTDOUNCIRCLELENGTH = 248.186; // длина окружности 2Pi*R, Px
+    const COUNTDOUNCIRCLELENGTH = 248.186; // 2Pi*R, Px
     const startFastCountingTime = 6;
     let secondsCountdown = timer;
     ticAudio.src = require('../../../../assets/audio/clock-ticking-2.mp3');
@@ -68,7 +68,6 @@ class SprintView extends Sprint {
   }
 
   public startSprint = async (): Promise < void > => {
-    //this.exitSprintListen();
     const sprintContainer: HTMLElement = document.querySelector('.sprint-container') as HTMLElement;
     sprintContainer.innerHTML = `
     <div class="sprint-game-container">
@@ -99,10 +98,10 @@ class SprintView extends Sprint {
   }
 
   public renderRoundStatistic = () => {
-    const sprintGameContainer: HTMLElement = document.querySelector('.sprint-game-container') as HTMLElement;
+    const sprintGameContainerBody: HTMLElement = document.querySelector('.sprint-game-body') as HTMLElement;
     const roundStatisticContainer: HTMLElement = document.createElement('div');
     roundStatisticContainer.classList.add('round-statistic-container');
-    sprintGameContainer.prepend(roundStatisticContainer);
+    sprintGameContainerBody.before(roundStatisticContainer);
     roundStatisticContainer.innerHTML = this.renderRoundStatisticContainer();
     const wordsTableContainer: HTMLElement = document.querySelector('.round-statistic-words') as HTMLElement;
     wordsTableContainer.innerHTML = `<table class="round-statistic-table round-statistic-table_correct-answers">
@@ -156,31 +155,32 @@ class SprintView extends Sprint {
   }
 
   renderRoundStatisticContainer = (): string => {
-    const accuracy = (sprintRoundStatistic.correctAnswers.length / sprintRoundStatistic.numberOfQuestions);
+    const accuracy = Math.round((sprintRoundStatistic.correctAnswers.length / sprintRoundStatistic.numberOfQuestions) * 100);
     const roundStatisticViewHTML = `
         <div class="round-statistic-results">
-    <h3 class="round-statistic-header">Результаты</h3>
+    <h3 class="round-statistic-header">RESULTS</h3>
     <table class="round-statistic-statistic">
       <tr>
-        <th>Правильных ответов:</th>
+        <th>Correct answers:</th>
         <th class="round-statistic-correct-answers">${sprintRoundStatistic.correctAnswers.length}</th>
       </tr>
       <tr>
-        <th>Неправильных ответов:</th>
+        <th>Wrong answers:</th>
         <th class="round-statistic-wrong-answers">${sprintRoundStatistic.wrongAnswers.length}</th>
       </tr>
       <tr>
-        <th>Лучшая серия ответов:</th>
+        <th>Unbreakable correct answers:</th>
         <th class="round-statistic-best-answers-series">${sprintRoundStatistic.bestCorrectAnswersSeries}</th>
       </tr>
       <tr>
-        <th>Точность:</th>
-        <th class="round-statistic-accuracy">${accuracy * 100}%</th>
+        <th>Accuracy:</th>
+        <th class="round-statistic-accuracy">${accuracy}%</th>
       </tr>
     </table>
     <div class="round-statistic-words"></div>
+    <button class="sprint-wrong-button">CLOSE</button>
     </div>
-    <button class="sprint-wrong-button">CLOSE</button>`;
+    `;
     return roundStatisticViewHTML;
   }
 
@@ -195,5 +195,5 @@ class SprintView extends Sprint {
   }
 
 };
+
 export const newSprint = new SprintView;
-//export default SprintView;

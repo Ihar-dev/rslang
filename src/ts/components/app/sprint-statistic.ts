@@ -23,11 +23,6 @@ export type word = {
     textExampleTranslate: string
 };
 
-// const dayStatistic {
-//     date: Date = new Date;
-//     statistic: RoundStatistic[];
-// };
-
 class SprintStatistic implements RoundStatistic {
     numberOfQuestions: number;
   correctAnswers: Array<word>;
@@ -46,12 +41,6 @@ class SprintStatistic implements RoundStatistic {
       this.bestCorrectAnswersSeries = 0;
   }
 
-
- 
-// getSprintRoundStatistic = () => {    
-//     this.dayStatistic.statistic.push(this.roundStatistic);
-
-// }
 }
 
 export const sprintRoundStatistic = new SprintStatistic(0,[],[],0,0);

@@ -2,11 +2,9 @@
     width: 70%;
 }
 
-
 .progress {
     display: block;
     background: linear-gradient(to right, #24809E 24%, #808080 24%, #808080 100%); 
-    /* border: solid 2px #072d3a;*/
     border-radius: 4px;
     height: 12px;
      width: 90%;
@@ -14,8 +12,6 @@
     transition: background 450ms ease-in;
     -webkit-appearance: none;
 }
-
-
 
 .progress::-webkit-slider-thumb {
     width: 15px;
