@@ -24,7 +24,7 @@ const AudioChallengeStatisticResultsContent = {
     </table>
     <div class="round-statistic__words"></div>`;
     return view;
-  }
+  },
 };
 
 export default AudioChallengeStatisticResultsContent;

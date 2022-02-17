@@ -14,28 +14,28 @@ const wrongAnswerSound = require('../../../assets/audio/wronganswer.mp3');
 const endRoundSound = require('../../../assets/audio/endround.mp3');
 
 interface Word {
-  id: string,
-  group: number,
-  page: number,
-  word: string,
-  image: string,
-  audio: string,
-  audioMeaning: string,
-  audioExample: string,
-  textMeaning: string,
-  textExample: string,
-  transcription: string,
-  wordTranslate: string,
-  textMeaningTranslate: string,
-  textExampleTranslate: string
+  id: string;
+  group: number;
+  page: number;
+  word: string;
+  image: string;
+  audio: string;
+  audioMeaning: string;
+  audioExample: string;
+  textMeaning: string;
+  textExample: string;
+  transcription: string;
+  wordTranslate: string;
+  textMeaningTranslate: string;
+  textExampleTranslate: string;
 }
 
 interface RoundStatistic {
-  numberOfQuestions: number,
-  correctAnswers: Array<Word>,
-  wrongAnswers: Array<Word>,
-  correctAnswersSeries: number,
-  bestCorrectAnswersSeries: number,
+  numberOfQuestions: number;
+  correctAnswers: Array<Word>;
+  wrongAnswers: Array<Word>;
+  correctAnswersSeries: number;
+  bestCorrectAnswersSeries: number;
 }
 
 class StartAudioChallengeApp {
@@ -52,7 +52,7 @@ class StartAudioChallengeApp {
     wrongAnswers: [],
     correctAnswersSeries: 0,
     bestCorrectAnswersSeries: 0,
-  }
+  };
 
   private static getRandomNumber(min: number, max: number): number {
     const randomNumber = min + Math.random() * (max + 1 - min);
@@ -66,7 +66,7 @@ class StartAudioChallengeApp {
     audio.play();
   }
 
-  private async resetRoundData(): Promise<void> { 
+  private async resetRoundData(): Promise<void> {
     StartAudioChallengeApp.roundStatistic.numberOfQuestions = 0;
     StartAudioChallengeApp.roundStatistic.correctAnswers.length = 0;
     StartAudioChallengeApp.roundStatistic.wrongAnswers.length = 0;
@@ -75,7 +75,7 @@ class StartAudioChallengeApp {
   }
 
   private async resetAnswers(): Promise<void> {
-    StartAudioChallengeApp.answers.length = 0;    
+    StartAudioChallengeApp.answers.length = 0;
   }
 
   private async getWordGroupAndPage(target: HTMLElement) {
@@ -110,7 +110,7 @@ class StartAudioChallengeApp {
     top.innerHTML = await AudioChallengeTopContent.render();
 
     const middle = document.querySelector('.audio-challenge-container__middle') as HTMLElement;
-    middle.innerHTML = "";
+    middle.innerHTML = '';
     for (let i = 1; i <= answersNumber; i++) {
       middle.insertAdjacentHTML('beforeend', await AudioChallengeVarianContent.render());
     }
@@ -126,14 +126,14 @@ class StartAudioChallengeApp {
     const variantsNumber = document.querySelectorAll('.audio-challenge-container__variant-number') as NodeListOf<HTMLElement>;
     const variantsText = document.querySelectorAll('.audio-challenge-container__text') as NodeListOf<HTMLElement>;
     const numberOfQuestions = StartAudioChallengeApp.roundStatistic.numberOfQuestions;
-    const progressBarWidth = (numberOfQuestions - StartAudioChallengeApp.chunkOfWords.length) / numberOfQuestions * 100;
-  
+    const progressBarWidth = ((numberOfQuestions - StartAudioChallengeApp.chunkOfWords.length) / numberOfQuestions) * 100;
+
     progressBar.style.width = `${progressBarWidth}%`;
     img.style.backgroundImage = `url(${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.image})`;
     word.innerHTML = `${StartAudioChallengeApp.correctAnswer.word}`;
 
     for (let i = 0; i < variantsText.length; i++) {
-      variantsNumber[i].innerHTML = `${i+1}`;
+      variantsNumber[i].innerHTML = `${i + 1}`;
       variantsText[i].innerHTML = `${StartAudioChallengeApp.answers[i]}`;
     }
   }
@@ -143,11 +143,11 @@ class StartAudioChallengeApp {
     const correctAnswers = StartAudioChallengeApp.roundStatistic.correctAnswers.length;
     const wrongAnswers = StartAudioChallengeApp.roundStatistic.wrongAnswers.length;
     const bestAnswersSeries = StartAudioChallengeApp.roundStatistic.bestCorrectAnswersSeries;
-    const accuracyPercents = Math.round(correctAnswers / StartAudioChallengeApp.roundStatistic.numberOfQuestions * 100);
+    const accuracyPercents = Math.round((correctAnswers / StartAudioChallengeApp.roundStatistic.numberOfQuestions) * 100);
 
     const statisticPage = document.querySelector('.audio-challenge-container__round-statistic') as HTMLElement;
     statisticPage.innerHTML = await AudioChallengeStatisticContent.render();
-    
+
     const results = document.querySelector('.round-statistic__results') as HTMLElement;
     results.innerHTML = await AudioChallengeStatisticResultsContent.render(correctAnswers, wrongAnswers, bestAnswersSeries, accuracyPercents);
 
@@ -157,7 +157,7 @@ class StartAudioChallengeApp {
       wordsContainer.insertAdjacentHTML('beforeend', await AudioChallengeStatisticTableContent.renderCorrect());
       const correctAnswersTable = document.querySelector('.round-statistic__table_correct-answers tbody') as HTMLElement;
       for (let word of StartAudioChallengeApp.roundStatistic.correctAnswers) {
-        correctAnswersTable.insertAdjacentHTML('beforeend', await AudioChallengeStatisticTableContent.renderLine(word.audio ,word.word, word.transcription, word.wordTranslate));
+        correctAnswersTable.insertAdjacentHTML('beforeend', await AudioChallengeStatisticTableContent.renderLine(word.audio, word.word, word.transcription, word.wordTranslate));
       }
     }
 
@@ -170,8 +170,8 @@ class StartAudioChallengeApp {
     }
 
     const controls = document.querySelector('.round-statistic__controls') as HTMLElement;
-    controls.innerHTML = await AudioChallengeStatisticControlsContent.render();   
-    
+    controls.innerHTML = await AudioChallengeStatisticControlsContent.render();
+
     audioChallengeContent.style.display = 'none';
     statisticPage.style.display = 'flex';
   }
@@ -212,12 +212,12 @@ class StartAudioChallengeApp {
     wordContainer.style.visibility = 'visible';
     dontKnowButton.classList.add('hidden');
     nextButton.classList.remove('hidden');
-    for(const value of variantButtons) {
+    for (const value of variantButtons) {
       value.classList.add('disabled');
     }
   }
 
-  private async getWordsChunk(group: number, page: number): Promise<Word[]> {    
+  private async getWordsChunk(group: number, page: number): Promise<Word[]> {
     const wordChunkPageLink = `${StartAudioChallengeApp.basePageLink}/words?group=${group}&page=${page}`;
     return (await fetch(wordChunkPageLink)).json();
   }
@@ -236,11 +236,11 @@ class StartAudioChallengeApp {
 
     StartAudioChallengeApp.chunkOfWords = [...data];
     StartAudioChallengeApp.roundStatistic.numberOfQuestions = StartAudioChallengeApp.chunkOfWords.length;
-  } 
+  }
 
   private async getCorrectAnswer(): Promise<void> {
     if (StartAudioChallengeApp.chunkOfWords.length) {
-      const correctAnswerPosition =  StartAudioChallengeApp.getRandomNumber(0, StartAudioChallengeApp.chunkOfWords.length - 1);
+      const correctAnswerPosition = StartAudioChallengeApp.getRandomNumber(0, StartAudioChallengeApp.chunkOfWords.length - 1);
       StartAudioChallengeApp.correctAnswer = StartAudioChallengeApp.chunkOfWords[correctAnswerPosition];
       StartAudioChallengeApp.chunkOfWords.splice(correctAnswerPosition, 1);
     }
@@ -262,7 +262,7 @@ class StartAudioChallengeApp {
     while (StartAudioChallengeApp.answers.length < wrongAnswersNumber) {
       const variant = wordChunk[StartAudioChallengeApp.getRandomNumber(minNumber, wordChunk.length - 1)].wordTranslate;
 
-      if (!StartAudioChallengeApp.answers.includes(variant) && variant !== correctAnswer){
+      if (!StartAudioChallengeApp.answers.includes(variant) && variant !== correctAnswer) {
         StartAudioChallengeApp.answers.push(variant);
       }
     }
@@ -323,7 +323,7 @@ class StartAudioChallengeApp {
   public addListeners(): void {
     const delegationMouseEvents = (event: MouseEvent): void => {
       const audioChallengePage = document.querySelector('.audio-challenge-container__content');
-      
+
       const target = event.target as HTMLElement;
       if (target.closest('.audio-challenge-container__variant') || target.closest('.audio-challenge-container__dont-know')) {
         this.checkAnswer(target);
@@ -359,7 +359,7 @@ class StartAudioChallengeApp {
         const startApp = new StartApp();
         startApp.render();
       }
-    }
+    };
 
     const delegationKeyboardEvents = (event: KeyboardEvent): void => {
       const gameDifficultyPage = document.querySelector('.audio-challenge__game-difficulty');
@@ -411,7 +411,7 @@ class StartAudioChallengeApp {
               this.checkAnswer(audioChallengeAnswerButtons[4]);
               break;
           }
-        }          
+        }
         switch (event.key) {
           case 'Enter':
             if (!dontKnowButton.classList.contains('hidden')) {
@@ -422,12 +422,12 @@ class StartAudioChallengeApp {
             break;
         }
       }
-    }
+    };
 
     if (!StartAudioChallengeApp.isGameStart) {
       document.addEventListener('click', delegationMouseEvents);
       document.addEventListener('keyup', delegationKeyboardEvents);
-      StartAudioChallengeApp.isGameStart = true; 
+      StartAudioChallengeApp.isGameStart = true;
     }
   }
 }

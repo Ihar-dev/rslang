@@ -14,7 +14,7 @@ const AudioChallengeContent = {
       <div class="audio-challenge-container__round-statistic"></div>
     </div>`;
     return view;
-  }
+  },
 };
 
 export default AudioChallengeContent;
