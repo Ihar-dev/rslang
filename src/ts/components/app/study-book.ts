@@ -107,6 +107,7 @@ class StudyBook {
       if (this.wordsSettings.group !== 0) {
         const data = await this.getWords(this.wordsSettings.group = 0, this.wordsSettings.page);
         this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
       }
     });
 
@@ -115,6 +116,7 @@ class StudyBook {
       if (this.wordsSettings.group !== 1) {
         const data = await this.getWords(this.wordsSettings.group = 1, this.wordsSettings.page);
         this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
       }
     });
 
@@ -123,6 +125,7 @@ class StudyBook {
       if (this.wordsSettings.group !== 2) {
         const data = await this.getWords(this.wordsSettings.group = 2, this.wordsSettings.page);
         this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
       }
     });
 
@@ -131,6 +134,7 @@ class StudyBook {
       if (this.wordsSettings.group !== 3) {
         const data = await this.getWords(this.wordsSettings.group = 3, this.wordsSettings.page);
         this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
       }
     });
 
@@ -139,6 +143,7 @@ class StudyBook {
       if (this.wordsSettings.group !== 4) {
         const data = await this.getWords(this.wordsSettings.group = 4, this.wordsSettings.page);
         this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
       }
     });
 
@@ -147,6 +152,7 @@ class StudyBook {
       if (this.wordsSettings.group !== 5) {
         const data = await this.getWords(this.wordsSettings.group = 5, this.wordsSettings.page);
         this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
       }
     });
   }
