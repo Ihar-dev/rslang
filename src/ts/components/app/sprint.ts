@@ -43,6 +43,7 @@ type answer = {
 
 let answer: answer;
 let wordsSet: Array < word > ;
+let wordsSetFull: Array < word > ;
 let roundScore: number;
 
 //-----------------Get CHUNK OF Words for Game---------------------------
@@ -66,8 +67,7 @@ class Sprint {
         return Math.floor(Math.random() * (max - min + 1)) + min; //max and min includes
     }
 
-    getSprintQuestion = async (): Promise < void > => {
-        const wordsSetFull = await this.getWordsChunk(page, group) as unknown as Array < word > ;
+    getSprintQuestion = async (): Promise < void > => {        
         const questionWord: word = wordsSet[0];
         wordsSet = wordsSet.filter(element => element !== questionWord);
         let tempWordsSet = wordsSetFull.filter(element => element !== questionWord);
@@ -299,6 +299,7 @@ class Sprint {
 
     public startSprintRound = async () => {
         this.resetRoundStatistic();
+        wordsSetFull = await this.getWordsChunk(page, group) as unknown as Array < word > ;
         wordsSet = await this.getWordsChunk(page, group) as unknown as Array < word > ;
         this.renderQuestionContainer();
         await this.renderSprintQuestion();
