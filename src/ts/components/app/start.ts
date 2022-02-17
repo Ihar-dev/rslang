@@ -22,6 +22,10 @@ import '../view/start/start.css';
 import {newSprint} from '../view/sprintview/sprintview';
 import StartAudioChallengeApp from './audio-challenge';
 const startAudioChallengeApp = new StartAudioChallengeApp();
+
+import {StudyBook} from './study-book';
+const studyBook = new StudyBook();
+
 type user = {
   name ? : string,
   email: string,
@@ -35,7 +39,6 @@ enum settings {
 
 class StartApp {
 
-  started: boolean;
   userSettings: {
     name: string,
     refreshToken: string,
@@ -47,7 +50,6 @@ class StartApp {
   };
 
   constructor() {
-    this.started = false;
     if (localStorage.getItem('rslang-user-settings')) {
       this.userSettings = JSON.parse(localStorage.getItem('rslang-user-settings') || '');
     } else this.userSettings = {
@@ -61,18 +63,19 @@ class StartApp {
     };
   }
 
-  public async render(): Promise < void > {
-    await this.renderCoreComponents();
+  public async render(menu: boolean): Promise < void > {
+    await this.renderCoreComponents(menu);
   }
 
-  private async renderCoreComponents(): Promise < void > {
+  private async renderCoreComponents(menu: boolean): Promise < void > {
     const body = getBody() as HTMLElement;
     addClassForElement(body, 'start');
+    removeClassForElement(body, 'book');
     const page = getElementByClassName('page-container') as HTMLElement;
     const footer = getElementByClassName('footer-container') as HTMLElement;
     page.innerHTML = await Main.render();
     footer.innerHTML = await Footer.render();
-    if (!this.started) {
+    if (menu) {
       const header = getElementByClassName('header-container') as HTMLElement;
       header.innerHTML = await Header.render();
       const entryButton = getElementByClassName('author-cont__entry-button') as HTMLElement;
@@ -86,7 +89,6 @@ class StartApp {
       if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) this.updateEntrance(entryButton);
       this.addListeners(footer, page);
     };
-    this.started = true;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
     addClassForElement(menuContainer, 'start');
     removeClassForElement(menuContainer, 'game');
@@ -108,7 +110,7 @@ class StartApp {
 
     const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
     homeButton.addEventListener('click', () => {
-      this.render();
+      this.render(false);
     });
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
@@ -116,10 +118,17 @@ class StartApp {
       this.resetStartForGames(menuContainer, footer, page);
       startAudioChallengeApp.renderGameDifficultyPage();
     });
+
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
     menuSprintButton.addEventListener('click', async () => {
       this.resetStartForGames(menuContainer, footer, page);
       newSprint.getGameDifficulty();
+    });
+
+    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
+    bookButton.addEventListener('click', () => {
+      this.resetStartForBook(menuContainer, footer, page);
+      studyBook.render();
     });
   }
 
@@ -319,6 +328,14 @@ class StartApp {
     removeClassForElement(menuContainer, 'active');
     footer.innerHTML = '';
     page.innerHTML = '';
+  }
+
+  private resetStartForBook(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
+    const body = getBody() as HTMLElement;
+    addClassForElement(body, 'book');
+    removeClassForElement(menuContainer, 'start');
+    addClassForElement(menuContainer, 'game');
+    removeClassForElement(menuContainer, 'active');
   }
 
 }
