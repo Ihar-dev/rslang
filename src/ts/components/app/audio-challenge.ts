@@ -7,6 +7,7 @@ import AudioChallengeStatisticResultsContent from '../view/audio-challenge/stati
 import AudioChallengeStatisticTableContent from '../view/audio-challenge/statistic/table/table';
 import AudioChallengeStatisticControlsContent from '../view/audio-challenge/statistic/controls/controls';
 import OpenGameDifficultyPage from './game-difficulty';
+import StartApp from './start';
 
 const correctAnswerSound = require('../../../assets/audio/correctanswer.mp3');
 const wrongAnswerSound = require('../../../assets/audio/wronganswer.mp3');
@@ -355,12 +356,9 @@ class StartAudioChallengeApp {
       }
 
       if (target.closest('.round-statistic__back')) {
-        // startApp.render();
+        const startApp = new StartApp();
+        startApp.render();
       }
-
-      // if(target.classList.contains('audio-challenge-container__close')) {
-      //   console.log('close');
-      // }
     }
 
     const delegationKeyboardEvents = (event: KeyboardEvent): void => {
