@@ -2,14 +2,11 @@ import AudioChallengeContent from '../view/audio-challenge/audio-challenge';
 import AudioChallengeTopContent from '../view/audio-challenge/top/top';
 import AudioChallengeVarianContent from '../view/audio-challenge/variant/variant';
 import AudioChallengeBottomContent from '../view/audio-challenge/bottom/bottom';
-
 import AudioChallengeStatisticContent from '../view/audio-challenge/statistic/statistic';
 import AudioChallengeStatisticResultsContent from '../view/audio-challenge/statistic/results/results';
 import AudioChallengeStatisticTableContent from '../view/audio-challenge/statistic/table/table';
 import AudioChallengeStatisticControlsContent from '../view/audio-challenge/statistic/controls/controls';
-
 import OpenGameDifficultyPage from './game-difficulty';
-// import startApp from '../../index';
 
 const correctAnswerSound = require('../../../assets/audio/correctanswer.mp3');
 const wrongAnswerSound = require('../../../assets/audio/wronganswer.mp3');
@@ -122,16 +119,20 @@ class StartAudioChallengeApp {
   }
 
   private async setDataToPage(): Promise<void> {
-    const img = document.querySelector('.audio-challenge-container__word-image') as HTMLTemplateElement;
-    const word = document.querySelector('.audio-challenge-container__word') as HTMLTemplateElement;
-    const variantNumber = document.querySelectorAll('.audio-challenge-container__variant-number');
-    const variantsText = document.querySelectorAll('.audio-challenge-container__text');
+    const progressBar = document.querySelector('.audio-challenge-container__progress-bar') as HTMLElement;
+    const img = document.querySelector('.audio-challenge-container__word-image') as HTMLElement;
+    const word = document.querySelector('.audio-challenge-container__word') as HTMLElement;
+    const variantsNumber = document.querySelectorAll('.audio-challenge-container__variant-number') as NodeListOf<HTMLElement>;
+    const variantsText = document.querySelectorAll('.audio-challenge-container__text') as NodeListOf<HTMLElement>;
+    const numberOfQuestions = StartAudioChallengeApp.roundStatistic.numberOfQuestions;
+    const progressBarWidth = (numberOfQuestions - StartAudioChallengeApp.chunkOfWords.length) / numberOfQuestions * 100;
   
+    progressBar.style.width = `${progressBarWidth}%`;
     img.style.backgroundImage = `url(${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.image})`;
     word.innerHTML = `${StartAudioChallengeApp.correctAnswer.word}`;
 
     for (let i = 0; i < variantsText.length; i++) {
-      variantNumber[i].innerHTML = `${i+1}`;
+      variantsNumber[i].innerHTML = `${i+1}`;
       variantsText[i].innerHTML = `${StartAudioChallengeApp.answers[i]}`;
     }
   }
