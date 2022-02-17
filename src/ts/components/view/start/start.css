@@ -205,7 +205,6 @@ body.start {
 .header-container__menu.active .menu__toggle-button,
 .author-cont__eye-button,
 .author-cont__cross-button {
-
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 50%;
