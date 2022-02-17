@@ -39,7 +39,6 @@ enum settings {
 
 class StartApp {
 
-  started: boolean;
   userSettings: {
     name: string,
     refreshToken: string,
@@ -51,7 +50,6 @@ class StartApp {
   };
 
   constructor() {
-    this.started = false;
     if (localStorage.getItem('rslang-user-settings')) {
       this.userSettings = JSON.parse(localStorage.getItem('rslang-user-settings') || '');
     } else this.userSettings = {
@@ -65,11 +63,11 @@ class StartApp {
     };
   }
 
-  public async render(): Promise < void > {
-    await this.renderCoreComponents();
+  public async render(menu: boolean): Promise < void > {
+    await this.renderCoreComponents(menu);
   }
 
-  private async renderCoreComponents(): Promise < void > {
+  private async renderCoreComponents(menu: boolean): Promise < void > {
     const body = getBody() as HTMLElement;
     addClassForElement(body, 'start');
     removeClassForElement(body, 'book');
@@ -77,7 +75,7 @@ class StartApp {
     const footer = getElementByClassName('footer-container') as HTMLElement;
     page.innerHTML = await Main.render();
     footer.innerHTML = await Footer.render();
-    if (!this.started) {
+    if (menu) {
       const header = getElementByClassName('header-container') as HTMLElement;
       header.innerHTML = await Header.render();
       const entryButton = getElementByClassName('author-cont__entry-button') as HTMLElement;
@@ -91,7 +89,6 @@ class StartApp {
       if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) this.updateEntrance(entryButton);
       this.addListeners(footer, page);
     };
-    this.started = true;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
     addClassForElement(menuContainer, 'start');
     removeClassForElement(menuContainer, 'game');
@@ -113,7 +110,7 @@ class StartApp {
 
     const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
     homeButton.addEventListener('click', () => {
-      this.render();
+      this.render(false);
     });
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;

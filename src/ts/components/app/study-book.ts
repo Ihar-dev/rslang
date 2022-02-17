@@ -29,7 +29,10 @@ class StudyBook {
     const page = getElementByClassName('page-container') as HTMLElement;
     page.innerHTML = await Main.render();
     const startApp = new StartApp();
-    console.log(startApp);
+    const bookCont = getElementByClassName('page-container__book-cont') as HTMLElement;
+    bookCont.addEventListener('click', () => {
+      startApp.render(false);
+    });
   }
 
 }
