@@ -15,13 +15,14 @@ export const timeOuts: Array < NodeJS.Timeout > = [];
 
 class SprintView extends Sprint {
 
-  public sprintView = async () => {
+  public sprintView = async (): Promise<void> => {
     const getReadyTime: number = 5; //-----time before start--------
     const pageContainer: HTMLElement = document.querySelector('.page-container') as HTMLElement;
     const namingContainer: HTMLElement = document.querySelector('.page-container__naming') as HTMLElement;
     namingContainer.classList.add('filter-gray');
-    const menuContainer: HTMLElement = document.querySelector('.header-container__menu') as HTMLElement;
-    menuContainer.classList.add('off');
+    namingContainer.classList.add('naming-sprint');
+    //const menuContainer: HTMLElement = document.querySelector('.header-container__menu') as HTMLElement;
+    //menuContainer.classList.remove('game');    
     const sprintContainer: HTMLElement = document.createElement('div');
     sprintContainer.classList.add('sprint-container');
     pageContainer.append(sprintContainer);
@@ -30,10 +31,11 @@ class SprintView extends Sprint {
     </button>`);
     const welcomeSprintButton = document.querySelector('.welcome-sprint-button') as HTMLElement;
     this.getCountdown(getReadyTime, welcomeSprintButton, 'GET READY', this.startSprint);
+    this.exitSprintListen();
   }
 
   private getCountdown = async (timer: number, container: HTMLElement, text = '', func: () => void) => {
-    const COUNTDOUNCIRCLELENGTH = 248.186; // 2Pi*R, Px
+    const COUNTDOUNCIRCLELENGTH = 248.186; // 2Pi*R, px
     const startFastCountingTime = 6;
     let secondsCountdown = timer;
     ticAudio.src = require('../../../../assets/audio/clock-ticking-2.mp3');
@@ -190,8 +192,7 @@ class SprintView extends Sprint {
       const tableString = this.renderLine(element);
       tableText += tableString;
     });
-    console.log(tableText);
-    return tableText;
+   return tableText;
   }
 
 };

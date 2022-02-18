@@ -28,7 +28,7 @@ type user = {
   password: string,
 };
 
-enum settings {
+export enum settings {
   tokenDuration = 14400000,
   APIUrl = 'https://rs-lang-work-team.herokuapp.com/',
 };
