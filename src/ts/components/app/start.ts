@@ -35,6 +35,8 @@ type user = {
 enum settings {
   tokenDuration = 14400000,
   APIUrl = 'https://rs-lang-work-team.herokuapp.com/',
+  numberOfPages = 30,
+  numberOfGroups = 6,
 };
 
 class StartApp {
@@ -64,7 +66,7 @@ class StartApp {
   }
 
   public async render(menu: boolean): Promise < void > {
-    await this.renderCoreComponents(menu);
+    this.renderCoreComponents(menu);
   }
 
   private async renderCoreComponents(menu: boolean): Promise < void > {
