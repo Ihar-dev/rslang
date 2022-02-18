@@ -8,6 +8,7 @@ import AudioChallengeStatisticTableContent from '../view/audio-challenge/statist
 import AudioChallengeStatisticControlsContent from '../view/audio-challenge/statistic/controls/controls';
 import OpenGameDifficultyPage from './game-difficulty';
 import { StartApp, settings } from './start';
+import { StudyBook } from './study-book';
 
 const correctAnswerSound = require('../../../assets/audio/correctanswer.mp3');
 const wrongAnswerSound = require('../../../assets/audio/wronganswer.mp3');
@@ -79,11 +80,17 @@ class StartAudioChallengeApp {
   }
 
   private async getWordGroupAndPage(target: HTMLElement) {
-    if (target.closest('.audio-challenge__game-difficulty')) {
+    const studyBook = new StudyBook();
+
+    if (target.closest('.round-statistic__replay')) {
+      return;
+    } else if (target.closest('.audio-challenge__game-difficulty')) {
       StartAudioChallengeApp.wordGroup = Number(target.innerHTML) - 1;
       StartAudioChallengeApp.wordPage = null;
+    } else {
+      StartAudioChallengeApp.wordGroup = studyBook.wordsSettings.group;
+      StartAudioChallengeApp.wordPage = studyBook.wordsSettings.page;
     }
-    //TODO Добавить условие на запуск приложения из учебника
   }
 
   public async renderGameDifficultyPage(): Promise<void> {
@@ -286,18 +293,25 @@ class StartAudioChallengeApp {
   }
 
   public async startGame(target: HTMLElement): Promise<void> {
-    await this.resetRoundData();
-    await this.resetAnswers();
-    await this.getWordGroupAndPage(target);
-    await this.setWords(StartAudioChallengeApp.wordGroup, StartAudioChallengeApp.wordPage);
-    await this.getCorrectAnswer();
-    await this.getAnswerVariants();
-    await this.renderPage();
-    await this.setDataToPage();
-    this.addListeners();
+    const gameDifficulty = document.querySelector('.game-difficulty-container') as HTMLElement;
 
-    const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
-    await this.playAudio(audioPath);
+    if (gameDifficulty || document.body.classList.contains('book') || target.closest('.round-statistic__replay')) {
+      console.log(document.body.classList.contains('start'));
+      await this.resetRoundData();
+      await this.resetAnswers();
+      await this.renderPage();
+      await this.getWordGroupAndPage(target);
+      await this.setWords(StartAudioChallengeApp.wordGroup, StartAudioChallengeApp.wordPage);
+      await this.getCorrectAnswer();
+      await this.getAnswerVariants();
+      await this.setDataToPage();
+      this.addListeners();
+
+      const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
+      await this.playAudio(audioPath);
+    } else {
+      await this.renderGameDifficultyPage();
+    }
   }
 
   private async nextWord(): Promise<void> {
