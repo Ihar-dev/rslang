@@ -7,7 +7,7 @@ import AudioChallengeStatisticResultsContent from '../view/audio-challenge/stati
 import AudioChallengeStatisticTableContent from '../view/audio-challenge/statistic/table/table';
 import AudioChallengeStatisticControlsContent from '../view/audio-challenge/statistic/controls/controls';
 import OpenGameDifficultyPage from './game-difficulty';
-import StartApp from './start';
+import { StartApp, settings } from './start';
 
 const correctAnswerSound = require('../../../assets/audio/correctanswer.mp3');
 const wrongAnswerSound = require('../../../assets/audio/wronganswer.mp3');
@@ -40,7 +40,7 @@ interface RoundStatistic {
 
 class StartAudioChallengeApp {
   private static isGameStart = false;
-  private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
+  // private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
   private static wordGroup = 0;
   private static wordPage: number | null = null;
   private static chunkOfWords: Word[];
@@ -129,7 +129,7 @@ class StartAudioChallengeApp {
     const progressBarWidth = ((numberOfQuestions - StartAudioChallengeApp.chunkOfWords.length) / numberOfQuestions) * 100;
 
     progressBar.style.width = `${progressBarWidth}%`;
-    img.style.backgroundImage = `url(${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.image})`;
+    img.style.backgroundImage = `url(${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.image})`;
     word.innerHTML = `${StartAudioChallengeApp.correctAnswer.word}`;
 
     for (let i = 0; i < variantsText.length; i++) {
@@ -218,7 +218,7 @@ class StartAudioChallengeApp {
   }
 
   private async getWordsChunk(group: number, page: number): Promise<Word[]> {
-    const wordChunkPageLink = `${StartAudioChallengeApp.basePageLink}/words?group=${group}&page=${page}`;
+    const wordChunkPageLink = `${settings.APIUrl}words?group=${group}&page=${page}`;
     return (await fetch(wordChunkPageLink)).json();
   }
 
@@ -296,7 +296,7 @@ class StartAudioChallengeApp {
     await this.setDataToPage();
     this.addListeners();
 
-    const audioPath = `${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.audio}`;
+    const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
     await this.playAudio(audioPath);
   }
 
@@ -311,7 +311,7 @@ class StartAudioChallengeApp {
       await this.renderPage();
       await this.setDataToPage();
 
-      const audioPath = `${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.audio}`;
+      const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
       await this.playAudio(audioPath);
       this.addListeners();
     } else {
@@ -334,12 +334,12 @@ class StartAudioChallengeApp {
       }
 
       if (target.closest('.audio-challenge-container__play-audio-1') || target.closest('.audio-challenge-container__play-audio-2')) {
-        const audioPath = `${StartAudioChallengeApp.basePageLink}/${StartAudioChallengeApp.correctAnswer.audio}`;
+        const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
         this.playAudio(audioPath);
       }
 
       if (target.closest('.round-statistic__audio') && audioChallengePage) {
-        const audioPath = `${StartAudioChallengeApp.basePageLink}/${target.dataset.audio}`;
+        const audioPath = `${settings.APIUrl}${target.dataset.audio}`;
         this.playAudio(audioPath);
       }
 
@@ -357,7 +357,7 @@ class StartAudioChallengeApp {
 
       if (target.closest('.round-statistic__back')) {
         const startApp = new StartApp();
-        startApp.render();
+        startApp.render(false);
       }
     };
 
