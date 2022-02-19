@@ -183,6 +183,39 @@ class StartAudioChallengeApp {
     statisticPage.style.display = 'flex';
   }
 
+  private async updateUserWord(correctAnswer: Word, isCorrect: boolean): Promise<void> {
+    const startApp = new StartApp();
+    if (startApp.userSettings.userId) {
+      const requestsServer = new RequestsServer();
+      const correctAnswersCountForHardWords = 5;
+      let word = await requestsServer.getUserWord(correctAnswer.id);
+
+      if (word) {
+        if (isCorrect) {
+          word.optional.correctAnswersCount++;
+
+          if(word.difficulty === 'hard' && word.optional.correctAnswersCount >= correctAnswersCountForHardWords) {
+            word.difficulty = 'studied';
+          }
+
+        } else {
+          word.optional.correctAnswersCount = 0;
+        }
+        delete word.id;
+        delete word.wordId;
+        await requestsServer.createUserWord('PUT', correctAnswer.id, word);
+      } else {
+        word = {
+          difficulty: 'studied',
+          optional: {
+            correctAnswersCount: isCorrect ? 1 : 0,
+          },
+        };
+        await requestsServer.createUserWord('POST', correctAnswer.id, word);
+      }
+    }
+  }
+
   private async checkAnswer(target: HTMLElement): Promise<void> {
     if (target.closest('.audio-challenge-container__variant')) {
       const answer = target.closest('.audio-challenge-container__variant')?.lastElementChild?.innerHTML;
@@ -190,21 +223,20 @@ class StartAudioChallengeApp {
       const result = Boolean(answer === correctAnswer);
 
       if (result) {
-        //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
         this.playAudio(correctAnswerSound);
         const children = target.closest('.audio-challenge-container__variant')?.children as HTMLCollectionOf<HTMLElement>;
         children[0].style.visibility = 'hidden';
         children[1].style.visibility = 'visible';
       } else {
-        //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
         this.playAudio(wrongAnswerSound);
         target.closest('.audio-challenge-container__variant')?.classList.add('wrong');
       }
-
+      await this.updateUserWord(StartAudioChallengeApp.correctAnswer, result);
       await this.updateStatistic(result);
     } else if (target.closest('.audio-challenge-container__dont-know')) {
       this.playAudio(wrongAnswerSound);
       await this.updateStatistic(false);
+      await this.updateUserWord(StartAudioChallengeApp.correctAnswer, false);
     }
 
     const playAudioButton1 = document.querySelector('.audio-challenge-container__play-audio-1') as HTMLElement;
@@ -296,7 +328,6 @@ class StartAudioChallengeApp {
     const gameDifficulty = document.querySelector('.game-difficulty-container') as HTMLElement;
 
     if (gameDifficulty || document.body.classList.contains('book') || target.closest('.round-statistic__replay')) {
-      console.log(document.body.classList.contains('start'));
       await this.resetRoundData();
       await this.resetAnswers();
       await this.renderPage();
@@ -443,6 +474,49 @@ class StartAudioChallengeApp {
       document.addEventListener('keyup', delegationKeyboardEvents);
       StartAudioChallengeApp.isGameStart = true;
     }
+  }
+}
+
+type wordDataResponse = {
+  id?: string;
+  wordId?: string;
+  difficulty: string;
+  optional: {
+    correctAnswersCount: number;
+  };
+};
+class RequestsServer {
+  public async getUserWord(wordId: string): Promise<wordDataResponse | null> {
+    const startApp = new StartApp();
+    let data = null;
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+        },
+      });
+      data = await res.json();
+    } catch (error) {}
+    return data;
+  }
+
+  public async createUserWord(method: string, wordId: string, wordData: wordDataResponse): Promise<void> {
+    const startApp = new StartApp();
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
+      await fetch(url, {
+        method: method,
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(wordData),
+      });
+    } catch (error) {}
   }
 }
 
