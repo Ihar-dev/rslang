@@ -10,7 +10,7 @@ const AudioChallengeTopContent = {
       <div class="audio-challenge-container__word"></div>
     </div>`;
     return view;
-  }
+  },
 };
 
 export default AudioChallengeTopContent;

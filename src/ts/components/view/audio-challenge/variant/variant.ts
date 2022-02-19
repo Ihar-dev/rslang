@@ -9,7 +9,7 @@ const AudioChallengeVarianContent = {
       <div class="audio-challenge-container__text"></div>
     </div>`;
     return view;
-  }
+  },
 };
 
 export default AudioChallengeVarianContent;

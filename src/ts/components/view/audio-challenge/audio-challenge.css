@@ -36,6 +36,17 @@
   cursor: pointer;
 }
 
+.audio-challenge-container__progress-bar {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+
+  height: 5px;
+  width: 0%;
+
+  background-color: #9f1bd3;
+}
+
 .audio-challenge-container__content {
   padding-bottom: 7em;
 }
