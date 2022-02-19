@@ -116,9 +116,10 @@ class StartApp {
     });
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
-    audioChallengeButton.addEventListener('click', () => {
+    audioChallengeButton.addEventListener('click', (event: MouseEvent) => {
       this.resetStartForGames(menuContainer, footer, page);
-      startAudioChallengeApp.renderGameDifficultyPage();
+      const target = event.target as HTMLElement;
+      startAudioChallengeApp.startGame(target);
     });
 
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
