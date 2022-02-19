@@ -66,11 +66,11 @@ class StartApp {
   }
 
   public async render(menu: boolean): Promise < void > {
-    this.renderCoreComponents(menu);
+    const body = getBody() as HTMLElement;
+    this.renderCoreComponents(menu, body);
   }
 
-  private async renderCoreComponents(menu: boolean): Promise < void > {
-    const body = getBody() as HTMLElement;
+  private async renderCoreComponents(menu: boolean, body: HTMLElement): Promise < void > {
     addClassForElement(body, 'start');
     removeClassForElement(body, 'book');
     const page = getElementByClassName('page-container') as HTMLElement;
@@ -89,7 +89,7 @@ class StartApp {
         entryButton.textContent = 'Войти';
       }
       if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) this.updateEntrance(entryButton);
-      this.addListeners(footer, page);
+      this.addListeners(footer, page, body);
     };
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
     addClassForElement(menuContainer, 'start');
@@ -97,12 +97,12 @@ class StartApp {
     removeClassForElement(menuContainer, 'active');
   }
 
-  private addListeners(footer: HTMLElement, page: HTMLElement): void {
-    this.addMenuListeners(footer, page);
+  private addListeners(footer: HTMLElement, page: HTMLElement, body: HTMLElement): void {
+    this.addMenuListeners(footer, page, body);
     this.addRegistrationListeners();
   }
 
-  private addMenuListeners(footer: HTMLElement, page: HTMLElement): void {
+  private addMenuListeners(footer: HTMLElement, page: HTMLElement, body: HTMLElement): void {
     const menuToggleButton = getElementByClassName('menu__toggle-button') as HTMLElement;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
 
@@ -128,9 +128,11 @@ class StartApp {
     });
 
     const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
-    bookButton.addEventListener('click', () => {
+    bookButton.addEventListener('click', async () => {
+      addClassForElement(body, 'start');
       this.resetStartForBook(menuContainer, footer, page);
       studyBook.render();
+      footer.innerHTML = await Footer.render();
     });
   }
 
