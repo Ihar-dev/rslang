@@ -39,7 +39,19 @@ enum settings {
   numberOfGroups = 6,
 };
 
-class StartApp {
+interface startAppInterface {
+  userSettings: {
+    name: string,
+    refreshToken: string,
+    token: string,
+    userId: string,
+    email: string,
+    password: string,
+    expiredTime: number,
+  };
+}
+
+class StartApp implements startAppInterface {
 
   userSettings: {
     name: string,
@@ -181,7 +193,7 @@ class StartApp {
     });
   }
 
-  private handleExit(entryButton: HTMLElement): void {
+  private async handleExit(entryButton: HTMLElement): Promise < void > {
     this.handleMessage(`Bye bye, ${this.userSettings.name}!`, 'green-text');
     const userName = getElementByClassName('page-container__user-name') as HTMLElement;
     this.userSettings = {
@@ -196,6 +208,8 @@ class StartApp {
     userName.textContent = '';
     localStorage.setItem('rslang-user-settings', '');
     entryButton.textContent = 'Войти';
+    const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
+    hardButtons?.forEach(elem => elem.style.display = 'none');
   }
 
   private async updateEntrance(entryButton: HTMLElement): Promise < void > {
@@ -268,6 +282,23 @@ class StartApp {
         localStorage.setItem('rslang-user-settings', JSON.stringify(this.userSettings));
         userName.textContent = this.userSettings.name;
         entryButton.textContent = 'Выйти';
+        const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
+        let userWords = [{
+          difficulty: '',
+          optional: {
+            correctAnswersCount: 0,
+          },
+        }];
+        if (this.userSettings.userId) {
+          userWords = await studyBook.getAllUserWords();
+          console.log(userWords);
+        };
+        hardButtons?.forEach(elem => {
+          let elId = getAttributeFromElement(elem, 'word-id');
+          if (elId === null) elId = '';
+          studyBook.handleHardWordButton(elId, userWords, this, elem);
+          elem.style.display = 'block';
+        });
       };
     } catch (er) {
       this.handleMessage('Incorrect e-mail or password!', 'red-text');
@@ -347,5 +378,6 @@ class StartApp {
 
 export {
   StartApp,
-  settings
+  settings,
+  startAppInterface,
 };

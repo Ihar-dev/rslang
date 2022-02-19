@@ -19,7 +19,8 @@ import '../view/study-book/study-book.css';
 
 import {
   StartApp,
-  settings
+  settings,
+  startAppInterface
 } from './start';
 
 
@@ -38,6 +39,15 @@ type wordsResponse = {
   textExampleTranslate: string,
   textMeaningTranslate: string,
   wordTranslate: string,
+}
+
+type wordDataResponse = {
+  id ? : string,
+  wordId ? : string,
+  difficulty: string,
+  optional: {
+    correctAnswersCount: number,
+  },
 }
 
 class StudyBook {
@@ -69,14 +79,14 @@ class StudyBook {
       if (this.wordsSettings.page > 0) {
         const data = await this.getWords(this.wordsSettings.group, --this.wordsSettings.page);
         this.handlePagination(pageCount, data);
-      } 
+      }
     });
     const rightButton = getElementByClassName('book-cont__right-button') as HTMLElement;
     rightButton.addEventListener('click', async () => {
       if (this.wordsSettings.page < settings.numberOfPages - 1) {
         const data = await this.getWords(this.wordsSettings.group, ++this.wordsSettings.page);
         this.handlePagination(pageCount, data);
-      } 
+      }
     });
 
     const leftFastButton = getElementByClassName('book-cont__left-fast-button') as HTMLElement;
@@ -94,7 +104,7 @@ class StudyBook {
         this.handlePagination(pageCount, data);
       }
     });
-  
+
     const groupsButton = getElementByClassName('book-cont__groups-button') as HTMLElement;
     const groupsChangeButtons = getElementByClassName('book-cont__groups-change-buttons') as HTMLElement;
     groupsButton.addEventListener('click', () => {
@@ -164,15 +174,13 @@ class StudyBook {
   }
 
   private async renderCoreComponents(): Promise < void > {
-    const startApp = new StartApp();
     const page = getElementByClassName('page-container') as HTMLElement;
     page.innerHTML = await Main.render();
     const data = await this.getWords(this.wordsSettings.group, this.wordsSettings.page);
     await this.renderCards(data);
   }
 
-  private async renderCards(data: wordsResponse[]): Promise < void > {
-    const bookCont = getElementByClassName('page-container__book-cont') as HTMLElement;
+  private renderCardsHeading(bookCont: HTMLElement): void {
     bookCont.innerHTML = '';
     const bookContHeading = getElementByClassName('book-cont__heading') as HTMLElement;
     bookContHeading.textContent = `Уровень сложности ${this.wordsSettings.group + 1}`;
@@ -198,6 +206,131 @@ class StudyBook {
       default:
         bookContHeading.style.color = 'white';
     }
+  }
+
+  public async handleHardWordButton(elId: string, userWords: wordDataResponse[], startApp: startAppInterface, cardHardButton: HTMLElement): Promise < void > {
+    const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
+    if (filteredUserWords.length && filteredUserWords[0].difficulty === 'hard') {
+      setAttributeForElement(cardHardButton, 'title', 'Убрать из сложных');
+      setElementActive(cardHardButton);
+    } else setAttributeForElement(cardHardButton, 'title', 'Добавить в сложные');
+    cardHardButton.addEventListener('click', async () => {
+      if (getAttributeFromElement(cardHardButton, 'title') === 'Добавить в сложные') {
+        const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
+        if (filteredUserWords.length) this.updateUserWord(elId, 'hard', filteredUserWords[0].optional.correctAnswersCount);
+        else this.addUserWord(elId, 'hard', 0);
+        setAttributeForElement(cardHardButton, 'title', 'Убрать из сложных');
+        setElementActive(cardHardButton);
+      } else {
+        const wordData = await this.getUserWord(elId);
+        this.updateUserWord(elId, 'studied', wordData.optional.correctAnswersCount);
+        setAttributeForElement(cardHardButton, 'title', 'Добавить в сложные');
+        setElementInactive(cardHardButton);
+      }
+    });
+
+    if (startApp.userSettings.userId) cardHardButton.style.display = 'block';
+    else cardHardButton.style.display = 'none';
+  }
+
+  public async updateUserWord(wordId: string, difficulty: string, correctAnswersCount: number): Promise < void > {
+    const startApp = new StartApp();
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
+      const newWord: wordDataResponse = {
+        difficulty: difficulty,
+        optional: {
+          correctAnswersCount: correctAnswersCount,
+        }
+      };
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newWord)
+      });
+    } catch (er) {}
+  }
+
+  public async addUserWord(wordId: string, difficulty: string, correctAnswersCount: number): Promise < void > {
+    const startApp = new StartApp();
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
+      const newWord: wordDataResponse = {
+        difficulty: difficulty,
+        optional: {
+          correctAnswersCount: 0,
+        }
+      };
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newWord)
+      });
+    } catch (er) {}
+  }
+
+  public async getUserWord(wordId: string): Promise < wordDataResponse > {
+    const startApp = new StartApp();
+    let data = {
+      difficulty: '',
+      optional: {
+        correctAnswersCount: 0,
+      },
+    };
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      data = await res.json();
+    } catch (er) {}
+    return data;
+  }
+
+  public async getAllUserWords(): Promise < wordDataResponse[] > {
+    const startApp = new StartApp();
+    let data = [];
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/`;
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      data = await res.json();
+    } catch (er) {}
+    return data;
+  }
+
+  private async renderCards(data: wordsResponse[]): Promise < void > {
+    const startApp = new StartApp();
+    let userWords = [{
+      difficulty: '',
+      optional: {
+        correctAnswersCount: 0,
+      },
+    }];
+    if (startApp.userSettings.userId) {
+      userWords = await this.getAllUserWords();
+    };
+    const bookCont = getElementByClassName('page-container__book-cont') as HTMLElement;
+    this.renderCardsHeading(bookCont);
     data.forEach(el => {
       const card = document.createElement('div');
       addClassForElement(card, 'book-cont__word-card');
@@ -263,6 +396,12 @@ class StudyBook {
       addClassForElement(textMeaningTranslate, 'book-cont__text-meaning-translate');
       textMeaningTranslate.textContent = el.textMeaningTranslate;
       card.append(textMeaningTranslate);
+
+      const cardHardButton = document.createElement('div');
+      addClassForElement(cardHardButton, 'book-cont__hard-button');
+      setAttributeForElement(cardHardButton, 'word-id', el.id);
+      imgContainer.append(cardHardButton);
+      this.handleHardWordButton(el.id, userWords, startApp, cardHardButton);
     });
   }
 
@@ -273,12 +412,7 @@ class StudyBook {
     try {
       const res = await fetch(url);
       data = await res.json();
-      /*       if (res.status === 200) {
-              console.log(data);
-            }; */
-    } catch (er) {
-
-    }
+    } catch (er) {}
     return data;
   }
 
