@@ -125,6 +125,8 @@ class StartApp implements startAppInterface {
     const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
     homeButton.addEventListener('click', () => {
       this.render(false);
+      localStorage.setItem('rslang-page', 'home');
+      localStorage.setItem('rslang-words-data', '');
     });
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
@@ -132,12 +134,15 @@ class StartApp implements startAppInterface {
       this.resetStartForGames(menuContainer, footer, page);
       const target = event.target as HTMLElement;
       startAudioChallengeApp.startGame(target);
+      localStorage.setItem('rslang-page', '');
+      localStorage.setItem('rslang-words-data', 'audio challenge');
     });
 
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
     menuSprintButton.addEventListener('click', async () => {
       this.resetStartForGames(menuContainer, footer, page);
       newSprint.getGameDifficulty();
+      localStorage.setItem('rslang-page', 'sprint');
     });
 
     const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
@@ -146,6 +151,7 @@ class StartApp implements startAppInterface {
       this.resetStartForBook(menuContainer, footer, page);
       studyBook.render();
       footer.innerHTML = await Footer.render();
+      localStorage.setItem('rslang-page', 'book');
     });
   }
 

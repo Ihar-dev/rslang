@@ -177,7 +177,8 @@ class StudyBook {
     const page = getElementByClassName('page-container') as HTMLElement;
     page.innerHTML = await Main.render();
     const data = await this.getWords(this.wordsSettings.group, this.wordsSettings.page);
-    await this.renderCards(data);
+    localStorage.setItem('rslang-words-data', JSON.stringify(data));
+    this.renderCards(data);
   }
 
   private renderCardsHeading(bookCont: HTMLElement): void {
