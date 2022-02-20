@@ -203,9 +203,13 @@ class StartAudioChallengeApp {
     if (startApp.userSettings.userId) {
       const requestsServer = new RequestsServer();
       const correctAnswersCountForHardWords = 5;
-      let word = await requestsServer.getUserWord(correctAnswer.id);
+      const userWords = await requestsServer.getAllUserWords();
+      const isWordIncludes = userWords.find((value) => value.wordId === correctAnswer.id);
+      let word;
 
-      if (word) {
+      if (isWordIncludes) {
+        word = await requestsServer.getUserWord(correctAnswer.id);
+
         if (isCorrect) {
           word.optional.correctAnswersCount++;
 
@@ -261,8 +265,8 @@ class StartAudioChallengeApp {
         this.playAudio(wrongAnswerSound);
         target.closest('.audio-challenge-container__variant')?.classList.add('wrong');
       }
-      await this.updateUserWord(StartAudioChallengeApp.correctAnswer, result);
       await this.updateStatistic(result);
+      await this.updateUserWord(StartAudioChallengeApp.correctAnswer, result);
     } else if (target.closest('.audio-challenge-container__dont-know')) {
       this.playAudio(wrongAnswerSound);
       await this.updateStatistic(false);
@@ -287,16 +291,17 @@ class StartAudioChallengeApp {
       const requestsServer = new RequestsServer();
       while (wordPage >= 0 && data.length < 20) {
         const chunkOfWords = await this.getWordsChunk(group, wordPage);
+        const userWords = await requestsServer.getAllUserWords();
 
         for (const word of chunkOfWords) {
+          const userWord = userWords.find((value) => value.wordId === word.id);
+          
           if (data.length < 20) {
-            const userWord = await requestsServer.getUserWord(word.id);
-
             if (!userWord) {
               data.push(word);
-            } else if (userWord?.difficulty === 'hard' && userWord.optional.correctAnswersCount < 5) {
+            } else if (userWord.difficulty === 'hard' && userWord.optional.correctAnswersCount < 5) {
               data.push(word);
-            } else if (userWord?.difficulty === 'studied' && userWord.optional.correctAnswersCount < 3) {
+            } else if (userWord.difficulty === 'studied' && userWord.optional.correctAnswersCount < 3) {
               data.push(word);
             }
           }
@@ -305,7 +310,6 @@ class StartAudioChallengeApp {
         wordPage--;
       }
     }
-
     StartAudioChallengeApp.chunkOfWords = [...data];
     StartAudioChallengeApp.roundStatistic.numberOfQuestions = StartAudioChallengeApp.chunkOfWords.length;
   }
@@ -367,13 +371,20 @@ class StartAudioChallengeApp {
       await this.renderPreloaderPage();
       await this.getWordGroupAndPage(target);
       await this.setWords(StartAudioChallengeApp.wordGroup, StartAudioChallengeApp.wordPage);
-      await this.getCorrectAnswer();
-      await this.getAnswerVariants();
-      await this.setDataToPage();
-      this.addListeners();
+      if(StartAudioChallengeApp.chunkOfWords.length) {
+        await this.getCorrectAnswer();
+        await this.getAnswerVariants();
+        await this.setDataToPage();
+        this.addListeners();
+  
+        const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
+        await this.playAudio(audioPath);
+      } else {
+        //TODO выход в учебник
+        const startApp = new StartApp();
+        startApp.render(false);
+      }
 
-      const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
-      await this.playAudio(audioPath);
     } else {
       await this.renderGameDifficultyPage();
     }
@@ -520,9 +531,9 @@ type wordDataResponse = {
   };
 };
 class RequestsServer {
-  public async getUserWord(wordId: string): Promise<wordDataResponse | null> {
+  public async getUserWord(wordId: string): Promise<wordDataResponse> {
     const startApp = new StartApp();
-    let data = null;
+    let data;
     try {
       const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
       const res = await fetch(url, {
@@ -551,6 +562,24 @@ class RequestsServer {
         body: JSON.stringify(wordData),
       });
     } catch (error) {}
+  }
+
+  public async getAllUserWords(): Promise < wordDataResponse[] > {
+    const startApp = new StartApp();
+    let data: wordDataResponse[] = [];
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/`;
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      data = await res.json();
+    } catch (error) {}
+    return data;
   }
 }
 
