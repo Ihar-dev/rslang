@@ -406,6 +406,7 @@ class StartApp implements startAppInterface {
   private resetStartForGames(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
     const body = getBody() as HTMLElement;
     removeClassForElement(body, 'start');
+    removeClassForElement(body, 'book');
     removeClassForElement(menuContainer, 'start');
     addClassForElement(menuContainer, 'game');
     removeClassForElement(menuContainer, 'active');
