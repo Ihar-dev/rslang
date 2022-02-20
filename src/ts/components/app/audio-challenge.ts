@@ -87,7 +87,13 @@ class StartAudioChallengeApp {
       StartAudioChallengeApp.wordGroup = Number(target.innerHTML) - 1;
       StartAudioChallengeApp.wordPage = null;
     } else {
-      StartAudioChallengeApp.wordGroup = studyBook.wordsSettings.group;
+      if (studyBook.wordsSettings.group > 5) {
+        const minNumber = 0;
+        const maxGroupNumber = 5;        
+        StartAudioChallengeApp.wordGroup = StartAudioChallengeApp.getRandomNumber(minNumber, maxGroupNumber);
+      } else {
+        StartAudioChallengeApp.wordGroup = studyBook.wordsSettings.group;
+      }      
       StartAudioChallengeApp.wordPage = studyBook.wordsSettings.page;
     }
   }
