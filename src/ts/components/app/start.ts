@@ -22,6 +22,10 @@ import '../view/start/start.css';
 import {newSprint} from '../view/sprintview/sprintview';
 import StartAudioChallengeApp from './audio-challenge';
 const startAudioChallengeApp = new StartAudioChallengeApp();
+
+import {StudyBook} from './study-book';
+const studyBook = new StudyBook();
+
 type user = {
   name ? : string,
   email: string,
@@ -31,11 +35,24 @@ type user = {
 export enum settings {
   tokenDuration = 14400000,
   APIUrl = 'https://rs-lang-work-team.herokuapp.com/',
+  numberOfPages = 30,
+  numberOfGroups = 6,
 };
 
-class StartApp {
+interface startAppInterface {
+  userSettings: {
+    name: string,
+    refreshToken: string,
+    token: string,
+    userId: string,
+    email: string,
+    password: string,
+    expiredTime: number,
+  };
+}
 
-  started: boolean;
+class StartApp implements startAppInterface {
+
   userSettings: {
     name: string,
     refreshToken: string,
@@ -47,7 +64,6 @@ class StartApp {
   };
 
   constructor() {
-    this.started = false;
     if (localStorage.getItem('rslang-user-settings')) {
       this.userSettings = JSON.parse(localStorage.getItem('rslang-user-settings') || '');
     } else this.userSettings = {
@@ -61,18 +77,19 @@ class StartApp {
     };
   }
 
-  public async render(): Promise < void > {
-    await this.renderCoreComponents();
+  public async render(menu: boolean): Promise < void > {
+    const body = getBody() as HTMLElement;
+    this.renderCoreComponents(menu, body);
   }
 
-  private async renderCoreComponents(): Promise < void > {
-    const body = getBody() as HTMLElement;
+  private async renderCoreComponents(menu: boolean, body: HTMLElement): Promise < void > {
     addClassForElement(body, 'start');
+    removeClassForElement(body, 'book');
     const page = getElementByClassName('page-container') as HTMLElement;
     const footer = getElementByClassName('footer-container') as HTMLElement;
     page.innerHTML = await Main.render();
     footer.innerHTML = await Footer.render();
-    if (!this.started) {
+    if (menu) {
       const header = getElementByClassName('header-container') as HTMLElement;
       header.innerHTML = await Header.render();
       const entryButton = getElementByClassName('author-cont__entry-button') as HTMLElement;
@@ -84,21 +101,20 @@ class StartApp {
         entryButton.textContent = 'Войти';
       }
       if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) this.updateEntrance(entryButton);
-      this.addListeners(footer, page);
+      this.addListeners(footer, page, body);
     };
-    this.started = true;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
     addClassForElement(menuContainer, 'start');
     removeClassForElement(menuContainer, 'game');
     removeClassForElement(menuContainer, 'active');
   }
 
-  private addListeners(footer: HTMLElement, page: HTMLElement): void {
-    this.addMenuListeners(footer, page);
+  private addListeners(footer: HTMLElement, page: HTMLElement, body: HTMLElement): void {
+    this.addMenuListeners(footer, page, body);
     this.addRegistrationListeners();
   }
 
-  private addMenuListeners(footer: HTMLElement, page: HTMLElement): void {
+  private addMenuListeners(footer: HTMLElement, page: HTMLElement, body: HTMLElement): void {
     const menuToggleButton = getElementByClassName('menu__toggle-button') as HTMLElement;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
 
@@ -108,18 +124,33 @@ class StartApp {
 
     const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
     homeButton.addEventListener('click', () => {
-      this.render();
+      this.render(false);
+      localStorage.setItem('rslang-page', 'home');
+      localStorage.setItem('rslang-words-data', '');
     });
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
-    audioChallengeButton.addEventListener('click', () => {
+    audioChallengeButton.addEventListener('click', (event: MouseEvent) => {
       this.resetStartForGames(menuContainer, footer, page);
-      startAudioChallengeApp.renderGameDifficultyPage();
+      const target = event.target as HTMLElement;
+      startAudioChallengeApp.startGame(target);
+      localStorage.setItem('rslang-page', 'audio challenge');
     });
+
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
     menuSprintButton.addEventListener('click', async () => {
       this.resetStartForGames(menuContainer, footer, page);
       newSprint.getGameDifficulty();
+      localStorage.setItem('rslang-page', 'sprint');
+    });
+
+    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
+    bookButton.addEventListener('click', async () => {
+      addClassForElement(body, 'start');
+      this.resetStartForBook(menuContainer, footer, page);
+      studyBook.render();
+      footer.innerHTML = await Footer.render();
+      localStorage.setItem('rslang-page', 'book');
     });
   }
 
@@ -167,7 +198,7 @@ class StartApp {
     });
   }
 
-  private handleExit(entryButton: HTMLElement): void {
+  private async handleExit(entryButton: HTMLElement): Promise < void > {
     this.handleMessage(`Bye bye, ${this.userSettings.name}!`, 'green-text');
     const userName = getElementByClassName('page-container__user-name') as HTMLElement;
     this.userSettings = {
@@ -182,6 +213,8 @@ class StartApp {
     userName.textContent = '';
     localStorage.setItem('rslang-user-settings', '');
     entryButton.textContent = 'Войти';
+    const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
+    hardButtons?.forEach(elem => elem.style.display = 'none');
   }
 
   private async updateEntrance(entryButton: HTMLElement): Promise < void > {
@@ -254,6 +287,23 @@ class StartApp {
         localStorage.setItem('rslang-user-settings', JSON.stringify(this.userSettings));
         userName.textContent = this.userSettings.name;
         entryButton.textContent = 'Выйти';
+        const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
+        let userWords = [{
+          difficulty: '',
+          optional: {
+            correctAnswersCount: 0,
+          },
+        }];
+        if (this.userSettings.userId) {
+          userWords = await studyBook.getAllUserWords();
+          console.log(userWords);
+        };
+        hardButtons?.forEach(elem => {
+          let elId = getAttributeFromElement(elem, 'word-id');
+          if (elId === null) elId = '';
+          studyBook.handleHardWordButton(elId, userWords, this, elem);
+          elem.style.display = 'block';
+        });
       };
     } catch (er) {
       this.handleMessage('Incorrect e-mail or password!', 'red-text');
@@ -321,6 +371,18 @@ class StartApp {
     page.innerHTML = '';
   }
 
+  private resetStartForBook(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
+    const body = getBody() as HTMLElement;
+    addClassForElement(body, 'book');
+    removeClassForElement(menuContainer, 'start');
+    addClassForElement(menuContainer, 'game');
+    removeClassForElement(menuContainer, 'active');
+  }
+
 }
 
-export default StartApp;
+export {
+  StartApp,
+  settings,
+  startAppInterface,
+};

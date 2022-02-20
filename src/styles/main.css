@@ -6,10 +6,10 @@
 }
 
 .footer-container__footer-add {
-  position: absolute;
+  position: fixed;
+  width: 99vw;
   bottom: 10px;
   display: flex;
-  width: 100vw;
   height: 11.11vh;
   justify-content: center;
   column-gap: 3vw;

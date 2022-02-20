@@ -1,4 +1,4 @@
-import StartApp from './start';
+import {StartApp} from './start';
 import {
     wordAudio,
     ticAudio,
@@ -123,7 +123,7 @@ class Sprint {
         quitRoundButton.addEventListener('click', () => {
             window.removeEventListener('keydown', this.keyboardListen);
             const startApp = new StartApp();
-            startApp.render();
+            startApp.render(false);
         });
     }
 
