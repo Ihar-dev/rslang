@@ -122,8 +122,11 @@ class Sprint {
         });
         quitRoundButton.addEventListener('click', () => {
             window.removeEventListener('keydown', this.keyboardListen);
-            const startApp = new StartApp();
-            startApp.render(false);
+            const namingContainer: HTMLElement = document.querySelector('.page-container__naming') as HTMLElement;
+            const homeButton: HTMLElement = document.querySelector('.menu__home-button') as HTMLElement;
+            namingContainer.classList.remove('filter-gray');
+            namingContainer.classList.remove('naming-sprint');
+            homeButton.click();
         });
     }
 
@@ -142,9 +145,12 @@ class Sprint {
             button.outerHTML;
             if (button.className !== 'menu__toggle-button') {
                 button.addEventListener('click', (): void => {
-                    this.roundOver();
-                    const quitRoundButton = document.querySelector('.quit-round-button') as HTMLElement;
-                    quitRoundButton.click();
+                    sprintRoundStatistic.sortRoundWords();
+                    const namingContainer: HTMLElement = document.querySelector('.page-container__naming') as HTMLElement;
+                    namingContainer.classList.remove('filter-gray');
+                    namingContainer.classList.remove('naming-sprint');
+                    this.clearCountDownTimeouts();
+                    ticAudio.pause();                    
                 })
             }
         });
