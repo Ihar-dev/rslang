@@ -569,8 +569,8 @@ class RequestsServer {
       await fetch(url, {
         method: method,
         headers: {
-          Authorization: `Bearer ${startApp.userSettings.token}`,
-          Accept: 'application/json',
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(wordData),
@@ -586,8 +586,8 @@ class RequestsServer {
       const res = await fetch(url, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${startApp.userSettings.token}`,
-          Accept: 'application/json',
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
       });
