@@ -393,9 +393,8 @@ class StartAudioChallengeApp {
         const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
         await this.playAudio(audioPath);
       } else {
-        //TODO выход в учебник
-        const startApp = new StartApp();
-        startApp.render(false);
+        const bookButton: HTMLElement = document.querySelector('.menu__book-button') as HTMLElement;
+        bookButton.click();
       }
     } else {
       await this.renderGameDifficultyPage();
@@ -454,7 +453,8 @@ class StartAudioChallengeApp {
       }
 
       if (target.closest('.round-statistic__book')) {
-        console.log('book');
+        const bookButton: HTMLElement = document.querySelector('.menu__book-button') as HTMLElement;
+        bookButton.click();
       }
 
       if (target.closest('.round-statistic__back')) {
