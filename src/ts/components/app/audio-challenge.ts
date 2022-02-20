@@ -41,7 +41,6 @@ interface RoundStatistic {
 
 class StartAudioChallengeApp {
   private static isGameStart = false;
-  // private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
   private static wordGroup = 0;
   private static wordPage: number | null = null;
   private static chunkOfWords: Word[];
@@ -287,31 +286,35 @@ class StartAudioChallengeApp {
       const randomPageNumber = StartAudioChallengeApp.getRandomNumber(minNumber, maxPageNumber);
       data = await this.getWordsChunk(group, randomPageNumber);
     } else {
-      let wordPage = page;
-      const requestsServer = new RequestsServer();
-      while (wordPage >= 0 && data.length < 20) {
-        const chunkOfWords = await this.getWordsChunk(group, wordPage);
-        const userWords = await requestsServer.getAllUserWords();
+      const startApp = new StartApp();
+      if (startApp.userSettings.userId) {
+        let wordPage = page;
+        const requestsServer = new RequestsServer();
+        while (wordPage >= 0 && data.length < 20) {
+          const chunkOfWords = await this.getWordsChunk(group, wordPage);
+          const userWords = await requestsServer.getAllUserWords();
 
-        for (const word of chunkOfWords) {
-          const userWord = userWords.find((value) => value.wordId === word.id);
-          
-          if (data.length < 20) {
-            if (!userWord) {
-              data.push(word);
-            } else if (userWord.difficulty === 'hard' && userWord.optional.correctAnswersCount < 5) {
-              data.push(word);
-            } else if (userWord.difficulty === 'studied' && userWord.optional.correctAnswersCount < 3) {
-              data.push(word);
+          for (const word of chunkOfWords) {
+            const userWord = userWords.find((value) => value.wordId === word.id);
+
+            if (data.length < 20) {
+              if (!userWord) {
+                data.push(word);
+              } else if (userWord.difficulty === 'hard' && userWord.optional.correctAnswersCount < 5) {
+                data.push(word);
+              } else if (userWord.difficulty === 'studied' && userWord.optional.correctAnswersCount < 3) {
+                data.push(word);
+              }
             }
           }
+          wordPage--;
         }
-
-        wordPage--;
+      } else {
+        data = await this.getWordsChunk(group, page); 
       }
     }
     StartAudioChallengeApp.chunkOfWords = [...data];
-    StartAudioChallengeApp.roundStatistic.numberOfQuestions = StartAudioChallengeApp.chunkOfWords.length;
+    StartAudioChallengeApp.roundStatistic.numberOfQuestions = StartAudioChallengeApp.chunkOfWords.length;    
   }
 
   private async getCorrectAnswer(): Promise<void> {
@@ -371,12 +374,12 @@ class StartAudioChallengeApp {
       await this.renderPreloaderPage();
       await this.getWordGroupAndPage(target);
       await this.setWords(StartAudioChallengeApp.wordGroup, StartAudioChallengeApp.wordPage);
-      if(StartAudioChallengeApp.chunkOfWords.length) {
+      if (StartAudioChallengeApp.chunkOfWords.length) {
         await this.getCorrectAnswer();
         await this.getAnswerVariants();
         await this.setDataToPage();
         this.addListeners();
-  
+
         const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
         await this.playAudio(audioPath);
       } else {
@@ -384,7 +387,6 @@ class StartAudioChallengeApp {
         const startApp = new StartApp();
         startApp.render(false);
       }
-
     } else {
       await this.renderGameDifficultyPage();
     }
@@ -539,8 +541,8 @@ class RequestsServer {
       const res = await fetch(url, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${startApp.userSettings.token}`,
-          'Accept': 'application/json',
+          Authorization: `Bearer ${startApp.userSettings.token}`,
+          Accept: 'application/json',
         },
       });
       data = await res.json();
@@ -555,8 +557,8 @@ class RequestsServer {
       await fetch(url, {
         method: method,
         headers: {
-          'Authorization': `Bearer ${startApp.userSettings.token}`,
-          'Accept': 'application/json',
+          Authorization: `Bearer ${startApp.userSettings.token}`,
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(wordData),
@@ -564,7 +566,7 @@ class RequestsServer {
     } catch (error) {}
   }
 
-  public async getAllUserWords(): Promise < wordDataResponse[] > {
+  public async getAllUserWords(): Promise<wordDataResponse[]> {
     const startApp = new StartApp();
     let data: wordDataResponse[] = [];
     try {
@@ -572,10 +574,10 @@ class RequestsServer {
       const res = await fetch(url, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${startApp.userSettings.token}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${startApp.userSettings.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
       });
       data = await res.json();
     } catch (error) {}
