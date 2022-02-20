@@ -217,6 +217,22 @@ class StartAudioChallengeApp {
   }
 
   private async checkAnswer(target: HTMLElement): Promise<void> {
+    const playAudioButton1 = document.querySelector('.audio-challenge-container__play-audio-1') as HTMLElement;
+    const wordImage = document.querySelector('.audio-challenge-container__word-image') as HTMLElement;
+    const wordContainer = document.querySelector('.audio-challenge-container__word-container') as HTMLElement;
+    const variantButtons = document.querySelectorAll('.audio-challenge-container__variant') as NodeListOf<HTMLElement>;
+    const dontKnowButton = document.querySelector('.audio-challenge-container__dont-know') as HTMLElement;
+    const nextButton = document.querySelector('.audio-challenge-container__next') as HTMLElement;
+
+    playAudioButton1.style.display = 'none';
+    wordImage.style.visibility = 'visible';
+    wordContainer.style.visibility = 'visible';
+    dontKnowButton.classList.add('hidden');
+    nextButton.classList.remove('hidden');
+    for (const value of variantButtons) {
+      value.classList.add('disabled');
+    }
+
     if (target.closest('.audio-challenge-container__variant')) {
       const answer = target.closest('.audio-challenge-container__variant')?.lastElementChild?.innerHTML;
       const correctAnswer = StartAudioChallengeApp.correctAnswer.wordTranslate;
@@ -238,22 +254,6 @@ class StartAudioChallengeApp {
       await this.updateStatistic(false);
       await this.updateUserWord(StartAudioChallengeApp.correctAnswer, false);
     }
-
-    const playAudioButton1 = document.querySelector('.audio-challenge-container__play-audio-1') as HTMLElement;
-    const wordImage = document.querySelector('.audio-challenge-container__word-image') as HTMLElement;
-    const wordContainer = document.querySelector('.audio-challenge-container__word-container') as HTMLElement;
-    const variantButtons = document.querySelectorAll('.audio-challenge-container__variant') as NodeListOf<HTMLElement>;
-    const dontKnowButton = document.querySelector('.audio-challenge-container__dont-know') as HTMLElement;
-    const nextButton = document.querySelector('.audio-challenge-container__next') as HTMLElement;
-
-    playAudioButton1.style.display = 'none';
-    wordImage.style.visibility = 'visible';
-    wordContainer.style.visibility = 'visible';
-    dontKnowButton.classList.add('hidden');
-    nextButton.classList.remove('hidden');
-    for (const value of variantButtons) {
-      value.classList.add('disabled');
-    }
   }
 
   private async getWordsChunk(group: number, page: number): Promise<Word[]> {
@@ -262,17 +262,36 @@ class StartAudioChallengeApp {
   }
 
   private async setWords(group: number, page: number | null): Promise<void> {
-    //TODO Подбор чанка слов для игры в зависимости от типа игры (учебник или главное меню)
-    let data: Word[];
+    let data: Word[] = [];
     if (page === null) {
       const minNumber = 0;
       const maxPageNumber = 29;
       const randomPageNumber = StartAudioChallengeApp.getRandomNumber(minNumber, maxPageNumber);
       data = await this.getWordsChunk(group, randomPageNumber);
     } else {
-      data = await this.getWordsChunk(group, page);
-    }
+      let wordPage = page;
+      const requestsServer = new RequestsServer();
+      while (wordPage >= 0 && data.length < 20) {
+        const chunkOfWords = await this.getWordsChunk(group, wordPage);
+        
+        for(const word of chunkOfWords) {
+          if (data.length < 20) {
+            const userWord = await requestsServer.getUserWord(word.id);
 
+            if (!userWord) {
+              data.push(word);
+            } else if (userWord?.difficulty === 'hard' && userWord.optional.correctAnswersCount < 5) {
+              data.push(word);
+            } else if (userWord?.difficulty === 'studied' && userWord.optional.correctAnswersCount < 3) {
+              data.push(word);
+            }
+          }
+        }
+
+        wordPage--;
+      }
+    }
+    
     StartAudioChallengeApp.chunkOfWords = [...data];
     StartAudioChallengeApp.roundStatistic.numberOfQuestions = StartAudioChallengeApp.chunkOfWords.length;
   }
