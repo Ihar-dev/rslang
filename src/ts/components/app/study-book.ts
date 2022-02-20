@@ -307,6 +307,17 @@ class StudyBook {
 
         const bookContHeading = getElementByClassName('book-cont__heading') as HTMLElement;
         if (bookContHeading.textContent === `Уровень сложности Сложные`) this.openHardWordsPage();
+
+        this.handleStudiedWordOnPageCount();
+
+
+        const studiedButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__studied-button');
+        userWords = await this.getAllUserWords();
+        studiedButtons?.forEach(elem => {
+          let elId = getAttributeFromElement(elem, 'word-id');
+          if (elId === null) elId = '';
+          this.handleStudiedWordButton(elId, userWords, startApp, elem, false);
+        });
       });
 
       if (startApp.userSettings.userId) cardHardButton.style.display = 'block';
@@ -356,6 +367,7 @@ class StudyBook {
       setElementActive(studiedButton);
     } else {
       setAttributeForElement(studiedButton, 'title', 'Добавить в изученные');
+      setElementInactive(studiedButton);
     };
     if (refreshStatus) {
       studiedButton.addEventListener('click', async () => {
@@ -374,6 +386,16 @@ class StudyBook {
         }
 
         this.handleStudiedWordOnPageCount();
+
+        const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
+        userWords = await this.getAllUserWords();
+        hardButtons?.forEach(elem => {
+          let elId = getAttributeFromElement(elem, 'word-id');
+          if (elId === null) elId = '';
+          this.handleHardWordButton(elId, userWords, startApp, elem, false);
+          elem.style.display = 'block';
+        });
+    
       });
 
       if (startApp.userSettings.userId) studiedButton.style.display = 'block';
