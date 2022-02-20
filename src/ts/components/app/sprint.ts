@@ -94,7 +94,7 @@ class Sprint {
         return answerWord;
     }
 
-    public roundOver = (): void => {
+    public roundOver = (): void => {        
         this.clearCountDownTimeouts();
         ticAudio.pause();
         endRoundAudio.play();
@@ -107,6 +107,7 @@ class Sprint {
    <p>ROUND OVER</p>
    <p>Your Score-${roundScore} </p>
    <button class="sprint-wright-button">GET ROUND STATISTIC</button>`;
+    sprintRoundStatistic.sortRoundWords();
         const writeButton = document.querySelector('.sprint-wright-button') as HTMLElement;
         writeButton.addEventListener('click', () => {
             newSprint.renderRoundStatistic();
@@ -116,7 +117,7 @@ class Sprint {
         const roundTimerContainer = document.querySelector('.sprint-round-countdown') as HTMLElement;
         if (roundTimerContainer) roundTimerContainer.remove();
         nextRoundButton.addEventListener('click', () => {
-            page = page < 60 ? page++ : 0;
+            page = page < 30 ? page++ : 0;
             newSprint.startSprint();
         });
         quitRoundButton.addEventListener('click', () => {
