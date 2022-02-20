@@ -54,7 +54,7 @@ type wordDataResponse = {
 
 class StudyBook {
 
-  studiedWordOnPageCount: number;
+  studiedWordsOnPageCount: number;
   wordsSettings: {
     group: number,
     page: number,
@@ -67,7 +67,7 @@ class StudyBook {
       group: 0,
       page: 0,
     };
-    this.studiedWordOnPageCount = 0;
+    this.studiedWordsOnPageCount = 0;
   }
 
   public async render(): Promise < void > {
@@ -315,7 +315,7 @@ class StudyBook {
   }
 
   public async handleStudiedWordOnPageCount(): Promise < void > {
-    this.studiedWordOnPageCount = 0;
+    this.studiedWordsOnPageCount = 0;
     const startApp = new StartApp();
     let userWords: wordDataResponse[] = [{
       difficulty: '',
@@ -333,13 +333,13 @@ class StudyBook {
       const filteredUserWords = userWords.filter(elem => elem.wordId === el.id);
       if (filteredUserWords.length && filteredUserWords[0].difficulty === 'studied' && filteredUserWords[0].optional.correctAnswersCount >= 3 ||
         filteredUserWords.length && filteredUserWords[0].difficulty === 'hard' && filteredUserWords[0].optional.correctAnswersCount >= 5) {
-        this.studiedWordOnPageCount++;
+        this.studiedWordsOnPageCount++;
       }
     });
 
     const studyingPlate = getElementByClassName('book-cont__studying') as HTMLElement;
     const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
-    if (this.studiedWordOnPageCount === settings.wordsPerPage) {
+    if (this.studiedWordsOnPageCount === settings.wordsPerPage) {
       setElementActive(studyingPlate);
       bookButton.style.backgroundColor = 'rgba(229, 137, 10, 0.8)';
     } else {
