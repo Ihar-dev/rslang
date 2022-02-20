@@ -41,7 +41,6 @@ interface RoundStatistic {
 
 class StartAudioChallengeApp {
   private static isGameStart = false;
-  // private static basePageLink = 'https://react-rslang-hauzinski.herokuapp.com';
   private static wordGroup = 0;
   private static wordPage: number | null = null;
   private static chunkOfWords: Word[];
@@ -88,7 +87,13 @@ class StartAudioChallengeApp {
       StartAudioChallengeApp.wordGroup = Number(target.innerHTML) - 1;
       StartAudioChallengeApp.wordPage = null;
     } else {
-      StartAudioChallengeApp.wordGroup = studyBook.wordsSettings.group;
+      if (studyBook.wordsSettings.group > 5) {
+        const minNumber = 0;
+        const maxGroupNumber = 5;        
+        StartAudioChallengeApp.wordGroup = StartAudioChallengeApp.getRandomNumber(minNumber, maxGroupNumber);
+      } else {
+        StartAudioChallengeApp.wordGroup = studyBook.wordsSettings.group;
+      }      
       StartAudioChallengeApp.wordPage = studyBook.wordsSettings.page;
     }
   }
@@ -126,15 +131,30 @@ class StartAudioChallengeApp {
     bottom.innerHTML = await AudioChallengeBottomContent.render();
   }
 
+  private async renderPreloaderPage(): Promise<void> {
+    const preloader = document.querySelector('.audio-challenge-container__preloader') as HTMLElement;
+    const progressBar = document.querySelector('.audio-challenge-container__progress-bar') as HTMLElement;
+    const content = document.querySelector('.audio-challenge-container__content') as HTMLElement;
+
+    progressBar.style.visibility = 'hidden';
+    content.style.visibility = 'hidden';
+    preloader.style.display = 'block';
+  }
+
   private async setDataToPage(): Promise<void> {
     const progressBar = document.querySelector('.audio-challenge-container__progress-bar') as HTMLElement;
     const img = document.querySelector('.audio-challenge-container__word-image') as HTMLElement;
     const word = document.querySelector('.audio-challenge-container__word') as HTMLElement;
+    const content = document.querySelector('.audio-challenge-container__content') as HTMLElement;
+    const preloader = document.querySelector('.audio-challenge-container__preloader') as HTMLElement;
     const variantsNumber = document.querySelectorAll('.audio-challenge-container__variant-number') as NodeListOf<HTMLElement>;
     const variantsText = document.querySelectorAll('.audio-challenge-container__text') as NodeListOf<HTMLElement>;
     const numberOfQuestions = StartAudioChallengeApp.roundStatistic.numberOfQuestions;
     const progressBarWidth = ((numberOfQuestions - StartAudioChallengeApp.chunkOfWords.length) / numberOfQuestions) * 100;
 
+    preloader.style.display = 'none';
+    content.style.visibility = 'visible';
+    progressBar.style.visibility = 'visible';
     progressBar.style.width = `${progressBarWidth}%`;
     img.style.backgroundImage = `url(${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.image})`;
     word.innerHTML = `${StartAudioChallengeApp.correctAnswer.word}`;
@@ -183,30 +203,47 @@ class StartAudioChallengeApp {
     statisticPage.style.display = 'flex';
   }
 
-  private async checkAnswer(target: HTMLElement): Promise<void> {
-    if (target.closest('.audio-challenge-container__variant')) {
-      const answer = target.closest('.audio-challenge-container__variant')?.lastElementChild?.innerHTML;
-      const correctAnswer = StartAudioChallengeApp.correctAnswer.wordTranslate;
-      const result = Boolean(answer === correctAnswer);
+  private async updateUserWord(correctAnswer: Word, isCorrect: boolean): Promise<void> {
+    const startApp = new StartApp();
+    if (startApp.userSettings.userId) {
+      const requestsServer = new RequestsServer();
+      const correctAnswersCountForHardWords = 5;
+      const userWords = await requestsServer.getAllUserWords();
+      const isWordIncludes = userWords.find((value) => value.wordId === correctAnswer.id);
+      let word;
 
-      if (result) {
-        //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
-        this.playAudio(correctAnswerSound);
-        const children = target.closest('.audio-challenge-container__variant')?.children as HTMLCollectionOf<HTMLElement>;
-        children[0].style.visibility = 'hidden';
-        children[1].style.visibility = 'visible';
+      if (isWordIncludes) {
+        word = await requestsServer.getUserWord(correctAnswer.id);
+
+        if (isCorrect) {
+          word.optional.correctAnswersCount++;
+          word.optional.correctAnswersCountForStatistics++;
+
+          if (word.difficulty === 'hard' && word.optional.correctAnswersCount >= correctAnswersCountForHardWords) {
+            word.difficulty = 'studied';
+          }
+        } else {
+          word.optional.correctAnswersCount = 0;
+        }
+        word.optional.allAnswersCount++;
+        delete word.id;
+        delete word.wordId;
+        await requestsServer.createUserWord('PUT', correctAnswer.id, word);
       } else {
-        //TODO Изменение данных о выбранном слове (количество правильных ответов, статус слова)
-        this.playAudio(wrongAnswerSound);
-        target.closest('.audio-challenge-container__variant')?.classList.add('wrong');
+        word = {
+          difficulty: 'studied',
+          optional: {
+            correctAnswersCount: isCorrect ? 1 : 0,
+            correctAnswersCountForStatistics: isCorrect ? 1 : 0,
+            allAnswersCount: 1,
+          },
+        };
+        await requestsServer.createUserWord('POST', correctAnswer.id, word);
       }
-
-      await this.updateStatistic(result);
-    } else if (target.closest('.audio-challenge-container__dont-know')) {
-      this.playAudio(wrongAnswerSound);
-      await this.updateStatistic(false);
     }
+  }
 
+  private async checkAnswer(target: HTMLElement): Promise<void> {
     const playAudioButton1 = document.querySelector('.audio-challenge-container__play-audio-1') as HTMLElement;
     const wordImage = document.querySelector('.audio-challenge-container__word-image') as HTMLElement;
     const wordContainer = document.querySelector('.audio-challenge-container__word-container') as HTMLElement;
@@ -222,6 +259,28 @@ class StartAudioChallengeApp {
     for (const value of variantButtons) {
       value.classList.add('disabled');
     }
+
+    if (target.closest('.audio-challenge-container__variant')) {
+      const answer = target.closest('.audio-challenge-container__variant')?.lastElementChild?.innerHTML;
+      const correctAnswer = StartAudioChallengeApp.correctAnswer.wordTranslate;
+      const result = Boolean(answer === correctAnswer);
+
+      if (result) {
+        this.playAudio(correctAnswerSound);
+        const children = target.closest('.audio-challenge-container__variant')?.children as HTMLCollectionOf<HTMLElement>;
+        children[0].style.visibility = 'hidden';
+        children[1].style.visibility = 'visible';
+      } else {
+        this.playAudio(wrongAnswerSound);
+        target.closest('.audio-challenge-container__variant')?.classList.add('wrong');
+      }
+      await this.updateStatistic(result);
+      await this.updateUserWord(StartAudioChallengeApp.correctAnswer, result);
+    } else if (target.closest('.audio-challenge-container__dont-know')) {
+      this.playAudio(wrongAnswerSound);
+      await this.updateStatistic(false);
+      await this.updateUserWord(StartAudioChallengeApp.correctAnswer, false);
+    }
   }
 
   private async getWordsChunk(group: number, page: number): Promise<Word[]> {
@@ -230,19 +289,42 @@ class StartAudioChallengeApp {
   }
 
   private async setWords(group: number, page: number | null): Promise<void> {
-    //TODO Подбор чанка слов для игры в зависимости от типа игры (учебник или главное меню)
-    let data: Word[];
+    let data: Word[] = [];
     if (page === null) {
       const minNumber = 0;
       const maxPageNumber = 29;
       const randomPageNumber = StartAudioChallengeApp.getRandomNumber(minNumber, maxPageNumber);
       data = await this.getWordsChunk(group, randomPageNumber);
     } else {
-      data = await this.getWordsChunk(group, page);
-    }
+      const startApp = new StartApp();
+      if (startApp.userSettings.userId) {
+        let wordPage = page;
+        const requestsServer = new RequestsServer();
+        while (wordPage >= 0 && data.length < 20) {
+          const chunkOfWords = await this.getWordsChunk(group, wordPage);
+          const userWords = await requestsServer.getAllUserWords();
 
+          for (const word of chunkOfWords) {
+            const userWord = userWords.find((value) => value.wordId === word.id);
+
+            if (data.length < 20) {
+              if (!userWord) {
+                data.push(word);
+              } else if (userWord.difficulty === 'hard' && userWord.optional.correctAnswersCount < 5) {
+                data.push(word);
+              } else if (userWord.difficulty === 'studied' && userWord.optional.correctAnswersCount < 3) {
+                data.push(word);
+              }
+            }
+          }
+          wordPage--;
+        }
+      } else {
+        data = await this.getWordsChunk(group, page); 
+      }
+    }
     StartAudioChallengeApp.chunkOfWords = [...data];
-    StartAudioChallengeApp.roundStatistic.numberOfQuestions = StartAudioChallengeApp.chunkOfWords.length;
+    StartAudioChallengeApp.roundStatistic.numberOfQuestions = StartAudioChallengeApp.chunkOfWords.length;    
   }
 
   private async getCorrectAnswer(): Promise<void> {
@@ -296,19 +378,24 @@ class StartAudioChallengeApp {
     const gameDifficulty = document.querySelector('.game-difficulty-container') as HTMLElement;
 
     if (gameDifficulty || document.body.classList.contains('book') || target.closest('.round-statistic__replay')) {
-      console.log(document.body.classList.contains('start'));
       await this.resetRoundData();
       await this.resetAnswers();
       await this.renderPage();
+      await this.renderPreloaderPage();
       await this.getWordGroupAndPage(target);
       await this.setWords(StartAudioChallengeApp.wordGroup, StartAudioChallengeApp.wordPage);
-      await this.getCorrectAnswer();
-      await this.getAnswerVariants();
-      await this.setDataToPage();
-      this.addListeners();
+      if (StartAudioChallengeApp.chunkOfWords.length) {
+        await this.getCorrectAnswer();
+        await this.getAnswerVariants();
+        await this.setDataToPage();
+        this.addListeners();
 
-      const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
-      await this.playAudio(audioPath);
+        const audioPath = `${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.audio}`;
+        await this.playAudio(audioPath);
+      } else {
+        const bookButton: HTMLElement = document.querySelector('.menu__book-button') as HTMLElement;
+        bookButton.click();
+      }
     } else {
       await this.renderGameDifficultyPage();
     }
@@ -366,7 +453,8 @@ class StartAudioChallengeApp {
       }
 
       if (target.closest('.round-statistic__book')) {
-        console.log('book');
+        const bookButton: HTMLElement = document.querySelector('.menu__book-button') as HTMLElement;
+        bookButton.click();
       }
 
       if (target.closest('.round-statistic__back')) {
@@ -443,6 +531,69 @@ class StartAudioChallengeApp {
       document.addEventListener('keyup', delegationKeyboardEvents);
       StartAudioChallengeApp.isGameStart = true;
     }
+  }
+}
+
+type wordDataResponse = {
+  id ? : string,
+  wordId ? : string,
+  difficulty: string,
+  optional: {
+    correctAnswersCount: number,
+    correctAnswersCountForStatistics: number,
+    allAnswersCount: number,
+  },
+}
+class RequestsServer {
+  public async getUserWord(wordId: string): Promise<wordDataResponse> {
+    const startApp = new StartApp();
+    let data;
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${startApp.userSettings.token}`,
+          Accept: 'application/json',
+        },
+      });
+      data = await res.json();
+    } catch (error) {}
+    return data;
+  }
+
+  public async createUserWord(method: string, wordId: string, wordData: wordDataResponse): Promise<void> {
+    const startApp = new StartApp();
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
+      await fetch(url, {
+        method: method,
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(wordData),
+      });
+    } catch (error) {}
+  }
+
+  public async getAllUserWords(): Promise<wordDataResponse[]> {
+    const startApp = new StartApp();
+    let data: wordDataResponse[] = [];
+    try {
+      const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/`;
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      data = await res.json();
+    } catch (error) {}
+    return data;
   }
 }
 
