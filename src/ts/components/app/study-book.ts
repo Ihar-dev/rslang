@@ -176,9 +176,9 @@ class StudyBook {
     });
   }
 
-  private async openHardWordsPage(): Promise < void > { 
+  private async openHardWordsPage(): Promise < void > {
     const paginationContainer = getElementByClassName('book-cont__pagination-container') as HTMLElement;
-    paginationContainer.style.display = 'none';  
+    paginationContainer.style.display = 'none';
     const startApp = new StartApp();
     const userWords = await this.getAllUserWords();
     const bookCont = getElementByClassName('page-container__book-cont') as HTMLElement;
@@ -312,8 +312,8 @@ class StudyBook {
 
   public async handleStudiedWordButton(elId: string, userWords: wordDataResponse[], startApp: startAppInterface, studiedButton: HTMLElement, refreshStatus: boolean): Promise < void > {
     const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
-    if (filteredUserWords.length && filteredUserWords[0].difficulty === 'studied' && filteredUserWords[0].optional.correctAnswersCount >= 3
-    || filteredUserWords.length && filteredUserWords[0].difficulty === 'hard' && filteredUserWords[0].optional.correctAnswersCount >= 5) {
+    if (filteredUserWords.length && filteredUserWords[0].difficulty === 'studied' && filteredUserWords[0].optional.correctAnswersCount >= 3 ||
+      filteredUserWords.length && filteredUserWords[0].difficulty === 'hard' && filteredUserWords[0].optional.correctAnswersCount >= 5) {
       setAttributeForElement(studiedButton, 'title', 'Убрать из изученных');
       setElementActive(studiedButton);
     } else setAttributeForElement(studiedButton, 'title', 'Добавить в изученные');
@@ -450,7 +450,6 @@ class StudyBook {
     }];
     if (startApp.userSettings.userId) {
       userWords = await this.getAllUserWords();
-      //console.log(userWords);
     };
     const bookCont = getElementByClassName('page-container__book-cont') as HTMLElement;
     this.renderCardsHeading(bookCont, false);
@@ -534,6 +533,23 @@ class StudyBook {
     setAttributeForElement(studiedButton, 'word-id', el.id);
     imgContainer.append(studiedButton);
     this.handleStudiedWordButton(el.id, userWords, startApp, studiedButton, true);
+
+    const statisticsPlate = document.createElement('div');
+    addClassForElement(statisticsPlate, 'book-cont__statistics-plate');
+    setAttributeForElement(statisticsPlate, 'word-id', el.id);
+    imgContainer.append(statisticsPlate);
+    this.handleStatisticsPlaten(el.id, userWords, startApp, statisticsPlate);
+  }
+
+  public async handleStatisticsPlaten(elId: string, userWords: wordDataResponse[], startApp: startAppInterface, statisticsPlate: HTMLElement): Promise < void > {
+    const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
+    if (filteredUserWords.length) {
+      setAttributeForElement(statisticsPlate, 'title', 'Статистика по играм');
+      if (filteredUserWords[0].optional.allAnswersCount) {
+        statisticsPlate.textContent = `${filteredUserWords[0].optional.correctAnswersCountForStatistics}/${filteredUserWords[0].optional.allAnswersCount}`;
+      };
+    };
+
   }
 
   private async getWords(group: number, page: number): Promise < wordsResponse[] > {

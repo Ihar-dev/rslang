@@ -230,6 +230,9 @@ class StartApp implements startAppInterface {
 
     const studiedButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__studied-button');
     studiedButtons?.forEach(elem => elem.style.display = 'none');
+
+    const statisticsPlates: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__statistics-plate');
+    statisticsPlates?.forEach(elem => elem.style.display = 'none');
   }
 
   private async updateEntrance(entryButton: HTMLElement): Promise < void > {
@@ -340,6 +343,15 @@ class StartApp implements startAppInterface {
       studyBook.handleStudiedWordButton(elId, userWords, this, elem, false);
       elem.style.display = 'block';
     });
+
+    const statisticsPlates: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__statistics-plate');
+    statisticsPlates?.forEach(elem => {
+      let elId = getAttributeFromElement(elem, 'word-id');
+      if (elId === null) elId = '';
+      studyBook.handleStatisticsPlaten(elId, userWords, this, elem);
+      elem.style.display = 'block';
+    });
+
   }
 
   private async handleRegistration(nameInput: HTMLInputElement, addressInput: HTMLInputElement, passwordInput: HTMLInputElement, entryButton: HTMLElement): Promise < void > {
