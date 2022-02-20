@@ -291,7 +291,7 @@ class StudyBook {
           const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
           if (filteredUserWords.length) this.updateUserWord(elId, 'hard', filteredUserWords[0].optional.correctAnswersCount,
             filteredUserWords[0].optional.correctAnswersCountForStatistics, filteredUserWords[0].optional.allAnswersCount);
-          else this.addUserWord(elId, 'hard');
+          else this.addUserWord(elId, 'hard', 0, 0, 0);
           setAttributeForElement(cardHardButton, 'title', 'Убрать из сложных');
           setElementActive(cardHardButton);
         } else {
@@ -307,6 +307,35 @@ class StudyBook {
 
       if (startApp.userSettings.userId) cardHardButton.style.display = 'block';
       else cardHardButton.style.display = 'none';
+    };
+  }
+
+  public async handleStudiedWordButton(elId: string, userWords: wordDataResponse[], startApp: startAppInterface, studiedButton: HTMLElement, refreshStatus: boolean): Promise < void > {
+    const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
+    if (filteredUserWords.length && filteredUserWords[0].difficulty === 'studied' && filteredUserWords[0].optional.correctAnswersCount >= 3
+    || filteredUserWords.length && filteredUserWords[0].difficulty === 'hard' && filteredUserWords[0].optional.correctAnswersCount >= 5) {
+      setAttributeForElement(studiedButton, 'title', 'Убрать из изученных');
+      setElementActive(studiedButton);
+    } else setAttributeForElement(studiedButton, 'title', 'Добавить в изученные');
+    if (refreshStatus) {
+      studiedButton.addEventListener('click', async () => {
+        if (getAttributeFromElement(studiedButton, 'title') === 'Добавить в изученные') {
+          const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
+          if (filteredUserWords.length) this.updateUserWord(elId, 'studied', 3,
+            filteredUserWords[0].optional.correctAnswersCountForStatistics, filteredUserWords[0].optional.allAnswersCount);
+          else this.addUserWord(elId, 'studied', 3, 0, 0);
+          setAttributeForElement(studiedButton, 'title', 'Убрать из изученных');
+          setElementActive(studiedButton);
+        } else {
+          const wordData = await this.getUserWord(elId);
+          this.updateUserWord(elId, wordData.difficulty, 0, wordData.optional.correctAnswersCountForStatistics, wordData.optional.allAnswersCount);
+          setAttributeForElement(studiedButton, 'title', 'Добавить в изученные');
+          setElementInactive(studiedButton);
+        }
+      });
+
+      if (startApp.userSettings.userId) studiedButton.style.display = 'block';
+      else studiedButton.style.display = 'none';
     };
   }
 
@@ -334,16 +363,16 @@ class StudyBook {
     } catch (er) {}
   }
 
-  public async addUserWord(wordId: string, difficulty: string): Promise < void > {
+  public async addUserWord(wordId: string, difficulty: string, correctAnswersCount: number, correctAnswersCountForStatistics: number, allAnswersCount: number): Promise < void > {
     const startApp = new StartApp();
     try {
       const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
       const newWord: wordDataResponse = {
         difficulty: difficulty,
         optional: {
-          correctAnswersCount: 0,
-          correctAnswersCountForStatistics: 0,
-          allAnswersCount: 0,
+          correctAnswersCount: correctAnswersCount,
+          correctAnswersCountForStatistics: correctAnswersCountForStatistics,
+          allAnswersCount: allAnswersCount,
         }
       };
       const res = await fetch(url, {
@@ -499,6 +528,12 @@ class StudyBook {
     setAttributeForElement(cardHardButton, 'word-id', el.id);
     imgContainer.append(cardHardButton);
     this.handleHardWordButton(el.id, userWords, startApp, cardHardButton, true);
+
+    const studiedButton = document.createElement('div');
+    addClassForElement(studiedButton, 'book-cont__studied-button');
+    setAttributeForElement(studiedButton, 'word-id', el.id);
+    imgContainer.append(studiedButton);
+    this.handleStudiedWordButton(el.id, userWords, startApp, studiedButton, true);
   }
 
   private async getWords(group: number, page: number): Promise < wordsResponse[] > {

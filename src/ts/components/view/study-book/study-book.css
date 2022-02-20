@@ -79,7 +79,8 @@ body.book {
 .book-cont__audio-meaning-button,
 .book-cont__left-fast-button,
 .book-cont__right-fast-button,
-.book-cont__hard-button {
+.book-cont__hard-button,
+.book-cont__studied-button {
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 50%;
@@ -265,9 +266,9 @@ body.book {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.book-cont__hard-button {
+.book-cont__hard-button,
+.book-cont__studied-button {
   position: absolute;
-  top: 10px;
   left: 10px;
   width: 50px;
   height: 50px;
@@ -276,6 +277,15 @@ body.book {
 }
 
 .book-cont__hard-button {
+  top: 10px;
+}
+
+.book-cont__studied-button {
+  top: 100px;
+}
+
+.book-cont__hard-button,
+.book-cont__studied-button {
   transform: scale(1.2);
 }
 
@@ -283,7 +293,12 @@ body.book {
   background-image: url("../../../../assets/svg/fitness_center_white_24dp.svg");
 }
 
-.book-cont__hard-button.active {
+.book-cont__studied-button {
+  background-image: url("../../../../assets/svg/graduation-cap-solid.svg");
+}
+
+.book-cont__hard-button.active,
+.book-cont__studied-button.active {
   width: 70px;
   height: 70px;
   backdrop-filter: blur(2px);
