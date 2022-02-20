@@ -1,0 +1,107 @@
+.audio-challenge-container__play-audio-1 {
+  position: absolute;
+  z-index: 10;
+
+  border-radius: 50%;
+  background-color: rgba(167, 167, 167, 0.35);
+
+  cursor: pointer;
+}
+
+.audio-challenge-container__play-audio-1 > div {
+  margin: 3em;
+  height: 60px;
+  width: 60px;
+
+  -webkit-mask: url(../../../../../assets/svg/audio-challenge__play-audio.svg) no-repeat center;
+  mask: url(../../../../../assets/svg/audio-challenge__play-audio.svg) no-repeat center;
+  background-color: black;
+
+  transition: 0.5s;
+}
+
+.audio-challenge-container__play-audio-1:hover > div {
+  background-color: goldenrod;
+}
+
+.audio-challenge-container__play-audio-1:active > div {
+  transform: scale(0.9);
+}
+
+.audio-challenge-container__word-image {
+  display: block;
+
+  height: 200px;
+  width: 200px;
+
+  border: 5px solid #c0c0c0;
+  border-radius: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  visibility: hidden;
+}
+
+.audio-challenge-container__word-container {
+  display: flex;
+  align-items: center;
+  margin: 1em;
+
+  visibility: hidden;
+}
+
+.audio-challenge-container__play-audio-2 {
+  margin: 1em;
+  height: 30px;
+  width: 30px;
+
+  -webkit-mask: url(../../../../../assets/svg/audio-challenge__play-audio.svg) no-repeat center;
+  mask: url(../../../../../assets/svg/audio-challenge__play-audio.svg) no-repeat center;
+  background-color: black;
+
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.audio-challenge-container__play-audio-2:hover {
+  background-color: goldenrod;
+}
+
+.audio-challenge-container__word {
+  font-size: 3rem;
+}
+
+@media (max-width: 1024px) {
+  .audio-challenge-container__word-image {
+    height: 160px;
+    width: 160px;
+  }
+}
+
+@media (max-width: 640px) {
+  .audio-challenge-container__play-audio-1 > div {
+    margin: 2.5em;
+    height: 50px;
+    width: 50px;
+  }
+
+  .audio-challenge-container__word-image {
+    height: 120px;
+    width: 120px;
+  }
+
+  .audio-challenge-container__word-container {
+    margin: 0.25em;
+  }
+
+  .audio-challenge-container__play-audio-2 {
+    margin: 0.5em;
+    height: 20px;
+    width: 20px;
+  }
+
+  .audio-challenge-container__word {
+    font-size: 2rem;
+  }
+}

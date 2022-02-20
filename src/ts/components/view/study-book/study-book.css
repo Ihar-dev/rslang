@@ -1,0 +1,306 @@
+body.book {
+  width: 99vw;
+  background-attachment: fixed;
+}
+
+.page-container__book-cont {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 99vw;
+  padding: 50px;
+  row-gap: 35px;
+  column-gap: 35px;
+  top: 100px;
+  padding-bottom: 120px;
+}
+
+.book-cont__word-card {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  width: 400px;
+  height: 425px;
+  border: 2px solid rgba(36, 197, 219, 0.7);
+  border-radius: 15px;
+}
+
+.book-cont__heading {
+  top: 90px;
+  left: 140px;
+  position: absolute;
+  font-size: 28px;
+  line-height: 35px;
+}
+
+.book-cont__img-container {
+  display: flex;
+  padding: 20px;
+  flex-direction: column-reverse;
+  row-gap: 20px;
+  align-content: center;
+  align-items: flex-end;
+  width: 100%;
+  height: 260px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  background-size: cover;
+}
+
+.book-cont__word {
+  font-size: 45px;
+  line-height: 50px;
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+.book-cont__translation-cont {
+  display: flex;
+  flex-direction: row-reverse;
+  align-content: space-between;
+  column-gap: 10px;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.book-cont__translation-text,
+.book-cont__transcription-text {
+  font-size: 25px;
+  line-height: 30px;
+}
+
+.book-cont__left-button,
+.book-cont__right-button,
+.book-cont__audio-meaning-button,
+.book-cont__left-fast-button,
+.book-cont__right-fast-button,
+.book-cont__hard-button,
+.book-cont__studied-button {
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 50%;
+  background-size: 50% 50%;
+  cursor: pointer;
+}
+
+.book-cont__left-button,
+.book-cont__right-button,
+.book-cont__audio-meaning-button,
+.book-cont__left-fast-button,
+.book-cont__right-fast-button {
+  width: 50px;
+  height: 50px;
+  background-size: 60% 60%;
+  transition: transform 0.1s;
+}
+
+.book-cont__left-button:hover,
+.book-cont__right-button:hover,
+.book-cont__left-fast-button:hover,
+.book-cont__right-fast-button:hover {
+  transform: scale(1.2);
+}
+
+.book-cont__audio-meaning-button {
+  background-image: url("../../../../assets/svg/volume-high-solid.svg");
+}
+
+.book-cont__left-button {
+  background-image: url("../../../../assets/svg/circle-arrow-left-solid.svg");
+}
+
+.book-cont__left-fast-button {
+  background-image: url("../../../../assets/svg/backward-fast-solid.svg");
+}
+
+.book-cont__right-button {
+  background-image: url("../../../../assets/svg/circle-arrow-right-solid.svg");
+}
+
+.book-cont__right-fast-button {
+  background-image: url("../../../../assets/svg/forward-fast-solid.svg");
+}
+
+.book-cont__heading,
+.book-cont__word,
+.book-cont__translation-text,
+.book-cont__transcription-text,
+.book-cont__text-meaning,
+.book-cont__text-example,
+.book-cont__text-example-translate,
+.book-cont__text-meaning-translate,
+.book-cont__page-count,
+.book-cont__groups-button,
+.book-cont__groups-change-buttons {
+  font-family: 'Roboto', sans-serif;
+  color: white;
+}
+
+.book-cont__text-meaning,
+.book-cont__text-example,
+.book-cont__text-example-translate,
+.book-cont__text-meaning-translate {
+  margin-right: 10px;
+  margin-left: 10px;
+  text-align: right;
+}
+
+.book-cont__text-meaning,
+.book-cont__text-example-translate {
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.book-cont__text-example,
+.book-cont__text-meaning-translate {
+  font-size: 12px;
+  line-height: 15px;
+  font-style: italic;
+}
+
+.book-cont__hr {
+  margin-left: 20px;
+  margin-right: 10px;
+  background-color: white;
+  height: 1px;
+}
+
+.book-cont__word-card,
+.book-cont__word,
+.book-cont__translation-cont,
+.book-cont__groups-button {
+  backdrop-filter: blur(10px);
+  background: radial-gradient(118.88% 606.86% at 0% 0%, rgba(36, 197, 219, 0.1) 0%, rgba(36, 197, 219, 0.8) 100%);
+}
+
+.book-cont__pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 220px;
+  height: 40px;
+  column-gap: 10px;
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  border-radius: 5px;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: 250;
+}
+
+.book-cont__page-count {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.book-cont__groups-button {
+  position: absolute;
+  top: 90px;
+  left: 30px;
+  width: 100px;
+  height: 35px;
+  font-size: 20px;
+  line-height: 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 300;
+}
+
+.book-cont__groups-change-buttons {
+  position: absolute;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  row-gap: 10px;
+  top: 140px;
+  left: 30px;
+  width: 100px;
+  height: 0;
+  font-size: 20px;
+  line-height: 25px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  z-index: 300;
+  transition: height 0.2s;
+}
+
+.book-cont__groups-change-buttons.active {
+  height: 500px;
+}
+
+.book-cont__first-button,
+.book-cont__second-button,
+.book-cont__third-button,
+.book-cont__forth-button,
+.book-cont__fifth-button,
+.book-cont__sixth-button,
+.book-cont__seventh-button {
+  width: 100%;
+  height: 50px;
+  font-size: 20px;
+  line-height: 25px;
+  font-family: 'Roboto', sans-serif;
+  color: white;
+  cursor: pointer;
+}
+
+.book-cont__second-button,
+.book-cont__forth-button,
+.book-cont__sixth-button {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.book-cont__first-button,
+.book-cont__third-button,
+.book-cont__fifth-button,
+.book-cont__seventh-button {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.book-cont__hard-button,
+.book-cont__studied-button {
+  position: absolute;
+  left: 10px;
+  width: 50px;
+  height: 50px;
+  background-size: 60% 60%;
+  transition: transform 0.1s;
+}
+
+.book-cont__hard-button {
+  top: 10px;
+}
+
+.book-cont__studied-button {
+  top: 100px;
+}
+
+.book-cont__hard-button,
+.book-cont__studied-button {
+  transform: scale(1.2);
+}
+
+.book-cont__hard-button {
+  background-image: url("../../../../assets/svg/fitness_center_white_24dp.svg");
+}
+
+.book-cont__studied-button {
+  background-image: url("../../../../assets/svg/graduation-cap-solid.svg");
+}
+
+.book-cont__hard-button.active,
+.book-cont__studied-button.active {
+  width: 70px;
+  height: 70px;
+  backdrop-filter: blur(2px);
+  background-color: rgba(229, 137, 10, 0.3);
+}

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./src/js/",
+    "allowJs": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "noEmitOnError": true,
+    "strictNullChecks": true,
+
+    "strictFunctionTypes": true,
+    "alwaysStrict": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "strictBindCallApply": true
+
+  },
+  "files": [
+    "./src/ts/index.ts"
+  ],
+  "lib": ["es2015"]
+}

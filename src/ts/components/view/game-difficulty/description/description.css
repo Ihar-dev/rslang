@@ -1,0 +1,40 @@
+.game-difficulty-container__description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.description__header {
+  margin: 1em;
+
+  font-size: 2.5rem;
+}
+
+.description__text {
+  margin: 0;
+
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+@media (max-width: 1366px) {
+  .description__header {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .description__header {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .description__header {
+    font-size: 1.4rem;
+  }
+
+  .description__text {
+    font-size: 1rem;
+  }
+}
