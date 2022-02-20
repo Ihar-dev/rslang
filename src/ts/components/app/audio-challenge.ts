@@ -126,15 +126,30 @@ class StartAudioChallengeApp {
     bottom.innerHTML = await AudioChallengeBottomContent.render();
   }
 
+  private async renderPreloaderPage(): Promise<void> {
+    const preloader = document.querySelector('.audio-challenge-container__preloader') as HTMLElement;
+    const progressBar = document.querySelector('.audio-challenge-container__progress-bar') as HTMLElement;
+    const content = document.querySelector('.audio-challenge-container__content') as HTMLElement;
+
+    progressBar.style.visibility = 'hidden';
+    content.style.visibility = 'hidden';
+    preloader.style.display = 'block';
+  }
+
   private async setDataToPage(): Promise<void> {
     const progressBar = document.querySelector('.audio-challenge-container__progress-bar') as HTMLElement;
     const img = document.querySelector('.audio-challenge-container__word-image') as HTMLElement;
     const word = document.querySelector('.audio-challenge-container__word') as HTMLElement;
+    const content = document.querySelector('.audio-challenge-container__content') as HTMLElement;
+    const preloader = document.querySelector('.audio-challenge-container__preloader') as HTMLElement;
     const variantsNumber = document.querySelectorAll('.audio-challenge-container__variant-number') as NodeListOf<HTMLElement>;
     const variantsText = document.querySelectorAll('.audio-challenge-container__text') as NodeListOf<HTMLElement>;
     const numberOfQuestions = StartAudioChallengeApp.roundStatistic.numberOfQuestions;
     const progressBarWidth = ((numberOfQuestions - StartAudioChallengeApp.chunkOfWords.length) / numberOfQuestions) * 100;
 
+    preloader.style.display = 'none';
+    content.style.visibility = 'visible';
+    progressBar.style.visibility = 'visible';
     progressBar.style.width = `${progressBarWidth}%`;
     img.style.backgroundImage = `url(${settings.APIUrl}${StartAudioChallengeApp.correctAnswer.image})`;
     word.innerHTML = `${StartAudioChallengeApp.correctAnswer.word}`;
@@ -194,10 +209,9 @@ class StartAudioChallengeApp {
         if (isCorrect) {
           word.optional.correctAnswersCount++;
 
-          if(word.difficulty === 'hard' && word.optional.correctAnswersCount >= correctAnswersCountForHardWords) {
+          if (word.difficulty === 'hard' && word.optional.correctAnswersCount >= correctAnswersCountForHardWords) {
             word.difficulty = 'studied';
           }
-
         } else {
           word.optional.correctAnswersCount = 0;
         }
@@ -273,8 +287,8 @@ class StartAudioChallengeApp {
       const requestsServer = new RequestsServer();
       while (wordPage >= 0 && data.length < 20) {
         const chunkOfWords = await this.getWordsChunk(group, wordPage);
-        
-        for(const word of chunkOfWords) {
+
+        for (const word of chunkOfWords) {
           if (data.length < 20) {
             const userWord = await requestsServer.getUserWord(word.id);
 
@@ -291,7 +305,7 @@ class StartAudioChallengeApp {
         wordPage--;
       }
     }
-    
+
     StartAudioChallengeApp.chunkOfWords = [...data];
     StartAudioChallengeApp.roundStatistic.numberOfQuestions = StartAudioChallengeApp.chunkOfWords.length;
   }
@@ -350,6 +364,7 @@ class StartAudioChallengeApp {
       await this.resetRoundData();
       await this.resetAnswers();
       await this.renderPage();
+      await this.renderPreloaderPage();
       await this.getWordGroupAndPage(target);
       await this.setWords(StartAudioChallengeApp.wordGroup, StartAudioChallengeApp.wordPage);
       await this.getCorrectAnswer();

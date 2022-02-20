@@ -5,6 +5,9 @@ const AudioChallengeContent = {
     const view = `
     <div class="audio-challenge-container">
       <div class="audio-challenge-container__close"></div>
+      <div class="audio-challenge-container__preloader">
+        <div class="audio-challenge-container__loader"></div>
+      </div>
       <div class="audio-challenge-container__progress-bar"></div>
       <div class="audio-challenge-container__content">
         <div class="audio-challenge-container__top"></div>
