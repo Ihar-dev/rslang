@@ -47,6 +47,8 @@ type wordDataResponse = {
   difficulty: string,
   optional: {
     correctAnswersCount: number,
+    correctAnswersCountForStatistics: number,
+    allAnswersCount: number,
   },
 }
 
@@ -209,32 +211,35 @@ class StudyBook {
     }
   }
 
-  public async handleHardWordButton(elId: string, userWords: wordDataResponse[], startApp: startAppInterface, cardHardButton: HTMLElement): Promise < void > {
+  public async handleHardWordButton(elId: string, userWords: wordDataResponse[], startApp: startAppInterface, cardHardButton: HTMLElement, refreshStatus: boolean): Promise < void > {
     const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
     if (filteredUserWords.length && filteredUserWords[0].difficulty === 'hard') {
       setAttributeForElement(cardHardButton, 'title', 'Убрать из сложных');
       setElementActive(cardHardButton);
     } else setAttributeForElement(cardHardButton, 'title', 'Добавить в сложные');
-    cardHardButton.addEventListener('click', async () => {
-      if (getAttributeFromElement(cardHardButton, 'title') === 'Добавить в сложные') {
-        const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
-        if (filteredUserWords.length) this.updateUserWord(elId, 'hard', filteredUserWords[0].optional.correctAnswersCount);
-        else this.addUserWord(elId, 'hard', 0);
-        setAttributeForElement(cardHardButton, 'title', 'Убрать из сложных');
-        setElementActive(cardHardButton);
-      } else {
-        const wordData = await this.getUserWord(elId);
-        this.updateUserWord(elId, 'studied', wordData.optional.correctAnswersCount);
-        setAttributeForElement(cardHardButton, 'title', 'Добавить в сложные');
-        setElementInactive(cardHardButton);
-      }
-    });
+    if (refreshStatus) {
+      cardHardButton.addEventListener('click', async () => {
+        if (getAttributeFromElement(cardHardButton, 'title') === 'Добавить в сложные') {
+          const filteredUserWords = userWords.filter(elem => elem.wordId === elId);
+          if (filteredUserWords.length) this.updateUserWord(elId, 'hard', filteredUserWords[0].optional.correctAnswersCount,
+            filteredUserWords[0].optional.correctAnswersCountForStatistics, filteredUserWords[0].optional.allAnswersCount);
+          else this.addUserWord(elId, 'hard');
+          setAttributeForElement(cardHardButton, 'title', 'Убрать из сложных');
+          setElementActive(cardHardButton);
+        } else {
+          const wordData = await this.getUserWord(elId);
+          this.updateUserWord(elId, 'studied', wordData.optional.correctAnswersCount, wordData.optional.correctAnswersCountForStatistics, wordData.optional.allAnswersCount);
+          setAttributeForElement(cardHardButton, 'title', 'Добавить в сложные');
+          setElementInactive(cardHardButton);
+        }
+      });
 
-    if (startApp.userSettings.userId) cardHardButton.style.display = 'block';
-    else cardHardButton.style.display = 'none';
+      if (startApp.userSettings.userId) cardHardButton.style.display = 'block';
+      else cardHardButton.style.display = 'none';
+    };
   }
 
-  public async updateUserWord(wordId: string, difficulty: string, correctAnswersCount: number): Promise < void > {
+  public async updateUserWord(wordId: string, difficulty: string, correctAnswersCount: number, correctAnswersCountForStatistics: number, allAnswersCount: number): Promise < void > {
     const startApp = new StartApp();
     try {
       const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
@@ -242,6 +247,8 @@ class StudyBook {
         difficulty: difficulty,
         optional: {
           correctAnswersCount: correctAnswersCount,
+          correctAnswersCountForStatistics: correctAnswersCountForStatistics,
+          allAnswersCount: allAnswersCount,
         }
       };
       const res = await fetch(url, {
@@ -256,7 +263,7 @@ class StudyBook {
     } catch (er) {}
   }
 
-  public async addUserWord(wordId: string, difficulty: string, correctAnswersCount: number): Promise < void > {
+  public async addUserWord(wordId: string, difficulty: string): Promise < void > {
     const startApp = new StartApp();
     try {
       const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`;
@@ -264,6 +271,8 @@ class StudyBook {
         difficulty: difficulty,
         optional: {
           correctAnswersCount: 0,
+          correctAnswersCountForStatistics: 0,
+          allAnswersCount: 0,
         }
       };
       const res = await fetch(url, {
@@ -284,6 +293,8 @@ class StudyBook {
       difficulty: '',
       optional: {
         correctAnswersCount: 0,
+        correctAnswersCountForStatistics: 0,
+        allAnswersCount: 0,
       },
     };
     try {
@@ -325,10 +336,13 @@ class StudyBook {
       difficulty: '',
       optional: {
         correctAnswersCount: 0,
+        correctAnswersCountForStatistics: 0,
+        allAnswersCount: 0,
       },
     }];
     if (startApp.userSettings.userId) {
       userWords = await this.getAllUserWords();
+      //console.log(userWords);
     };
     const bookCont = getElementByClassName('page-container__book-cont') as HTMLElement;
     this.renderCardsHeading(bookCont);
@@ -402,7 +416,7 @@ class StudyBook {
       addClassForElement(cardHardButton, 'book-cont__hard-button');
       setAttributeForElement(cardHardButton, 'word-id', el.id);
       imgContainer.append(cardHardButton);
-      this.handleHardWordButton(el.id, userWords, startApp, cardHardButton);
+      this.handleHardWordButton(el.id, userWords, startApp, cardHardButton, true);
     });
   }
 

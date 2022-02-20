@@ -213,6 +213,10 @@ class StartApp implements startAppInterface {
     userName.textContent = '';
     localStorage.setItem('rslang-user-settings', '');
     entryButton.textContent = 'Войти';
+    this.handleExitForHardButtons();
+  }
+
+  private async handleExitForHardButtons(): Promise < void > {
     const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
     hardButtons?.forEach(elem => elem.style.display = 'none');
   }
@@ -287,29 +291,34 @@ class StartApp implements startAppInterface {
         localStorage.setItem('rslang-user-settings', JSON.stringify(this.userSettings));
         userName.textContent = this.userSettings.name;
         entryButton.textContent = 'Выйти';
-        const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
-        let userWords = [{
-          difficulty: '',
-          optional: {
-            correctAnswersCount: 0,
-          },
-        }];
-        if (this.userSettings.userId) {
-          userWords = await studyBook.getAllUserWords();
-          console.log(userWords);
-        };
-        hardButtons?.forEach(elem => {
-          let elId = getAttributeFromElement(elem, 'word-id');
-          if (elId === null) elId = '';
-          studyBook.handleHardWordButton(elId, userWords, this, elem);
-          elem.style.display = 'block';
-        });
+        this.handleEntranceForHardButtons();
       };
     } catch (er) {
       this.handleMessage('Incorrect e-mail or password!', 'red-text');
       userName.textContent = '';
       entryButton.textContent = 'Войти';
     }
+  }
+
+  private async handleEntranceForHardButtons(): Promise < void > {
+    const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
+    let userWords = [{
+      difficulty: '',
+      optional: {
+        correctAnswersCount: 0,
+        correctAnswersCountForStatistics: 0,
+        allAnswersCount: 0,
+      },
+    }];
+    if (this.userSettings.userId) {
+      userWords = await studyBook.getAllUserWords();
+    };
+    hardButtons?.forEach(elem => {
+      let elId = getAttributeFromElement(elem, 'word-id');
+      if (elId === null) elId = '';
+      studyBook.handleHardWordButton(elId, userWords, this, elem, false);
+      elem.style.display = 'block';
+    });
   }
 
   private async handleRegistration(nameInput: HTMLInputElement, addressInput: HTMLInputElement, passwordInput: HTMLInputElement, entryButton: HTMLElement): Promise < void > {
