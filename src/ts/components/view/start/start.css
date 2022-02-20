@@ -230,7 +230,7 @@ body.start {
   position: absolute;
   top: 0;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   transform: translateX(-100%);
   z-index: 200;
