@@ -217,6 +217,7 @@ class StartAudioChallengeApp {
 
         if (isCorrect) {
           word.optional.correctAnswersCount++;
+          word.optional.correctAnswersCountForStatistics++;
 
           if (word.difficulty === 'hard' && word.optional.correctAnswersCount >= correctAnswersCountForHardWords) {
             word.difficulty = 'studied';
@@ -224,6 +225,7 @@ class StartAudioChallengeApp {
         } else {
           word.optional.correctAnswersCount = 0;
         }
+        word.optional.allAnswersCount++;
         delete word.id;
         delete word.wordId;
         await requestsServer.createUserWord('PUT', correctAnswer.id, word);
@@ -232,6 +234,8 @@ class StartAudioChallengeApp {
           difficulty: 'studied',
           optional: {
             correctAnswersCount: isCorrect ? 1 : 0,
+            correctAnswersCountForStatistics: isCorrect ? 1 : 0,
+            allAnswersCount: 1,
           },
         };
         await requestsServer.createUserWord('POST', correctAnswer.id, word);
@@ -531,13 +535,15 @@ class StartAudioChallengeApp {
 }
 
 type wordDataResponse = {
-  id?: string;
-  wordId?: string;
-  difficulty: string;
+  id ? : string,
+  wordId ? : string,
+  difficulty: string,
   optional: {
-    correctAnswersCount: number;
-  };
-};
+    correctAnswersCount: number,
+    correctAnswersCountForStatistics: number,
+    allAnswersCount: number,
+  },
+}
 class RequestsServer {
   public async getUserWord(wordId: string): Promise<wordDataResponse> {
     const startApp = new StartApp();
