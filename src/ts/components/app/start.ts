@@ -107,6 +107,8 @@ class StartApp implements startAppInterface {
     addClassForElement(menuContainer, 'start');
     removeClassForElement(menuContainer, 'game');
     removeClassForElement(menuContainer, 'active');
+
+    if (localStorage.getItem('rslang-page') === 'book') this.startBookPage(body, menuContainer, footer, page);
   }
 
   private addListeners(footer: HTMLElement, page: HTMLElement, body: HTMLElement): void {
@@ -146,12 +148,16 @@ class StartApp implements startAppInterface {
 
     const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
     bookButton.addEventListener('click', async () => {
-      addClassForElement(body, 'start');
-      this.resetStartForBook(menuContainer, footer, page);
-      studyBook.render();
-      footer.innerHTML = await Footer.render();
-      localStorage.setItem('rslang-page', 'book');
+      this.startBookPage(body, menuContainer, footer, page);
     });
+  }
+
+  private async startBookPage(body: HTMLElement, menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): Promise < void > {
+    addClassForElement(body, 'start');
+    this.resetStartForBook(menuContainer, footer, page);
+    studyBook.render();
+    footer.innerHTML = await Footer.render();
+    localStorage.setItem('rslang-page', 'book');
   }
 
   private addRegistrationListeners(): void {
@@ -219,6 +225,7 @@ class StartApp implements startAppInterface {
   private async handleExitForHardButtons(): Promise < void > {
     const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
     hardButtons?.forEach(elem => elem.style.display = 'none');
+    studyBook.handleGroupMenu();
   }
 
   private async updateEntrance(entryButton: HTMLElement): Promise < void > {
@@ -319,6 +326,7 @@ class StartApp implements startAppInterface {
       studyBook.handleHardWordButton(elId, userWords, this, elem, false);
       elem.style.display = 'block';
     });
+    studyBook.handleGroupMenu();
   }
 
   private async handleRegistration(nameInput: HTMLInputElement, addressInput: HTMLInputElement, passwordInput: HTMLInputElement, entryButton: HTMLElement): Promise < void > {

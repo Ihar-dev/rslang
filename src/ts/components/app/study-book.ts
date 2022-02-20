@@ -71,6 +71,141 @@ class StudyBook {
   public async render(): Promise < void > {
     await this.renderCoreComponents();
     this.addPaginationListeners();
+    this.addGroupMenuListeners();
+  }
+
+  private async renderCoreComponents(): Promise < void > {
+    const page = getElementByClassName('page-container') as HTMLElement;
+    page.innerHTML = await Main.render();
+    this.handleGroupMenu();
+    const data = await this.getWords(this.wordsSettings.group, this.wordsSettings.page);
+    localStorage.setItem('rslang-words-data', JSON.stringify(data));
+    if (this.wordsSettings.group === 6) this.openHardWordsPage();
+    else this.renderCards(data);
+  }
+
+  public handleGroupMenu(): void {
+    const startApp = new StartApp();
+    const seventhButton = getElementByClassName('book-cont__seventh-button') as HTMLElement;
+    if (seventhButton) {
+      if (!startApp.userSettings.userId) seventhButton.style.display = 'none';
+      else seventhButton.style.display = 'block';
+    };
+  }
+
+  private addGroupMenuListeners(): void {
+    const pageCount = getElementByClassName('book-cont__page-count') as HTMLElement;
+    const paginationContainer = getElementByClassName('book-cont__pagination-container') as HTMLElement;
+    const groupsButton = getElementByClassName('book-cont__groups-button') as HTMLElement;
+    const groupsChangeButtons = getElementByClassName('book-cont__groups-change-buttons') as HTMLElement;
+
+    groupsButton.addEventListener('click', () => {
+      toggleElement(groupsChangeButtons);
+    });
+
+
+    const firstButton = getElementByClassName('book-cont__first-button') as HTMLElement;
+    firstButton.addEventListener('click', async () => {
+      if (this.wordsSettings.group !== 0) {
+        const data = await this.getWords(this.wordsSettings.group = 0, this.wordsSettings.page);
+        this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
+        paginationContainer.style.display = 'flex';
+      }
+    });
+
+    const secondButton = getElementByClassName('book-cont__second-button') as HTMLElement;
+    secondButton.addEventListener('click', async () => {
+      if (this.wordsSettings.group !== 1) {
+        const data = await this.getWords(this.wordsSettings.group = 1, this.wordsSettings.page);
+        this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
+        paginationContainer.style.display = 'flex';
+      }
+    });
+
+    const thirdButton = getElementByClassName('book-cont__third-button') as HTMLElement;
+    thirdButton.addEventListener('click', async () => {
+      if (this.wordsSettings.group !== 2) {
+        const data = await this.getWords(this.wordsSettings.group = 2, this.wordsSettings.page);
+        this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
+        paginationContainer.style.display = 'flex';
+      }
+    });
+
+    const forthButton = getElementByClassName('book-cont__forth-button') as HTMLElement;
+    forthButton.addEventListener('click', async () => {
+      if (this.wordsSettings.group !== 3) {
+        const data = await this.getWords(this.wordsSettings.group = 3, this.wordsSettings.page);
+        this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
+        paginationContainer.style.display = 'flex';
+      }
+    });
+
+    const fifthButton = getElementByClassName('book-cont__fifth-button') as HTMLElement;
+    fifthButton.addEventListener('click', async () => {
+      if (this.wordsSettings.group !== 4) {
+        const data = await this.getWords(this.wordsSettings.group = 4, this.wordsSettings.page);
+        this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
+        paginationContainer.style.display = 'flex';
+      }
+    });
+
+    const sixthButton = getElementByClassName('book-cont__sixth-button') as HTMLElement;
+    sixthButton.addEventListener('click', async () => {
+      if (this.wordsSettings.group !== 5) {
+        const data = await this.getWords(this.wordsSettings.group = 5, this.wordsSettings.page);
+        this.handlePagination(pageCount, data);
+        toggleElement(groupsChangeButtons);
+        paginationContainer.style.display = 'flex';
+      }
+    });
+
+    const seventhButton = getElementByClassName('book-cont__seventh-button') as HTMLElement;
+    seventhButton.addEventListener('click', async () => {
+      if (this.wordsSettings.group !== 6) {
+        const data = await this.getWords(this.wordsSettings.group = 6, this.wordsSettings.page);
+        toggleElement(groupsChangeButtons);
+        this.openHardWordsPage();
+        localStorage.setItem('rslang-words-settings', JSON.stringify(this.wordsSettings));
+        paginationContainer.style.display = 'none';
+      }
+    });
+  }
+
+  private async openHardWordsPage(): Promise < void > { 
+    const paginationContainer = getElementByClassName('book-cont__pagination-container') as HTMLElement;
+    paginationContainer.style.display = 'none';  
+    const startApp = new StartApp();
+    const userWords = await this.getAllUserWords();
+    const bookCont = getElementByClassName('page-container__book-cont') as HTMLElement;
+    this.renderCardsHeading(bookCont, true);
+    const allUserHardWords = userWords.filter(elem => elem.difficulty === 'hard');
+    const allUserHardWordsImproved: wordsResponse[] = [];
+    allUserHardWords.forEach(async (elem, index) => {
+      if (elem.wordId) {
+        const hardWordFullData = await this.getWord(elem.wordId);
+        allUserHardWordsImproved.push(hardWordFullData);
+        if (index === allUserHardWords.length - 1) {
+          allUserHardWordsImproved.forEach(el => {
+            this.renderNewCard(el, bookCont, userWords, startApp);
+          });
+        };
+      };
+    });
+  }
+
+  private async getWord(wordId: string): Promise < wordsResponse > {
+    let data = [];
+    let url = `${settings.APIUrl}words/${wordId}`;
+    try {
+      const res = await fetch(url);
+      data = await res.json();
+    } catch (er) {}
+    return data;
   }
 
   private addPaginationListeners(): void {
@@ -106,67 +241,6 @@ class StudyBook {
         this.handlePagination(pageCount, data);
       }
     });
-
-    const groupsButton = getElementByClassName('book-cont__groups-button') as HTMLElement;
-    const groupsChangeButtons = getElementByClassName('book-cont__groups-change-buttons') as HTMLElement;
-    groupsButton.addEventListener('click', () => {
-      toggleElement(groupsChangeButtons);
-    });
-
-
-    const firstButton = getElementByClassName('book-cont__first-button') as HTMLElement;
-    firstButton.addEventListener('click', async () => {
-      if (this.wordsSettings.group !== 0) {
-        const data = await this.getWords(this.wordsSettings.group = 0, this.wordsSettings.page);
-        this.handlePagination(pageCount, data);
-        toggleElement(groupsChangeButtons);
-      }
-    });
-
-    const secondButton = getElementByClassName('book-cont__second-button') as HTMLElement;
-    secondButton.addEventListener('click', async () => {
-      if (this.wordsSettings.group !== 1) {
-        const data = await this.getWords(this.wordsSettings.group = 1, this.wordsSettings.page);
-        this.handlePagination(pageCount, data);
-        toggleElement(groupsChangeButtons);
-      }
-    });
-
-    const thirdButton = getElementByClassName('book-cont__third-button') as HTMLElement;
-    thirdButton.addEventListener('click', async () => {
-      if (this.wordsSettings.group !== 2) {
-        const data = await this.getWords(this.wordsSettings.group = 2, this.wordsSettings.page);
-        this.handlePagination(pageCount, data);
-        toggleElement(groupsChangeButtons);
-      }
-    });
-
-    const forthButton = getElementByClassName('book-cont__forth-button') as HTMLElement;
-    forthButton.addEventListener('click', async () => {
-      if (this.wordsSettings.group !== 3) {
-        const data = await this.getWords(this.wordsSettings.group = 3, this.wordsSettings.page);
-        this.handlePagination(pageCount, data);
-        toggleElement(groupsChangeButtons);
-      }
-    });
-
-    const fifthButton = getElementByClassName('book-cont__fifth-button') as HTMLElement;
-    fifthButton.addEventListener('click', async () => {
-      if (this.wordsSettings.group !== 4) {
-        const data = await this.getWords(this.wordsSettings.group = 4, this.wordsSettings.page);
-        this.handlePagination(pageCount, data);
-        toggleElement(groupsChangeButtons);
-      }
-    });
-
-    const sixthButton = getElementByClassName('book-cont__sixth-button') as HTMLElement;
-    sixthButton.addEventListener('click', async () => {
-      if (this.wordsSettings.group !== 5) {
-        const data = await this.getWords(this.wordsSettings.group = 5, this.wordsSettings.page);
-        this.handlePagination(pageCount, data);
-        toggleElement(groupsChangeButtons);
-      }
-    });
   }
 
   private async handlePagination(pageCount: HTMLElement, data: wordsResponse[]): Promise < void > {
@@ -175,18 +249,11 @@ class StudyBook {
     localStorage.setItem('rslang-words-settings', JSON.stringify(this.wordsSettings));
   }
 
-  private async renderCoreComponents(): Promise < void > {
-    const page = getElementByClassName('page-container') as HTMLElement;
-    page.innerHTML = await Main.render();
-    const data = await this.getWords(this.wordsSettings.group, this.wordsSettings.page);
-    localStorage.setItem('rslang-words-data', JSON.stringify(data));
-    this.renderCards(data);
-  }
-
-  private renderCardsHeading(bookCont: HTMLElement): void {
+  private renderCardsHeading(bookCont: HTMLElement, hardWordsPage: boolean): void {
     bookCont.innerHTML = '';
     const bookContHeading = getElementByClassName('book-cont__heading') as HTMLElement;
-    bookContHeading.textContent = `Уровень сложности ${this.wordsSettings.group + 1}`;
+    if (hardWordsPage) bookContHeading.textContent = `Уровень сложности Сложные`;
+    else bookContHeading.textContent = `Уровень сложности ${this.wordsSettings.group + 1}`;
     switch (this.wordsSettings.group) {
       case 0:
         bookContHeading.style.color = '#357C3C';
@@ -209,6 +276,7 @@ class StudyBook {
       default:
         bookContHeading.style.color = 'white';
     }
+    if (hardWordsPage) bookContHeading.style.color = '#E5890A';
   }
 
   public async handleHardWordButton(elId: string, userWords: wordDataResponse[], startApp: startAppInterface, cardHardButton: HTMLElement, refreshStatus: boolean): Promise < void > {
@@ -232,6 +300,9 @@ class StudyBook {
           setAttributeForElement(cardHardButton, 'title', 'Добавить в сложные');
           setElementInactive(cardHardButton);
         }
+
+        const bookContHeading = getElementByClassName('book-cont__heading') as HTMLElement;
+        if (bookContHeading.textContent === `Уровень сложности Сложные`) this.openHardWordsPage();
       });
 
       if (startApp.userSettings.userId) cardHardButton.style.display = 'block';
@@ -314,7 +385,15 @@ class StudyBook {
 
   public async getAllUserWords(): Promise < wordDataResponse[] > {
     const startApp = new StartApp();
-    let data = [];
+    let data = [{
+      difficulty: '',
+      optional: {
+        correctAnswersCount: 0,
+        correctAnswersCountForStatistics: 0,
+        allAnswersCount: 0,
+      },
+      wordId: '',
+    }];;
     try {
       const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/words/`;
       const res = await fetch(url, {
@@ -345,79 +424,81 @@ class StudyBook {
       //console.log(userWords);
     };
     const bookCont = getElementByClassName('page-container__book-cont') as HTMLElement;
-    this.renderCardsHeading(bookCont);
-    data.forEach(el => {
-      const card = document.createElement('div');
-      addClassForElement(card, 'book-cont__word-card');
-      bookCont.append(card);
-      const imgContainer = document.createElement('div');
-      imgContainer.style.backgroundImage = `url(${settings.APIUrl}${el.image})`;
-      addClassForElement(imgContainer, 'book-cont__img-container');
-      card.append(imgContainer);
-      const translationContainer = document.createElement('div');
-      addClassForElement(translationContainer, 'book-cont__translation-cont');
-      imgContainer.append(translationContainer);
+    this.renderCardsHeading(bookCont, false);
+    data.forEach(el => this.renderNewCard(el, bookCont, userWords, startApp));
+  }
 
-      const audioMeaningButton = document.createElement('div');
-      addClassForElement(audioMeaningButton, 'book-cont__audio-meaning-button');
-      const audio = new Audio();
-      audio.src = `${settings.APIUrl}${el.audio}`;
-      const audioMeaning = new Audio();
-      audioMeaning.src = `${settings.APIUrl}${el.audioMeaning}`;
-      const audioExample = new Audio();
-      audioExample.src = `${settings.APIUrl}${el.audioExample}`;
-      translationContainer.append(audioMeaningButton);
-      audioMeaningButton.addEventListener('click', () => {
-        audio.play();
-        setTimeout(() => {
-          audioMeaning.play();
-        }, audio.duration * 1000);
-        setTimeout(() => {
-          audioExample.play();
-        }, audio.duration * 1000 + audioMeaning.duration * 1000);
-      });
+  private renderNewCard(el: wordsResponse, bookCont: HTMLElement, userWords: wordDataResponse[], startApp: startAppInterface): void {
+    const card = document.createElement('div');
+    addClassForElement(card, 'book-cont__word-card');
+    bookCont.append(card);
+    const imgContainer = document.createElement('div');
+    imgContainer.style.backgroundImage = `url(${settings.APIUrl}${el.image})`;
+    addClassForElement(imgContainer, 'book-cont__img-container');
+    card.append(imgContainer);
+    const translationContainer = document.createElement('div');
+    addClassForElement(translationContainer, 'book-cont__translation-cont');
+    imgContainer.append(translationContainer);
 
-      const transcriptionText = document.createElement('div');
-      addClassForElement(transcriptionText, 'book-cont__transcription-text');
-      transcriptionText.textContent = el.transcription;
-      translationContainer.append(transcriptionText);
-
-      const translationText = document.createElement('div');
-      addClassForElement(translationText, 'book-cont__translation-text');
-      translationText.textContent = el.wordTranslate;
-      translationContainer.append(translationText);
-
-      const cardWord = document.createElement('div');
-      addClassForElement(cardWord, 'book-cont__word');
-      cardWord.textContent = el.word;
-      imgContainer.append(cardWord);
-
-      const textMeaning = document.createElement('div');
-      addClassForElement(textMeaning, 'book-cont__text-meaning');
-      textMeaning.innerHTML = el.textMeaning;
-      card.append(textMeaning);
-      const textExample = document.createElement('div');
-      addClassForElement(textExample, 'book-cont__text-example');
-      textExample.innerHTML = el.textExample;
-      card.append(textExample);
-      const hr = document.createElement('hr');
-      addClassForElement(hr, 'book-cont__hr');
-      card.append(hr);
-      const textExampleTranslate = document.createElement('div');
-      addClassForElement(textExampleTranslate, 'book-cont__text-example-translate');
-      textExampleTranslate.textContent = el.textExampleTranslate;
-      card.append(textExampleTranslate);
-      const textMeaningTranslate = document.createElement('div');
-      addClassForElement(textMeaningTranslate, 'book-cont__text-meaning-translate');
-      textMeaningTranslate.textContent = el.textMeaningTranslate;
-      card.append(textMeaningTranslate);
-
-      const cardHardButton = document.createElement('div');
-      addClassForElement(cardHardButton, 'book-cont__hard-button');
-      setAttributeForElement(cardHardButton, 'word-id', el.id);
-      imgContainer.append(cardHardButton);
-      this.handleHardWordButton(el.id, userWords, startApp, cardHardButton, true);
+    const audioMeaningButton = document.createElement('div');
+    addClassForElement(audioMeaningButton, 'book-cont__audio-meaning-button');
+    const audio = new Audio();
+    audio.src = `${settings.APIUrl}${el.audio}`;
+    const audioMeaning = new Audio();
+    audioMeaning.src = `${settings.APIUrl}${el.audioMeaning}`;
+    const audioExample = new Audio();
+    audioExample.src = `${settings.APIUrl}${el.audioExample}`;
+    translationContainer.append(audioMeaningButton);
+    audioMeaningButton.addEventListener('click', () => {
+      audio.play();
+      setTimeout(() => {
+        audioMeaning.play();
+      }, audio.duration * 1000);
+      setTimeout(() => {
+        audioExample.play();
+      }, audio.duration * 1000 + audioMeaning.duration * 1000);
     });
+
+    const transcriptionText = document.createElement('div');
+    addClassForElement(transcriptionText, 'book-cont__transcription-text');
+    transcriptionText.textContent = el.transcription;
+    translationContainer.append(transcriptionText);
+
+    const translationText = document.createElement('div');
+    addClassForElement(translationText, 'book-cont__translation-text');
+    translationText.textContent = el.wordTranslate;
+    translationContainer.append(translationText);
+
+    const cardWord = document.createElement('div');
+    addClassForElement(cardWord, 'book-cont__word');
+    cardWord.textContent = el.word;
+    imgContainer.append(cardWord);
+
+    const textMeaning = document.createElement('div');
+    addClassForElement(textMeaning, 'book-cont__text-meaning');
+    textMeaning.innerHTML = el.textMeaning;
+    card.append(textMeaning);
+    const textExample = document.createElement('div');
+    addClassForElement(textExample, 'book-cont__text-example');
+    textExample.innerHTML = el.textExample;
+    card.append(textExample);
+    const hr = document.createElement('hr');
+    addClassForElement(hr, 'book-cont__hr');
+    card.append(hr);
+    const textExampleTranslate = document.createElement('div');
+    addClassForElement(textExampleTranslate, 'book-cont__text-example-translate');
+    textExampleTranslate.textContent = el.textExampleTranslate;
+    card.append(textExampleTranslate);
+    const textMeaningTranslate = document.createElement('div');
+    addClassForElement(textMeaningTranslate, 'book-cont__text-meaning-translate');
+    textMeaningTranslate.textContent = el.textMeaningTranslate;
+    card.append(textMeaningTranslate);
+
+    const cardHardButton = document.createElement('div');
+    addClassForElement(cardHardButton, 'book-cont__hard-button');
+    setAttributeForElement(cardHardButton, 'word-id', el.id);
+    imgContainer.append(cardHardButton);
+    this.handleHardWordButton(el.id, userWords, startApp, cardHardButton, true);
   }
 
   private async getWords(group: number, page: number): Promise < wordsResponse[] > {
