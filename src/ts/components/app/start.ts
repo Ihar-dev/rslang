@@ -225,7 +225,11 @@ class StartApp implements startAppInterface {
   private async handleExitForHardButtons(): Promise < void > {
     const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
     hardButtons?.forEach(elem => elem.style.display = 'none');
+
     studyBook.handleGroupMenu();
+
+    const studiedButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__studied-button');
+    studiedButtons?.forEach(elem => elem.style.display = 'none');
   }
 
   private async updateEntrance(entryButton: HTMLElement): Promise < void > {
@@ -326,7 +330,16 @@ class StartApp implements startAppInterface {
       studyBook.handleHardWordButton(elId, userWords, this, elem, false);
       elem.style.display = 'block';
     });
+    
     studyBook.handleGroupMenu();
+
+    const studiedButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__studied-button');
+    studiedButtons?.forEach(elem => {
+      let elId = getAttributeFromElement(elem, 'word-id');
+      if (elId === null) elId = '';
+      studyBook.handleStudiedWordButton(elId, userWords, this, elem, false);
+      elem.style.display = 'block';
+    });
   }
 
   private async handleRegistration(nameInput: HTMLInputElement, addressInput: HTMLInputElement, passwordInput: HTMLInputElement, entryButton: HTMLElement): Promise < void > {
