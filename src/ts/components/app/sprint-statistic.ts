@@ -128,8 +128,11 @@ class SprintStatistic implements RoundStatistic {
   sortRoundInCorrectWords = async (user: userSettings):Promise<void> => {
     this.wrongAnswers.forEach(async (element) => {
       const word: userWord | null = await this.getUserWord(element.id) as unknown as userWord | null;
-      if (word !== null) {        
-          await this.changeUserWord(word, 'studied', 0, Number(word.optional.correctAnswersCountForStatistics), Number(word.optional.allAnswersCount) + 1);        
+      if (word !== null) { 
+        if (word.difficulty === 'hard') {
+          await this.changeUserWord(word, 'hard', 0, Number(word.optional.correctAnswersCountForStatistics), Number(word.optional.allAnswersCount) + 1);
+        }else if (word.difficulty === 'studied') {
+          await this.changeUserWord(word, 'studied', 0, Number(word.optional.correctAnswersCountForStatistics), Number(word.optional.allAnswersCount) + 1); }       
       } else await this.createUserWord(user, element, 0, 0, 0)
     })
   }
@@ -217,50 +220,6 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
       console.log(error);
     }
   }
-
-  getUserStatistic = async(): Promise<userStatistic | boolean> => {
-    const startApp = new StartApp;
-const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/statistics`;
-try {
-      const req: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${startApp.userSettings.token}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      });
-     const data: userStatistic | boolean = req.ok ? await req.json(): false;
-     return data;
-  } catch {
-    const data = false;
-    return data;
-  } 
-}
-
-setUserStatistic = async(learnedWords: number, day: Date, correctAnswers: number, allAnswers: number, longestCorrectRangeSprint: number) => {
-  const startApp = new StartApp;
-const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/statistics`;
-      const req: Response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${startApp.userSettings.token}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({          
-  "learnedWords": `${learnedWords}`,
-  "optional": {
-    'day': `${day}`,
-    'correctAnswersSprint' : `${correctAnswers}`,
-    'allAnswersSprint': `${allAnswers}`,
-    'longestCorrectRangeSprint': `${longestCorrectRangeSprint}`
-  }          
-        })
-      });
-     const data: userStatistic | boolean = req.ok ? await req.json(): false;
-}
-
 
 }
 
