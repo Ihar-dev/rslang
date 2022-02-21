@@ -1,0 +1,13 @@
+.statistic-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(81, 165, 221);
+    background-image: url("../../../../assets/img/start-image.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}

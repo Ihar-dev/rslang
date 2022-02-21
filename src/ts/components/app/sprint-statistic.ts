@@ -102,7 +102,7 @@ class SprintStatistic implements RoundStatistic {
       await this.sortRoundInCorrectWords(user);      
     console.log(`words sorted`)
     const longestCorrectRange: number = this.correctAnswersSeries;
-    const allWordsRoundCount: number = this.numberOfQuestions;
+    const allWordsRoundCount: number = this.correctAnswers.length + this.wrongAnswers.length;
     const correctAnswersRoundCount: number = this.correctAnswers.length;
     statistics.updateStatistics(learnedWords, longestCorrectRange, 'sprint', allWordsRoundCount, correctAnswersRoundCount);
     }
