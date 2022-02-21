@@ -26,6 +26,9 @@ const startAudioChallengeApp = new StartAudioChallengeApp();
 import {StudyBook} from './study-book';
 const studyBook = new StudyBook();
 
+import {Statistics} from './statistics';
+const statistics = new Statistics();
+
 type user = {
   name ? : string,
   email: string,
@@ -151,6 +154,16 @@ class StartApp implements startAppInterface {
    
     bookButton.addEventListener('click', async () => {
       this.startBookPage(body, menuContainer, footer, page);
+    });
+   
+    const statisticsButton = getElementByClassName('menu__statistics-button') as HTMLElement;
+    statisticsButton.addEventListener('click', async () => {
+      statistics.getStatistics();
+    });
+   
+    const teamButton = getElementByClassName('menu__team-button') as HTMLElement;
+    teamButton.addEventListener('click', async () => {
+
     });
   }
 
