@@ -17,6 +17,9 @@ import {
 import Main from '../view/study-book/main';
 import '../view/study-book/study-book.css';
 
+import {Statistics} from './statistics';
+const statistics = new Statistics();
+
 import {
   StartApp,
   settings,
@@ -378,11 +381,13 @@ class StudyBook {
           else this.addUserWord(elId, 'studied', 3, 0, 0);
           setAttributeForElement(studiedButton, 'title', 'Убрать из изученных');
           setElementActive(studiedButton);
+          statistics.changeLearnedWordsCount('up');
         } else {
           const wordData = await this.getUserWord(elId);
           this.updateUserWord(elId, wordData.difficulty, 0, wordData.optional.correctAnswersCountForStatistics, wordData.optional.allAnswersCount);
           setAttributeForElement(studiedButton, 'title', 'Добавить в изученные');
           setElementInactive(studiedButton);
+          statistics.changeLearnedWordsCount('down');
         }
 
         this.handleStudiedWordOnPageCount();

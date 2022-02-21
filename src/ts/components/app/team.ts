@@ -1,23 +1,5 @@
 import {
-  StartApp,
-  settings,
-} from './start';
-
-import {
-  getBody,
   getElementByClassName,
-  getListOfElementsByClassName,
-  getElementById,
-  setElementActive,
-  addClassForElement,
-  setElementInactive,
-  removeClassForElement,
-  toggleElement,
-  classListContains,
-  getRandomElementForStringArray,
-  setAttributeForElements,
-  setAttributeForElement,
-  getAttributeFromElement,
 } from './helper';
 
 import Main from '../view/team/main';
