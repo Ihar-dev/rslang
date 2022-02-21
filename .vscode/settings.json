@@ -2,6 +2,8 @@
   "liveServer.settings.port": 5502,
   "cSpell.words": [
     "включаются",
+    "Войти",
+    "Выйти",
     "Максимум",
     "минимум",
     "Уровень",
@@ -12,6 +14,7 @@
     "endround",
     "MINIMUMSECONDSCOUNTDOUN",
     "rightbutton",
+    "signin",
     "sprintview",
     "wronganswer",
     "wrongbutton",
