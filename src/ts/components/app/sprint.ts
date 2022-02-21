@@ -125,7 +125,6 @@ class Sprint {
         const roundTimerContainer = document.querySelector('.sprint-round-countdown') as HTMLElement;
         if (roundTimerContainer) roundTimerContainer.remove();
         nextRoundButton.addEventListener('click', () => {
-            console.log(page);
             if (page < 30) {page++} else page = 0;
             console.log(page);
             newSprint.startSprint();
@@ -327,11 +326,11 @@ class Sprint {
     }
 
     public async getGameDifficulty(): Promise < void > {
+        const startApp = new StartApp;
         const body: HTMLElement = document.querySelector('body') as HTMLElement;
         body.classList.remove('book');
-        if (localStorage.getItem('rslang-words-data')) {
+        if (localStorage.getItem('rslang-words-data') && startApp.userSettings.userId) {
             savedWordsFromStudyBook = localStorage.getItem('rslang-words-data') as string;
-            console.log(`332`);
             if (savedWordsFromStudyBook.length > 0) {
             await this.filterWordsForRound();
             } else {
@@ -369,11 +368,8 @@ class Sprint {
     }
 
     filterWordsForRound = async(): Promise<void> => {
-        console.log(`365`);
         wordsSet.length =  0;
-        console.log(`366`);
-        wordsSetFull.length = 0;
-        console.log(`368`);
+        wordsSetFull.length = 0;       
         const rslangBookSettings: string = localStorage.getItem('rslang-words-settings') as string;
                 const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
                 let filteredPage = Number(bookSettings.page);
@@ -381,7 +377,7 @@ class Sprint {
                 let group = Number(bookSettings.group);
         let wordsFromStudyBook: word[] = await this.getWordsChunk(filteredPage, group) as word[];
         const filteredWordsForRound: word[] = [];
-         while (filteredWordsForRound.length < 20 && page >= 0) {
+         while (filteredWordsForRound.length < 20 && filteredPage >= 0) {
         await wordsFromStudyBook.forEach(async (element) => {
             const wordId: string = element.id;
             const word: userWord | null = await sprintRoundStatistic.getUserWord(wordId) as unknown as userWord | null;
@@ -402,7 +398,8 @@ class Sprint {
             }
         } else filteredWordsForRound.push(element);
         });       
-            filteredPage = filteredPage-1;
+            if (filteredPage >0) filteredPage--;
+            console.log(`${filteredPage} `)
             wordsFromStudyBook = await this.getWordsChunk(filteredPage, group);
         } 
         console.log(filteredWordsForRound.length);

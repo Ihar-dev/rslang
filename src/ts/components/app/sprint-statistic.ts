@@ -3,6 +3,7 @@ import {
   StartApp
 } from './start';
 import { StudyBook } from "./study-book";
+import {Statistics} from './statistics';
 
 const studyBook = new StudyBook;
 
@@ -61,6 +62,8 @@ type userStatistic = {
   }
 }
 
+let learnedWords: number = 0;
+
 
 class SprintStatistic implements RoundStatistic {
 
@@ -90,12 +93,18 @@ class SprintStatistic implements RoundStatistic {
   }
 
   public sortRoundWords = async () => {
+    learnedWords = 0;
+    const statistics = new Statistics();
     const startApp = new StartApp;
     const user: userSettings = this.getUser() as userSettings;
     if (startApp.userSettings.userId) {
       await this.sortRoundCorrectWords(user);
       await this.sortRoundInCorrectWords(user);      
     console.log(`words sorted`)
+    const longestCorrectRange: number = this.correctAnswersSeries;
+    const allWordsRoundCount: number = this.numberOfQuestions;
+    const correctAnswersRoundCount: number = this.correctAnswers.length;
+    statistics.updateStatistics(learnedWords, longestCorrectRange, 'sprint', allWordsRoundCount, correctAnswersRoundCount);
     }
   }
 
@@ -105,8 +114,10 @@ class SprintStatistic implements RoundStatistic {
         if (word !== null) {
          if (word.difficulty === 'hard') {
            await this.changeUserWord(word, 'hard', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) + 1);
+           learnedWords = Number(word.optional.correctAnswersCount) == 4 ? learnedWords + 1: learnedWords;
         } else {
           await this.changeUserWord(word, 'studied', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) +1);
+          learnedWords = Number(word.optional.correctAnswersCount) == 2 ? learnedWords + 1: learnedWords;
         }
       } else {
         await this.createUserWord(user, element, 1, 1, 1)
