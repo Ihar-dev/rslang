@@ -31,7 +31,7 @@ export type word = {
   textExampleTranslate: string
 };
 
-type userWord = {
+export type userWord = {
   id: string,
   difficulty: string,
   optional: {
@@ -94,42 +94,40 @@ class SprintStatistic implements RoundStatistic {
     const user: userSettings = this.getUser() as userSettings;
     if (startApp.userSettings.userId) {
       await this.sortRoundCorrectWords(user);
-      await this.sortRoundInCorrectWords(user);
+      await this.sortRoundInCorrectWords(user);      
+    console.log(`words sorted`)
     }
   }
 
-  sortRoundCorrectWords = async (user: userSettings) => {
+  sortRoundCorrectWords = async (user: userSettings):Promise<void> => {
     this.correctAnswers.forEach(async (element) => {
-      const word: userWord | null = await this.getUserWord(user, element.id) as unknown as userWord | null;
-      console.log (`получил${word}`)
-      if (word !== null) {
-        if (word.difficulty === 'hard' && word.optional.correctAnswersCount > 4) {
-          await this.changeUserWord(word, 'studied', word.optional.correctAnswersCount + 1, word.optional.correctAnswersCountForStatistics + 1, word.optional.allAnswersCount + 1);
-        } else if (word.difficulty === 'hard') {
-           await this.changeUserWord(word, 'hard', word.optional.correctAnswersCount + 1, word.optional.correctAnswersCountForStatistics + 1, word.optional.allAnswersCount + 1);
+      const word: userWord | null = await this.getUserWord(element.id) as unknown as userWord | null;
+        if (word !== null) {
+         if (word.difficulty === 'hard') {
+           await this.changeUserWord(word, 'hard', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) + 1);
         } else {
-          await this.changeUserWord(word, 'studied', word.optional.correctAnswersCount + 1, word.optional.correctAnswersCountForStatistics + 1, word.optional.allAnswersCount +1);
+          await this.changeUserWord(word, 'studied', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) +1);
         }
       } else {
-        await this.createUserWord(user, element, 1)
+        await this.createUserWord(user, element, 1, 1, 1)
       }
     });
   }
 
-  sortRoundInCorrectWords = async (user: userSettings) => {
+  sortRoundInCorrectWords = async (user: userSettings):Promise<void> => {
     this.wrongAnswers.forEach(async (element) => {
-      const word: userWord | null = await this.getUserWord(user, element.id) as unknown as userWord | null;
+      const word: userWord | null = await this.getUserWord(element.id) as unknown as userWord | null;
       if (word !== null) {        
-          await this.changeUserWord(word, 'studied', 0, word.optional.correctAnswersCountForStatistics, word.optional.allAnswersCount + 1);        
-      }
+          await this.changeUserWord(word, 'studied', 0, Number(word.optional.correctAnswersCountForStatistics), Number(word.optional.allAnswersCount) + 1);        
+      } else await this.createUserWord(user, element, 0, 0, 0)
     })
   }
 
-  getUserWord = async (user: userSettings, wordId: string): Promise < userWord | null > => {
+  public getUserWord = async ( wordId: string): Promise < userWord | null > => {
     const startApp = new StartApp;
     let content: userWord | null = null;
     try {
-      const rawResponse = await fetch(`${settings.APIUrl}${user.userId}/words/${wordId}`, {
+      const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings.userId}/words/${wordId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${startApp.userSettings.token}`,
@@ -137,20 +135,31 @@ class SprintStatistic implements RoundStatistic {
           'Content-Type': 'application/json'
         }
       });
-      content = rawResponse.status !== 404 ? await rawResponse.json() as userWord : null;
-      console.log(content)
+      content = rawResponse.status !== 404 ? await rawResponse.json() as userWord : null;      
     } catch (error) {
-      console.log('get word error')
-      console.log(content);
-    }
-    console.log(content)
+      console.log('get word error')     
+    }   
     return content;
   }
 
-  changeUserWord = async (word: userWord, difficulty: string, correctAnswers: number, correctAnswersCountForStatistics: number, allAnswersCount: number,) => {
+  getAllUserWords = async() => {
+    const startApp = new StartApp;
+const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings.userId}/words/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${startApp.userSettings.token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      const content = await rawResponse.json() as userWord[];     
+      return content;
+  }
+
+  changeUserWord = async (word: userWord, difficulty: string, correctAnswers: number, correctAnswersCountForStatistics: number, allAnswersCount: number) => {
     const user: userSettings = this.getUser();
     try {
-      const rawResponse = await fetch(`${settings.APIUrl}${word.id}/words/${word.wordId}`, {
+      const rawResponse = await fetch(`${settings.APIUrl}users/${user.userId}/words/${word.wordId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${user.token}`,
@@ -171,7 +180,7 @@ class SprintStatistic implements RoundStatistic {
     }
   }
 
-  createUserWord = async (user: userSettings, word: word, correctAnswers: number) => {
+  createUserWord = async (user: userSettings, word: word, correctAnswers: number, correctAnswersCountForStatistics: number, allAnswersCount: number) => {
     const url = `${settings.APIUrl}users/${user.userId}/words/${word.id}`;
     try {
       const req = await fetch(url, {
@@ -184,9 +193,9 @@ class SprintStatistic implements RoundStatistic {
         body: JSON.stringify({
           "difficulty": "studying",
           "optional": {
-            'correctAnswersCount': `${correctAnswers},
-            'correctAnswersCountForStatistics': '1',
-            'allAnswersCount': '1',`
+            'correctAnswersCount': `${correctAnswers}`,
+            'correctAnswersCountForStatistics': `${correctAnswersCountForStatistics}`,
+            'allAnswersCount': `${allAnswersCount}`,
           }
         })
       });
@@ -241,13 +250,6 @@ const url = `${settings.APIUrl}users/${startApp.userSettings.userId}/statistics`
      const data: userStatistic | boolean = req.ok ? await req.json(): false;
 }
 
-updateUserStatisticLearnedWords = async() => {
-  const userStatistic: userStatistic| boolean = await this.getUserStatistic();
-  const date = (new Date).toDateString();
-  if (userStatistic)  {
-        
-  }
- }
 
 }
 

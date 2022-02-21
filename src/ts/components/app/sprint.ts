@@ -1,4 +1,6 @@
-import {StartApp} from './start';
+import {
+    StartApp
+} from './start';
 import {
     wordAudio,
     ticAudio,
@@ -13,7 +15,7 @@ import {
 
 import OpenGameDifficultyPage from "./game-difficulty";
 import {
-    sprintRoundStatistic
+    sprintRoundStatistic, userWord
 } from "./sprint-statistic";
 
 type word = {
@@ -33,6 +35,11 @@ type word = {
     textExampleTranslate: string
 };
 
+type rslangWordsSettings = {
+    group: string,
+    page: string
+}
+
 type answer = {
     word: string,
     wordTranslate: string,
@@ -42,9 +49,10 @@ type answer = {
 };
 
 let answer: answer;
-let wordsSet: Array < word > ;
-let wordsSetFull: Array < word > ;
+let wordsSet: Array < word > = [];
+let wordsSetFull: Array < word > = [];
 let roundScore: number;
+let savedWordsFromStudyBook: string = '';
 
 //-----------------Get CHUNK OF Words for Game---------------------------
 
@@ -67,7 +75,7 @@ class Sprint {
         return Math.floor(Math.random() * (max - min + 1)) + min; //max and min includes
     }
 
-    getSprintQuestion = async (): Promise < void > => {        
+    getSprintQuestion = async (): Promise < void > => {
         const questionWord: word = wordsSet[0];
         wordsSet = wordsSet.filter(element => element !== questionWord);
         let tempWordsSet = wordsSetFull.filter(element => element !== questionWord);
@@ -94,7 +102,7 @@ class Sprint {
         return answerWord;
     }
 
-    public roundOver = (): void => {        
+    public roundOver = (): void => {
         this.clearCountDownTimeouts();
         ticAudio.pause();
         endRoundAudio.play();
@@ -107,7 +115,7 @@ class Sprint {
    <p>ROUND OVER</p>
    <p>Your Score-${roundScore} </p>
    <button class="sprint-wright-button">GET ROUND STATISTIC</button>`;
-    sprintRoundStatistic.sortRoundWords();
+        sprintRoundStatistic.sortRoundWords();
         const writeButton = document.querySelector('.sprint-wright-button') as HTMLElement;
         writeButton.addEventListener('click', () => {
             newSprint.renderRoundStatistic();
@@ -117,7 +125,9 @@ class Sprint {
         const roundTimerContainer = document.querySelector('.sprint-round-countdown') as HTMLElement;
         if (roundTimerContainer) roundTimerContainer.remove();
         nextRoundButton.addEventListener('click', () => {
-            page = page < 30 ? page++ : 0;
+            console.log(page);
+            if (page < 30) {page++} else page = 0;
+            console.log(page);
             newSprint.startSprint();
         });
         quitRoundButton.addEventListener('click', () => {
@@ -150,7 +160,7 @@ class Sprint {
                     namingContainer.classList.remove('filter-gray');
                     namingContainer.classList.remove('naming-sprint');
                     this.clearCountDownTimeouts();
-                    ticAudio.pause();                    
+                    ticAudio.pause();
                 })
             }
         });
@@ -201,36 +211,36 @@ class Sprint {
             writeButton.addEventListener('click', this.getWrongAnswer);
             wrongButton.addEventListener('click', this.getWriteAnswer);
         }
-       window.addEventListener('keydown', this.keyboardListen);
+        window.addEventListener('keydown', this.keyboardListen);
     }
-    
+
     keyboardListen = (event: KeyboardEvent): void => {
-  if (event.defaultPrevented) {
-    return;
-  }
-    const writeButton: HTMLElement = document.querySelector('.sprint-wright-button') as HTMLElement;
-    const wrongButton: HTMLElement = document.querySelector('.sprint-wrong-button') as HTMLElement;
-  switch (event.key) {
-    case "Left":
-    case "ArrowLeft":
-      wrongButton.click();
-      break;
-    case "Right": 
-    case "ArrowRight":
-      writeButton.click();
-      break;
-    case "Enter":
-      writeButton.click();
-      break;
-    case "Esc": 
-    case "Escape":
-     wrongButton.click();
-      break;
-    default:
-      return; 
-  } 
-  event.preventDefault();
-}
+        if (event.defaultPrevented) {
+            return;
+        }
+        const writeButton: HTMLElement = document.querySelector('.sprint-wright-button') as HTMLElement;
+        const wrongButton: HTMLElement = document.querySelector('.sprint-wrong-button') as HTMLElement;
+        switch (event.key) {
+            case "Left":
+            case "ArrowLeft":
+                wrongButton.click();
+                break;
+            case "Right":
+            case "ArrowRight":
+                writeButton.click();
+                break;
+            case "Enter":
+                writeButton.click();
+                break;
+            case "Esc":
+            case "Escape":
+                wrongButton.click();
+                break;
+            default:
+                return;
+        }
+        event.preventDefault();
+    }
 
     getWriteAnswer = () => {
         sprintRoundStatistic.correctAnswers.push(answer.questionWord);
@@ -306,13 +316,30 @@ class Sprint {
 
     public startSprintRound = async () => {
         this.resetRoundStatistic();
+        if (savedWordsFromStudyBook.length > 0) {          
+            savedWordsFromStudyBook = '';
+        } else {
         wordsSetFull = await this.getWordsChunk(page, group) as unknown as Array < word > ;
         wordsSet = await this.getWordsChunk(page, group) as unknown as Array < word > ;
+        }
         this.renderQuestionContainer();
         await this.renderSprintQuestion();
     }
 
     public async getGameDifficulty(): Promise < void > {
+        const body: HTMLElement = document.querySelector('body') as HTMLElement;
+        body.classList.remove('book');
+        if (localStorage.getItem('rslang-words-data')) {
+            savedWordsFromStudyBook = localStorage.getItem('rslang-words-data') as string;
+            console.log(`332`);
+            if (savedWordsFromStudyBook.length > 0) {
+            await this.filterWordsForRound();
+            } else {
+              const bookButton: HTMLElement = document.querySelector('.menu__book-button')as HTMLElement;
+        bookButton.click();
+        console.log('find no words');  
+            } 
+         } else {
         const openDifficulty = new OpenGameDifficultyPage;
         await openDifficulty.render('Choose the game level');
         const difficultyButtons: NodeList = document.querySelectorAll('.level-buttons__button');
@@ -326,6 +353,72 @@ class Sprint {
                 newSprint.sprintView();
             });
         });
+    }
+    }
+
+    getWordsFromStudyBook = async () => {
+        if (localStorage.getItem('rslang-words-data')) {
+            savedWordsFromStudyBook = localStorage.getItem('rslang-words-data') as string;            
+            if (savedWordsFromStudyBook.length > 0) {                
+                const rslangBookSettings: string = localStorage.getItem('rslang-words-settings') as string;
+                const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
+                page = Number(bookSettings.page);
+                group = Number(bookSettings.group);
+            } else return;
+        } else return;
+    }
+
+    filterWordsForRound = async(): Promise<void> => {
+        console.log(`365`);
+        wordsSet.length =  0;
+        console.log(`366`);
+        wordsSetFull.length = 0;
+        console.log(`368`);
+        const rslangBookSettings: string = localStorage.getItem('rslang-words-settings') as string;
+                const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
+                let filteredPage = Number(bookSettings.page);
+                page = filteredPage;
+                let group = Number(bookSettings.group);
+        let wordsFromStudyBook: word[] = await this.getWordsChunk(filteredPage, group) as word[];
+        const filteredWordsForRound: word[] = [];
+         while (filteredWordsForRound.length < 20 && page >= 0) {
+        await wordsFromStudyBook.forEach(async (element) => {
+            const wordId: string = element.id;
+            const word: userWord | null = await sprintRoundStatistic.getUserWord(wordId) as unknown as userWord | null;
+            if (word !== null) {
+            switch (word.difficulty) {
+                case 'hard':                    
+                    if (Number(word.optional.correctAnswersCount) < 5) {
+                       filteredWordsForRound.push(element); 
+                       break;
+                       } else break;
+                case 'studied':
+                    if (Number(word.optional.correctAnswersCount) < 3) {
+                       filteredWordsForRound.push(element);
+                       break;
+                    } else break;          
+                default:
+                    break;
+            }
+        } else filteredWordsForRound.push(element);
+        });       
+            filteredPage = filteredPage-1;
+            wordsFromStudyBook = await this.getWordsChunk(filteredPage, group);
+        } 
+        console.log(filteredWordsForRound.length);
+        if (filteredWordsForRound.length > 0) {
+        filteredWordsForRound.forEach(element => {
+            wordsSetFull.push(element);
+            wordsSet.push(element);           
+        });
+        localStorage.setItem('rslang-words-data', ''); 
+        newSprint.sprintView();
+    } else {
+        const bookButton: HTMLElement = document.querySelector('.menu__book-button') as HTMLElement;
+        bookButton.click();
+        console.log('find no words')
+    }
+        
     }
 
 }
