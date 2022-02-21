@@ -1,7 +1,7 @@
 import './results.css';
 
 const AudioChallengeStatisticResultsContent = {
-  render: async (correctAnswers: number, wrongAnswers: number, bestAnswersSeries: number, accuracy: number): Promise<string> => {
+  render: async (correctAnswers: number, wrongAnswers: number, bestAnswersSeries: number, accuracy: number, wordsLearned: number): Promise<string> => {
     const view = `
     <h3 class="round-statistic__header">Результаты</h3>
     <table class="round-statistic__statistic">
@@ -20,6 +20,10 @@ const AudioChallengeStatisticResultsContent = {
       <tr>
         <th>Точность:</th>
         <th class="round-statistic__accuracy">${accuracy}%</th>
+      </tr>
+      <tr>
+        <th>Слов выучено:</th>
+        <th class="round-statistic__words-learned">${wordsLearned}</th>
       </tr>
     </table>
     <div class="round-statistic__words"></div>`;
