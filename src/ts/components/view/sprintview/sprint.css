@@ -1,0 +1,347 @@
+.off {
+    display: none;
+}
+.hide {
+    opacity: 0;
+}
+
+.naming-sprint {
+  font-size: 5vh;
+  line-height: inherit;
+}
+
+.menu-sprint {
+  z-index: 1;
+}
+
+.sprint-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(81, 165, 221);
+    background-image: url(https://c.pxhere.com/photos/02/f1/westminster_big_ben_london-1069141.jpg!d);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.welcome-sprint-button {
+    position: absolute;
+    left: calc(50% - 10vh);
+    top: calc(50% - 10vh);
+    width: 20vh;
+    height: 20vh;
+    border-radius: 50%;
+    border: none;    
+    background-color: transparent;
+    backdrop-filter: blur(3px);
+    color: white;
+    font-size: 3vh;
+}
+
+.circle-progress {
+stroke-dashoffset: 248.186;
+}
+
+.countdown-svg {  
+    fill: none;
+}
+
+.circle-text {
+    width: 15vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 4vh;
+    fill: rgb(128, 128, 128);
+}
+
+.countdown-ended {
+  fill: rgba(255, 99, 71, 0.671) 
+}
+
+.sprint-game-container {
+    position: relative;
+    min-width: 330px;
+    max-width: 1000px;
+    width: 40vw;
+    height: 60vh;
+    top:20px;
+    margin: 0 auto;
+    border-radius: 25px;
+    background-color: rgba(249, 249, 250, 0.507);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+}
+
+.sprint-game-header {
+    height: 10%;
+    display: grid;
+    grid-template-columns: 0.5fr 1.5fr 0.3fr 1fr;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2%;
+    border-bottom: solid #808080 2px;
+    padding: 0 5px;
+    font-size: 3vh;
+    color: white;
+}
+
+.sprint-game-countdown-container {
+    position: relative;
+    width: 5vh;
+    height: 5vh;
+    background-color: transparent;
+}
+
+.sprint-round-score-container{
+    font-size: 5vh;
+    color: rgb(40, 195, 138);
+    text-align: center;
+}
+
+.sprint-game-sound-container {
+    height: 80%;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.sprint-game-body {
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 5vh;
+    color: #808080;
+}
+
+.sprint-round-right-answers-count {
+    width: 60%;
+    height: 8vh;
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1vh;
+}
+
+.sprint-round-right-answers-cup {
+    width: 80%;
+    height: 10vh;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1vh;
+}
+
+.sprint-question-word {
+    height: 10vh;
+    font-size: 6vh;
+    color:purple;
+    font-weight: 700;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.sprint-answer-word {
+    height: 8vh;
+    margin: 2vh;
+    font-size: 5vh;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.sprint-game-footer {
+    bottom: 0px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 8vh 3vh; 
+    border-top: solid #808080 3px;   
+}
+
+.sprint-wrong-button,
+.sprint-wright-button,
+.next-round-button,
+.quit-round-button {
+    width: 90%;
+    max-width: 350px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 400;
+    font-size: 2rem;
+    margin: 1vh;
+    cursor: pointer;
+}
+
+.sprint-wrong-button,
+.quit-round-button {
+    background-color: hsla(9, 100%, 64%, 0.671);
+}
+
+.sprint-wright-button,
+.next-round-button {
+    background-color: #07fa44da;
+}
+
+.answer-buttons-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  font-size: 3rem;
+}
+
+.sugar {
+  width: 7vh;
+  height: 7vh;
+  border-radius: 1vh;
+  background-color: none;
+  background-image: url(../../../../assets/img/white\ sugar.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.8;
+}
+
+.kettle {  
+  width: 12vh;
+  height: 10vh;
+  border-radius: 1vh;
+  background-color: white;
+  background-image: url(../../../../assets/img/teapot.jpg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
+}
+
+.cup {  
+  width: 10vh;
+  height: 9vh;
+  margin-top: 1vh;
+  border-radius: 1vh;
+  background-color: white;
+  background-image: url(../../../../assets/img/teacup2.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
+}
+
+.round-statistic-container {
+    position: absolute;
+   flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    background-color: rgb(187, 226, 241);
+    color: gray;
+}
+/*****************STATISTIC****************/
+.round-statistic-results {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;  
+  height: 60vh;
+  border-radius: 10px; 
+}
+
+.round-statistic-controls {
+  display: flex;
+}
+.round-statistic-header {
+  font-size: 4vh;
+}
+
+.round-statistic-statistic {
+  width: 100%;
+  margin: 1em 0 0.5em;
+  text-align: left;
+}
+
+.round-statistic-words {
+    width: 100%;    
+  overflow: auto;
+}
+
+.round-statistic-words::-webkit-scrollbar {
+  width: 1em;
+}
+
+.round-statistic-words::-webkit-scrollbar-track {
+  border-radius: 100vw;
+  background-color: gray;
+}
+
+
+
+.round-statistic-words::-webkit-scrollbar-thumb:hover {
+  background-color: white;
+}
+.round-statistic-table {
+  margin-right: 1vh;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.round-statistic-table th {
+  padding: 10px 0;
+  font-size: 1.2rem;
+}
+
+.round-statistic-table td {  
+  padding-left: 0px;
+}
+
+.round-statistic-table tr:nth-child(even) {
+  background-color: rgba(167, 167, 167, 0.5);
+}
+
+.round-statistic-table td:first-child {
+  width: 25px;
+  height: 25px;
+
+  -webkit-mask: url(../../../../assets/svg/round-statistic__play-audio.svg) no-repeat center;
+  mask: url(../../../../assets/svg/round-statistic__play-audio.svg) no-repeat center;
+  background-color: #3da9d4;
+  transition: 0.5s;
+}
+
+.round-statistic-table td:first-child:hover {
+  background-color: rgb(233, 102, 102);
+  cursor: pointer;
+}
+
+.round-statistic-words::-webkit-scrollbar {
+  width: 1em;
+}
+
+.round-statistic-words::-webkit-scrollbar-track {
+  border-radius: 100vw;
+  background-color: gray;
+}
+
+.round-statistic-words::-webkit-scrollbar-thumb {
+  border: 2px solid white;
+  border-radius: 100vw;
+  background-color: #3da9d4;
+}
+
+.round-statistic-words::-webkit-scrollbar-thumb:hover {
+  background-color: white;
+}
+
+.round-statistic-audio {
+  min-width: 1.2rem;
+}
+
+
+
+
+

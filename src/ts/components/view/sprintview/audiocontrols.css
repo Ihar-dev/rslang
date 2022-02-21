@@ -1,0 +1,48 @@
+.volume-label {
+    width: 70%;
+}
+
+.progress {
+    display: block;
+    background: linear-gradient(to right, #24809E 24%, #808080 24%, #808080 100%); 
+    border-radius: 4px;
+    height: 12px;
+     width: 90%;
+    outline: none;
+    transition: background 450ms ease-in;
+    -webkit-appearance: none;
+}
+
+.progress::-webkit-slider-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    -webkit-appearance: none;
+    cursor: ew-resize;
+    background: #24809E;
+}
+
+.word-audio {
+    position: absolute;
+    right: 0.5rem;
+    top:calc(10% + 3vh);
+    width: 5vh;
+    height: 5vh;
+    background: url(../../../../assets/svg/audio.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: invert(44%) sepia(52%) saturate(701%) hue-rotate(148deg) brightness(85%) contrast(82%);
+}
+
+.sprint-game-sound-container {    
+    background-image: url(../../../../assets/svg/audio.svg);
+    filter: invert(51%) sepia(1%) saturate(0%) hue-rotate(155deg) brightness(97%) contrast(90%);    
+}
+
+.mute {
+  background-image: url(../../../../assets/svg/mute.svg);  
+}
+
+.filter-gray {
+ filter: invert(51%) sepia(1%) saturate(0%) hue-rotate(155deg) brightness(97%) contrast(90%);   
+}

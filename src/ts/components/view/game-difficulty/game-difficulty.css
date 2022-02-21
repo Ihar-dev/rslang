@@ -1,0 +1,65 @@
+.game-difficulty-container {
+  position: relative;
+
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+
+  background: rgb(4, 0, 61);
+  background: linear-gradient(0deg, rgba(4, 0, 61, 1) 0%, rgba(43, 43, 196, 1) 35%, rgba(0, 212, 255, 1) 100%);
+}
+
+.game-difficulty-container__content {
+  display: flex;
+  flex-direction: column;
+  padding: 1em 2em;
+  width: 35%;
+
+  border-radius: 15px;
+  background-color: rgba(250, 250, 250, 0.65);
+  box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.15);
+}
+
+.game-difficulty-container__close {
+  position: absolute;
+  top: 2em;
+  right: 2em;
+
+  display: none;
+  height: 40px;
+  width: 40px;
+
+  color: transparent;
+  background-color: black;
+  -webkit-mask: url(../../../../assets/svg/button-close.svg) no-repeat center;
+  mask: url(../../../../assets/svg/button-close.svg) no-repeat center;
+
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.game-difficulty-container__close:hover {
+  background-color: goldenrod;
+}
+
+@media (max-width: 1600px) {
+  .game-difficulty-container__content {
+    width: 45%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .game-difficulty-container__content {
+    width: 65%;
+    padding: 1em;
+  }
+}
+
+@media (max-width: 640px) {
+  .game-difficulty-container__content {
+    width: 90%;
+    padding: 0.5em;
+  }
+}
