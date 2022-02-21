@@ -50,6 +50,7 @@
   font-family: 'Roboto', sans-serif;
   font-size: 20px;
   line-height: 27px;
+  cursor: pointer;
 }
 
 .page-container__about-cont::after {
@@ -57,7 +58,6 @@
   border-radius: 5px;
   content: "Узнать больше>>";
   background-color: white;
-  cursor: pointer;
 }
 
 body.start {
@@ -204,7 +204,8 @@ body.start {
 .menu__home-button div,
 .header-container__menu.active .menu__toggle-button,
 .author-cont__eye-button,
-.author-cont__cross-button {
+.author-cont__cross-button,
+.about-cont__cross-button {
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 50%;
@@ -223,11 +224,13 @@ body.start {
   column-gap: 30px;
 }
 
-.page-container__author-cont {
+.page-container__author-cont,
+.page-container__about-back-cont {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
+  background-attachment: fixed;
   top: 0;
   height: 100vh;
   width: 100%;
@@ -236,7 +239,8 @@ body.start {
   z-index: 200;
 }
 
-.page-container__author-cont.active {
+.page-container__author-cont.active,
+.page-container__about-back-cont.active {
   transform: translateX(0);
 }
 
@@ -293,28 +297,51 @@ body.start {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 70%;
-  height: 70%;
+  background-color: white;
+  border-radius: 10px;
+  transition: transform 0.5s;
+}
+
+.author-cont__inner-cont {
+  transform: translateX(-150%);
+}
+
+.about-back-cont__inner-cont {
+  display: flex;
+  transform: translateY(-150%);
+  flex-wrap: wrap;
+  row-gap: 30px;
+  column-gap: 30px;
+  padding: 60px;
+  padding-top: 140px;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 10px;
   background-color: white;
   transition: transform 0.5s;
-  transform: translateX(-150%);
+}
+
+.author-cont__inner-cont {
+  width: 620px;
+  height: 800px;
+}
+
+.about-back-cont__inner-cont {
+  width: 700px;
+  height: 880px;
 }
 
 .author-cont__inner-cont.active {
   transform: translateX(0);
 }
 
-@media (max-width: 600px) {
-
-  .author-cont__inner-cont {
-    width: 90%;
-    height: 90%;
-  }
-
-} 
+.about-back-cont__inner-cont.active {
+  transform: translateY(0);
+}
 
 .author-cont__eye-button,
-.author-cont__cross-button {
+.author-cont__cross-button,
+.about-cont__cross-button {
   position: absolute;
   width: 60px;
   height: 60px;
@@ -350,7 +377,8 @@ body.start {
 
 .author-cont__entry-button:hover,
 .author-cont__reg-button:hover,
-.author-cont__cross-button:hover {
+.author-cont__cross-button:hover,
+.about-cont__cross-button:hover {
   transform: scale(1.05);
 }
 
@@ -362,7 +390,8 @@ body.start {
   margin-top: 70px;
 }
 
-.author-cont__cross-button {
+.author-cont__cross-button,
+.about-cont__cross-button {
   top: 20px;
   right: 20px;
   border: solid grey 1px;
@@ -398,4 +427,70 @@ body.start {
   line-height: 30px;
   font-family: 'Roboto', sans-serif;
   color: white;
+}
+
+.about-cont__heading {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 27px;
+  line-height: 30px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.about-cont__page-card {
+  display: flex;
+  flex-direction: column;
+  row-gap: 7px;
+  width: 260px;
+  height: 320px;
+  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 40%), 0px 1px 1px 0px rgb(0 0 0 / 30%), 0px 1px 3px 0px rgb(0 0 0 / 10%);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
+
+.about-cont__img-container {
+  width: 100%;
+  height: 100px;
+  margin-top: 15px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60% 60%;
+}
+
+.audio-challenge-img {
+  background-image: url("../../../../assets/svg/headphones-solid-black.svg");
+}
+
+.sprint-img {
+  background-image: url("../../../../assets/svg/person-running-solid-black.svg");
+}
+
+.book-img {
+  background-image: url("../../../../assets/svg/book-solid-black.svg");
+}
+
+.statistics-img {
+  background-image: url("../../../../assets/svg/chart-line-solid-black.svg");
+}
+
+.about-cont__text-line,
+.about-cont__text-heading {
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.about-cont__text-heading {
+  font-size: 25px;
+  line-height: 30px;
+  margin-bottom: 15px;
+}
+
+.about-cont__text-line {
+  text-align: left;
+  font-size: 15px;
+  line-height: 18px;
 }

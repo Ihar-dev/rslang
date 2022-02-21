@@ -1,16 +1,10 @@
 import {
-  getBody,
   getElementByClassName,
   getListOfElementsByClassName,
-  getElementById,
   setElementActive,
   addClassForElement,
   setElementInactive,
-  removeClassForElement,
   toggleElement,
-  classListContains,
-  getRandomElementForStringArray,
-  setAttributeForElements,
   setAttributeForElement,
   getAttributeFromElement,
 } from './helper';
