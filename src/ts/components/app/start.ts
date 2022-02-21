@@ -37,6 +37,7 @@ enum settings {
   APIUrl = 'https://rs-lang-work-team.herokuapp.com/',
   numberOfPages = 30,
   numberOfGroups = 6,
+  wordsPerPage = 20,
 };
 
 interface startAppInterface {
@@ -107,6 +108,8 @@ class StartApp implements startAppInterface {
     addClassForElement(menuContainer, 'start');
     removeClassForElement(menuContainer, 'game');
     removeClassForElement(menuContainer, 'active');
+
+    if (localStorage.getItem('rslang-page') === 'book') this.startBookPage(body, menuContainer, footer, page);
   }
 
   private addListeners(footer: HTMLElement, page: HTMLElement, body: HTMLElement): void {
@@ -123,10 +126,12 @@ class StartApp implements startAppInterface {
     });
 
     const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
+    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
     homeButton.addEventListener('click', () => {
       this.render(false);
       localStorage.setItem('rslang-page', 'home');
       localStorage.setItem('rslang-words-data', '');
+      bookButton.style.backgroundColor = 'white';
     });
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
@@ -143,15 +148,18 @@ class StartApp implements startAppInterface {
       newSprint.getGameDifficulty();
       localStorage.setItem('rslang-page', 'sprint');
     });
-
-    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
+   
     bookButton.addEventListener('click', async () => {
-      addClassForElement(body, 'start');
-      this.resetStartForBook(menuContainer, footer, page);
-      studyBook.render();
-      footer.innerHTML = await Footer.render();
-      localStorage.setItem('rslang-page', 'book');
+      this.startBookPage(body, menuContainer, footer, page);
     });
+  }
+
+  private async startBookPage(body: HTMLElement, menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): Promise < void > {
+    addClassForElement(body, 'start');
+    this.resetStartForBook(menuContainer, footer, page);
+    studyBook.render();
+    footer.innerHTML = await Footer.render();
+    localStorage.setItem('rslang-page', 'book');
   }
 
   private addRegistrationListeners(): void {
@@ -213,8 +221,20 @@ class StartApp implements startAppInterface {
     userName.textContent = '';
     localStorage.setItem('rslang-user-settings', '');
     entryButton.textContent = 'Войти';
+    this.handleExitForHardButtons();
+  }
+
+  private async handleExitForHardButtons(): Promise < void > {
     const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
     hardButtons?.forEach(elem => elem.style.display = 'none');
+
+    studyBook.handleGroupMenu();
+
+    const studiedButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__studied-button');
+    studiedButtons?.forEach(elem => elem.style.display = 'none');
+
+    const statisticsPlates: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__statistics-plate');
+    statisticsPlates?.forEach(elem => elem.style.display = 'none');
   }
 
   private async updateEntrance(entryButton: HTMLElement): Promise < void > {
@@ -287,29 +307,53 @@ class StartApp implements startAppInterface {
         localStorage.setItem('rslang-user-settings', JSON.stringify(this.userSettings));
         userName.textContent = this.userSettings.name;
         entryButton.textContent = 'Выйти';
-        const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
-        let userWords = [{
-          difficulty: '',
-          optional: {
-            correctAnswersCount: 0,
-          },
-        }];
-        if (this.userSettings.userId) {
-          userWords = await studyBook.getAllUserWords();
-          console.log(userWords);
-        };
-        hardButtons?.forEach(elem => {
-          let elId = getAttributeFromElement(elem, 'word-id');
-          if (elId === null) elId = '';
-          studyBook.handleHardWordButton(elId, userWords, this, elem);
-          elem.style.display = 'block';
-        });
+        this.handleEntranceForHardButtons();
       };
     } catch (er) {
       this.handleMessage('Incorrect e-mail or password!', 'red-text');
       userName.textContent = '';
       entryButton.textContent = 'Войти';
     }
+  }
+
+  private async handleEntranceForHardButtons(): Promise < void > {
+    const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
+    let userWords = [{
+      difficulty: '',
+      optional: {
+        correctAnswersCount: 0,
+        correctAnswersCountForStatistics: 0,
+        allAnswersCount: 0,
+      },
+    }];
+    if (this.userSettings.userId) {
+      userWords = await studyBook.getAllUserWords();
+    };
+    hardButtons?.forEach(elem => {
+      let elId = getAttributeFromElement(elem, 'word-id');
+      if (elId === null) elId = '';
+      studyBook.handleHardWordButton(elId, userWords, this, elem, false);
+      elem.style.display = 'block';
+    });
+    
+    studyBook.handleGroupMenu();
+
+    const studiedButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__studied-button');
+    studiedButtons?.forEach(elem => {
+      let elId = getAttributeFromElement(elem, 'word-id');
+      if (elId === null) elId = '';
+      studyBook.handleStudiedWordButton(elId, userWords, this, elem, false);
+      elem.style.display = 'block';
+    });
+
+    const statisticsPlates: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__statistics-plate');
+    statisticsPlates?.forEach(elem => {
+      let elId = getAttributeFromElement(elem, 'word-id');
+      if (elId === null) elId = '';
+      studyBook.handleStatisticsPlaten(elId, userWords, this, elem);
+      elem.style.display = 'block';
+    });
+
   }
 
   private async handleRegistration(nameInput: HTMLInputElement, addressInput: HTMLInputElement, passwordInput: HTMLInputElement, entryButton: HTMLElement): Promise < void > {
@@ -369,6 +413,8 @@ class StartApp implements startAppInterface {
     removeClassForElement(menuContainer, 'active');
     footer.innerHTML = '';
     page.innerHTML = '';
+    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
+    bookButton.style.backgroundColor = 'white';
   }
 
   private resetStartForBook(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {
