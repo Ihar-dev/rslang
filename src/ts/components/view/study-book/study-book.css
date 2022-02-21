@@ -27,6 +27,22 @@ body.book {
   border-radius: 15px;
 }
 
+
+
+.book-cont__studying.active {
+  position: absolute;
+  top: 70px;
+  left: 460px;
+  width: 80px;
+  height: 80px;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 50%;
+  background-size: 80% 80%;
+  background-color: rgba(229, 137, 10, 0.9);
+  background-image: url("../../../../assets/svg/graduation-cap-solid.svg");
+}
+
 .book-cont__heading {
   top: 90px;
   left: 140px;

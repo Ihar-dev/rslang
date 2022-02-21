@@ -2,6 +2,7 @@ const Main = {
   render: async () => {
   const view = `
   <div class="book-cont__heading"></div>
+  <div class="book-cont__studying"></div>
   <button class="book-cont__groups-button">Изменить</button>
   <div class="book-cont__groups-change-buttons">
     <button class="book-cont__first-button">1</button>

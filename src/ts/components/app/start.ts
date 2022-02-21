@@ -37,6 +37,7 @@ enum settings {
   APIUrl = 'https://rs-lang-work-team.herokuapp.com/',
   numberOfPages = 30,
   numberOfGroups = 6,
+  wordsPerPage = 20,
 };
 
 interface startAppInterface {
@@ -125,10 +126,12 @@ class StartApp implements startAppInterface {
     });
 
     const homeButton = getElementByClassName('menu__home-button') as HTMLElement;
+    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
     homeButton.addEventListener('click', () => {
       this.render(false);
       localStorage.setItem('rslang-page', 'home');
       localStorage.setItem('rslang-words-data', '');
+      bookButton.style.backgroundColor = 'white';
     });
 
     const audioChallengeButton = getElementByClassName('menu__audio-challenge-button') as HTMLElement;
@@ -145,8 +148,7 @@ class StartApp implements startAppInterface {
       newSprint.getGameDifficulty();
       localStorage.setItem('rslang-page', 'sprint');
     });
-
-    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
+   
     bookButton.addEventListener('click', async () => {
       this.startBookPage(body, menuContainer, footer, page);
     });
@@ -411,6 +413,8 @@ class StartApp implements startAppInterface {
     removeClassForElement(menuContainer, 'active');
     footer.innerHTML = '';
     page.innerHTML = '';
+    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
+    bookButton.style.backgroundColor = 'white';
   }
 
   private resetStartForBook(menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): void {

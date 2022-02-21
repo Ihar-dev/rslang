@@ -54,10 +54,11 @@ type wordDataResponse = {
 
 class StudyBook {
 
+  studiedWordsOnPageCount: number;
   wordsSettings: {
     group: number,
     page: number,
-  }
+  };
 
   constructor() {
     if (localStorage.getItem('rslang-words-settings')) {
@@ -66,6 +67,7 @@ class StudyBook {
       group: 0,
       page: 0,
     };
+    this.studiedWordsOnPageCount = 0;
   }
 
   public async render(): Promise < void > {
@@ -172,6 +174,8 @@ class StudyBook {
         this.openHardWordsPage();
         localStorage.setItem('rslang-words-settings', JSON.stringify(this.wordsSettings));
         paginationContainer.style.display = 'none';
+        const studyingPlate = getElementByClassName('book-cont__studying') as HTMLElement;
+        setElementInactive(studyingPlate);
       }
     });
   }
@@ -303,10 +307,55 @@ class StudyBook {
 
         const bookContHeading = getElementByClassName('book-cont__heading') as HTMLElement;
         if (bookContHeading.textContent === `Уровень сложности Сложные`) this.openHardWordsPage();
+
+        this.handleStudiedWordOnPageCount();
+
+
+        const studiedButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__studied-button');
+        userWords = await this.getAllUserWords();
+        studiedButtons?.forEach(elem => {
+          let elId = getAttributeFromElement(elem, 'word-id');
+          if (elId === null) elId = '';
+          this.handleStudiedWordButton(elId, userWords, startApp, elem, false);
+        });
       });
 
       if (startApp.userSettings.userId) cardHardButton.style.display = 'block';
       else cardHardButton.style.display = 'none';
+    };
+  }
+
+  public async handleStudiedWordOnPageCount(): Promise < void > {
+    this.studiedWordsOnPageCount = 0;
+    const startApp = new StartApp();
+    let userWords: wordDataResponse[] = [{
+      difficulty: '',
+      optional: {
+        correctAnswersCount: 0,
+        correctAnswersCountForStatistics: 0,
+        allAnswersCount: 0,
+      },
+    }];
+    if (startApp.userSettings.userId) {
+      userWords = await this.getAllUserWords();
+    };
+    const data = await this.getWords(this.wordsSettings.group, this.wordsSettings.page);
+    data.forEach(el => {
+      const filteredUserWords = userWords.filter(elem => elem.wordId === el.id);
+      if (filteredUserWords.length && filteredUserWords[0].difficulty === 'studied' && filteredUserWords[0].optional.correctAnswersCount >= 3 ||
+        filteredUserWords.length && filteredUserWords[0].difficulty === 'hard' && filteredUserWords[0].optional.correctAnswersCount >= 5) {
+        this.studiedWordsOnPageCount++;
+      }
+    });
+
+    const studyingPlate = getElementByClassName('book-cont__studying') as HTMLElement;
+    const bookButton = getElementByClassName('menu__book-button') as HTMLElement;
+    if (this.studiedWordsOnPageCount === settings.wordsPerPage) {
+      setElementActive(studyingPlate);
+      bookButton.style.backgroundColor = 'rgba(229, 137, 10, 0.8)';
+    } else {
+      setElementInactive(studyingPlate);
+      bookButton.style.backgroundColor = 'white';
     };
   }
 
@@ -316,7 +365,10 @@ class StudyBook {
       filteredUserWords.length && filteredUserWords[0].difficulty === 'hard' && filteredUserWords[0].optional.correctAnswersCount >= 5) {
       setAttributeForElement(studiedButton, 'title', 'Убрать из изученных');
       setElementActive(studiedButton);
-    } else setAttributeForElement(studiedButton, 'title', 'Добавить в изученные');
+    } else {
+      setAttributeForElement(studiedButton, 'title', 'Добавить в изученные');
+      setElementInactive(studiedButton);
+    };
     if (refreshStatus) {
       studiedButton.addEventListener('click', async () => {
         if (getAttributeFromElement(studiedButton, 'title') === 'Добавить в изученные') {
@@ -332,6 +384,18 @@ class StudyBook {
           setAttributeForElement(studiedButton, 'title', 'Добавить в изученные');
           setElementInactive(studiedButton);
         }
+
+        this.handleStudiedWordOnPageCount();
+
+        const hardButtons: NodeListOf < HTMLElement > | null = await getListOfElementsByClassName('book-cont__hard-button');
+        userWords = await this.getAllUserWords();
+        hardButtons?.forEach(elem => {
+          let elId = getAttributeFromElement(elem, 'word-id');
+          if (elId === null) elId = '';
+          this.handleHardWordButton(elId, userWords, startApp, elem, false);
+          elem.style.display = 'block';
+        });
+    
       });
 
       if (startApp.userSettings.userId) studiedButton.style.display = 'block';
@@ -454,6 +518,7 @@ class StudyBook {
     const bookCont = getElementByClassName('page-container__book-cont') as HTMLElement;
     this.renderCardsHeading(bookCont, false);
     data.forEach(el => this.renderNewCard(el, bookCont, userWords, startApp));
+    this.handleStudiedWordOnPageCount();
   }
 
   private renderNewCard(el: wordsResponse, bookCont: HTMLElement, userWords: wordDataResponse[], startApp: startAppInterface): void {
