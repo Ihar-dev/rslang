@@ -9,6 +9,7 @@ import AudioChallengeStatisticControlsContent from '../view/audio-challenge/stat
 import OpenGameDifficultyPage from './game-difficulty';
 import { StartApp, settings } from './start';
 import { StudyBook } from './study-book';
+import { Statistics } from './statistics';
 
 const correctAnswerSound = require('../../../assets/audio/correctanswer.mp3');
 const wrongAnswerSound = require('../../../assets/audio/wronganswer.mp3');
@@ -37,6 +38,7 @@ interface RoundStatistic {
   wrongAnswers: Array<Word>;
   correctAnswersSeries: number;
   bestCorrectAnswersSeries: number;
+  wordsLearned: number;
 }
 
 class StartAudioChallengeApp {
@@ -52,6 +54,7 @@ class StartAudioChallengeApp {
     wrongAnswers: [],
     correctAnswersSeries: 0,
     bestCorrectAnswersSeries: 0,
+    wordsLearned: 0,
   };
 
   private static getRandomNumber(min: number, max: number): number {
@@ -72,6 +75,7 @@ class StartAudioChallengeApp {
     StartAudioChallengeApp.roundStatistic.wrongAnswers.length = 0;
     StartAudioChallengeApp.roundStatistic.correctAnswersSeries = 0;
     StartAudioChallengeApp.roundStatistic.bestCorrectAnswersSeries = 0;
+    StartAudioChallengeApp.roundStatistic.wordsLearned = 0;
   }
 
   private async resetAnswers(): Promise<void> {
@@ -171,12 +175,13 @@ class StartAudioChallengeApp {
     const wrongAnswers = StartAudioChallengeApp.roundStatistic.wrongAnswers.length;
     const bestAnswersSeries = StartAudioChallengeApp.roundStatistic.bestCorrectAnswersSeries;
     const accuracyPercents = Math.round((correctAnswers / StartAudioChallengeApp.roundStatistic.numberOfQuestions) * 100);
+    const wordsLearned = StartAudioChallengeApp.roundStatistic.wordsLearned;
 
     const statisticPage = document.querySelector('.audio-challenge-container__round-statistic') as HTMLElement;
     statisticPage.innerHTML = await AudioChallengeStatisticContent.render();
 
     const results = document.querySelector('.round-statistic__results') as HTMLElement;
-    results.innerHTML = await AudioChallengeStatisticResultsContent.render(correctAnswers, wrongAnswers, bestAnswersSeries, accuracyPercents);
+    results.innerHTML = await AudioChallengeStatisticResultsContent.render(correctAnswers, wrongAnswers, bestAnswersSeries, accuracyPercents, wordsLearned);
 
     const wordsContainer = document.querySelector('.round-statistic__words') as HTMLElement;
 
@@ -207,6 +212,7 @@ class StartAudioChallengeApp {
     const startApp = new StartApp();
     if (startApp.userSettings.userId) {
       const requestsServer = new RequestsServer();
+      const correctAnswersCountForStudiedWords = 3;
       const correctAnswersCountForHardWords = 5;
       const userWords = await requestsServer.getAllUserWords();
       const isWordIncludes = userWords.find((value) => value.wordId === correctAnswer.id);
@@ -221,6 +227,10 @@ class StartAudioChallengeApp {
 
           if (word.difficulty === 'hard' && word.optional.correctAnswersCount >= correctAnswersCountForHardWords) {
             word.difficulty = 'studied';
+            StartAudioChallengeApp.roundStatistic.wordsLearned++;
+          }
+          if (word.difficulty === 'studied' && word.optional.correctAnswersCount >= correctAnswersCountForStudiedWords) {
+            StartAudioChallengeApp.roundStatistic.wordsLearned++;
           }
         } else {
           word.optional.correctAnswersCount = 0;
@@ -378,6 +388,7 @@ class StartAudioChallengeApp {
     const gameDifficulty = document.querySelector('.game-difficulty-container') as HTMLElement;
 
     if (gameDifficulty || document.body.classList.contains('book') || target.closest('.round-statistic__replay')) {
+      localStorage.setItem('rslang-words-data', '');
       await this.resetRoundData();
       await this.resetAnswers();
       await this.renderPage();
@@ -418,6 +429,14 @@ class StartAudioChallengeApp {
     } else {
       await this.renderStatistic();
       await this.playAudio(endRoundSound);
+      const statistics = new Statistics();
+      const roundStatistic = StartAudioChallengeApp.roundStatistic;
+      const learnedWords = roundStatistic.wordsLearned;
+      const longestCorrectRange = roundStatistic.bestCorrectAnswersSeries;
+      const game = 'audio-challenge';
+      const allWordsRoundCount = roundStatistic.numberOfQuestions;
+      const correctAnswersRoundCount = roundStatistic.correctAnswers.length;
+      statistics.updateStatistics(learnedWords, longestCorrectRange, game, allWordsRoundCount, correctAnswersRoundCount);
     }
   }
 
