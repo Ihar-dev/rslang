@@ -27,8 +27,6 @@ body.book {
   border-radius: 15px;
 }
 
-
-
 .book-cont__studying.active {
   position: absolute;
   top: 70px;

@@ -1,0 +1,106 @@
+.page-container__team-cont {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 99vw;
+  padding: 50px;
+  row-gap: 35px;
+  column-gap: 35px;
+  top: 100px;
+  padding-bottom: 120px;
+}
+
+.team-cont__team-card {
+  display: flex;
+  flex-direction: column;
+  row-gap: 7px;
+  width: 400px;
+  height: 630px;
+  border: 2px solid rgba(36, 197, 219, 0.7);
+  border-radius: 15px;
+}
+
+.team-cont__team-card {
+  backdrop-filter: blur(10px);
+  background: radial-gradient(118.88% 606.86% at 0% 0%, rgba(36, 197, 219, 0.8) 0%, rgba(36, 197, 219, 0.1) 100%);
+}
+
+.team-cont__img-container {
+  display: flex;
+  flex-direction: column-reverse;
+  align-content: center;
+  align-items: flex-end;
+  width: 100%;
+  height: 400px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  background-size: cover;
+}
+
+.ihar-photo {
+  background-image: url("../../../../assets/img/ihar-photo.jpg");
+}
+
+.vitali-photo {
+  background-image: url("../../../../assets/img/vitali.jfif");
+}
+
+.alexandr-photo {
+  background-image: url("../../../../assets/img/alexandr.png");
+}
+
+.team-cont__heading,
+.team-cont__text-line,
+.team-cont__text-heading,
+.team-cont__text-small-heading {
+  font-family: 'Roboto', sans-serif;
+  color: white;
+}
+
+.team-cont__heading {
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  font-size: 35px;
+  line-height: 40px;
+  font-weight: 600;
+}
+
+.team-cont__text-line {
+  margin-right: 10px;
+  margin-left: 10px;
+  text-align: left;
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.team-cont__text-heading {
+  text-align: center;
+  font-size: 25px;
+  line-height: 30px;
+}
+
+.team-cont__text-small-heading,
+.team-cont__text-small-heading-long {
+  margin-left: 10px;
+  height: 30px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 30px;
+  border-radius: 7px;
+  background-color: rgba(57, 138, 185, 0.3);
+  color: white;
+}
+
+.team-cont__text-small-heading {
+  width: 190px;
+}
+
+.team-cont__text-small-heading-long {
+  width: 260px;
+  font-size: 16px;
+}
+
