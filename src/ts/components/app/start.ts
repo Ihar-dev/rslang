@@ -29,6 +29,9 @@ const studyBook = new StudyBook();
 import {Statistics} from './statistics';
 const statistics = new Statistics();
 
+import {Team} from './team';
+const team = new Team();
+
 type user = {
   name ? : string,
   email: string,
@@ -163,8 +166,16 @@ class StartApp implements startAppInterface {
    
     const teamButton = getElementByClassName('menu__team-button') as HTMLElement;
     teamButton.addEventListener('click', async () => {
-
+      this.startTeamPage(body, menuContainer, footer, page);
     });
+  }
+
+  private async startTeamPage(body: HTMLElement, menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): Promise < void > {
+    addClassForElement(body, 'start');
+    this.resetStartForBook(menuContainer, footer, page);
+    team.render();
+    footer.innerHTML = await Footer.render();
+    localStorage.setItem('rslang-page', 'team');
   }
 
   private async startBookPage(body: HTMLElement, menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): Promise < void > {
