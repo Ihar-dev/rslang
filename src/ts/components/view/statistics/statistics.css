@@ -7,9 +7,9 @@
     top:160px;
     margin: 0 auto;
     display: grid;
-    grid-template-rows: 0.25fr 1fr 1fr 1fr;
+    grid-template-rows: 0.25fr 1fr 1fr 1fr;    
     border-radius: 25px;
-    background-color: rgba(249, 249, 250, 0.507);
+    background-color: #4fc1f781;
     backdrop-filter: blur(5px);
     z-index: 1;
     font-size: 3vh;
@@ -21,6 +21,7 @@
 .statistic-header {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 2%;
     align-items: center;
     justify-content: center;
 }
@@ -66,11 +67,13 @@
     cursor: pointer;
     color: gray;
     border-radius: 25px;
-    border:white solid 1px
+    border:white solid 2px;
+    transition: all 0.8s;
 }
 
 .statistic-button-active {
-text-shadow: 2px 2px 5px rgb(3, 60, 231);
+    color:white;
+text-shadow: 2px 1px 4px #037bf7;
 }
 
 .statistics-table-row {
