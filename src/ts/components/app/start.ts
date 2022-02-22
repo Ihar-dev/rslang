@@ -15,6 +15,7 @@ import Header from '../view/start/navbar'
 import Main from '../view/start/main';
 import Footer from '../view/start/footer';
 import '../view/start/start.css';
+import RenderStatistic from './statistic-page';
 
 import {newSprint} from '../view/sprintview/sprintview';
 import StartAudioChallengeApp from './audio-challenge';
@@ -189,6 +190,9 @@ class StartApp implements startAppInterface {
     const statisticsButton = getElementByClassName('menu__statistics-button') as HTMLElement;
     statisticsButton.addEventListener('click', async () => {
       statistics.getStatistics();
+      this.resetStartForBook(menuContainer, footer, page);
+      const renderStatistic = new RenderStatistic;
+      renderStatistic.renderStatisticPage();
     });
    
     const teamButton = getElementByClassName('menu__team-button') as HTMLElement;
