@@ -2,18 +2,15 @@ import {
   getBody,
   getElementByClassName,
   getListOfElementsByClassName,
-  getElementById,
   setElementActive,
   addClassForElement,
   setElementInactive,
   removeClassForElement,
   toggleElement,
-  classListContains,
-  getRandomElementForStringArray,
-  setAttributeForElements,
   setAttributeForElement,
   getAttributeFromElement,
 } from './helper';
+
 import Header from '../view/start/navbar'
 import Main from '../view/start/main';
 import Footer from '../view/start/footer';
@@ -29,6 +26,9 @@ const studyBook = new StudyBook();
 
 import {Statistics} from './statistics';
 const statistics = new Statistics();
+
+import {Team} from './team';
+const team = new Team();
 
 type user = {
   name ? : string,
@@ -114,12 +114,42 @@ class StartApp implements startAppInterface {
     removeClassForElement(menuContainer, 'active');
 
     if (localStorage.getItem('rslang-page') === 'book') this.startBookPage(body, menuContainer, footer, page);
+    this.addAboutListeners();
   }
 
   private addListeners(footer: HTMLElement, page: HTMLElement, body: HTMLElement): void {
     this.addMenuListeners(footer, page, body);
     this.addRegistrationListeners();
   }
+
+  private addAboutListeners(): void {
+    const aboutContainer = getElementByClassName('page-container__about-cont') as HTMLElement;
+    const aboutBackContainer = getElementByClassName('page-container__about-back-cont') as HTMLElement;
+    const innerContainer = getElementByClassName('about-back-cont__inner-cont') as HTMLElement;
+    const crossButton = getElementByClassName('about-cont__cross-button') as HTMLElement;
+
+    aboutContainer.addEventListener('click', () => {
+      setElementActive(aboutBackContainer);
+      setElementActive(innerContainer);
+    });
+
+    aboutBackContainer.addEventListener('click', (event) => {
+      if (event.target === event.currentTarget) {
+        this.closeAbout(innerContainer, aboutBackContainer);
+      };
+    });
+
+    crossButton.addEventListener('click', () => {
+      this.closeAbout(innerContainer, aboutBackContainer);
+    });
+  }
+
+  private closeAbout(innerContainer: HTMLElement, aboutBackContainer: HTMLElement): void {
+    setElementInactive(innerContainer);
+    setTimeout(() => {
+      setElementInactive(aboutBackContainer);
+    }, 300);
+  }  
 
   private addMenuListeners(footer: HTMLElement, page: HTMLElement, body: HTMLElement): void {
     const menuToggleButton = getElementByClassName('menu__toggle-button') as HTMLElement;
@@ -167,8 +197,16 @@ class StartApp implements startAppInterface {
    
     const teamButton = getElementByClassName('menu__team-button') as HTMLElement;
     teamButton.addEventListener('click', async () => {
-
+      this.startTeamPage(body, menuContainer, footer, page);
     });
+  }
+
+  private async startTeamPage(body: HTMLElement, menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): Promise < void > {
+    addClassForElement(body, 'start');
+    this.resetStartForBook(menuContainer, footer, page);
+    team.render();
+    footer.innerHTML = await Footer.render();
+    localStorage.setItem('rslang-page', 'team');
   }
 
   private async startBookPage(body: HTMLElement, menuContainer: HTMLElement, footer: HTMLElement, page: HTMLElement): Promise < void > {
