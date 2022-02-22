@@ -8,7 +8,7 @@
     margin: 0 auto;
     display: grid;
     grid-template-rows: 0.25fr 1fr 1fr 1fr;    
-    border-radius: 25px;
+    border-radius: 10px;
     background-color: #4fc1f781;
     backdrop-filter: blur(5px);
     z-index: 1;
@@ -43,10 +43,16 @@
     top:6vh;
     margin: 0 auto;
     border-radius: 25px;
-    background-color: rgba(113, 113, 230, 0.95);
+    background-color: #a2abc5fb;
     backdrop-filter: blur(5px);
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 4vh 1fr 4vh 1fr 4vh 1fr 4vh 1fr;
+}
+
+.full-statistic-container p {
+    color: white;
+    border-bottom: solid 1px white;
+    font-size: 3vh;
 }
 
 .audio-challenge-statistic {
@@ -85,4 +91,14 @@ text-shadow: 2px 1px 4px #037bf7;
     display: grid;
     grid-template-columns: 3fr 0.5fr;
     border-bottom: white solid 2px;
+}
+
+.full-statistic-row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr 1fr;
+}
+
+.table-row {
+    display: grid;
+    grid-template-rows: repeat(3 1fr);
 }
