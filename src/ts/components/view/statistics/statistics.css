@@ -1,13 +1,85 @@
 .statistic-container {
     position: relative;
-    width: 100%;
-    height: 100vh;
+    min-width: 330px;
+    max-width: 1000px;
+    width: 95vw;
+    height: 65vh;
+    top:160px;
     margin: 0 auto;
-    display: flex;
+    display: grid;
+    grid-template-rows: 0.25fr 1fr 1fr 1fr;
+    border-radius: 25px;
+    background-color: rgba(249, 249, 250, 0.507);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+    font-size: 3vh;
+    color: rgb(0, 104, 173);
+    font-weight: 800;
+    font-family: 'Niconne';
+    text-shadow: 1px 1px 2px rgb(245, 245, 247);
+}
+
+.statistic-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
     justify-content: center;
-    background-color: rgb(81, 165, 221);
-    background-image: url("../../../../assets/img/start-image.jpg");
-    background-size: cover;
+}
+
+.game-statistic {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.full-statistic-container {
+    position: absolute;
+    min-width: 330px;
+    max-width: 1000px;
+    width: 95vw;
+    height: 59vh;
+    top:6vh;
+    margin: 0 auto;
+    border-radius: 25px;
+    background-color: rgba(113, 113, 230, 0.95);
+    backdrop-filter: blur(5px);
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+.audio-challenge-statistic {
+   background-blend-mode: screen;
+  background: linear-gradient(limegreen, transparent), linear-gradient(90deg, skyblue, transparent), linear-gradient(-90deg, coral, transparent); 
+}
+
+.sprint-statistic {
+    background-image: url(https://c.pxhere.com/photos/02/f1/westminster_big_ben_london-1069141.jpg!d);
+    background-size: auto 308%;
+    background-position: 100% 30%;
     background-repeat: no-repeat;
+}
+
+.day-statistic-button,
+.full-statistic-button {
+    font-size: 4vh;
+    text-align: center;
+    cursor: pointer;
+    color: gray;
+    border-radius: 25px;
+    border:white solid 1px
+}
+
+.statistic-button-active {
+text-shadow: 2px 2px 5px rgb(3, 60, 231);
+}
+
+.statistics-table-row {
+    min-width: 330px;
+    max-width: 990px;
+    width: 90vw;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 3fr 0.5fr;
+    border-bottom: white solid 2px;
 }
