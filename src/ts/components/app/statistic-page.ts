@@ -80,7 +80,7 @@ class RenderStatistic {
     const sprintDayAccuracy = sprintDayAllAnswersCount > 0 ? Math.round((sprintDayCorrectAnswersCount / sprintDayAllAnswersCount)*100) : 0;
     const audioChallengeDayAccuracy = audioChallengeDayAllAnswersCount > 0 ? Math.round((audioChallengeDayCorrectAnswersCount / audioChallengeDayAllAnswersCount)*100) : 0;
     const dayLearnedWords: number = currentStatistics ? currentStatistics.learnedWords : 0;
-    const dayAccuracy: number = currentStatistics ? Math.round((sprintDayCorrectAnswersCount + audioChallengeDayCorrectAnswersCount) /(sprintDayAllAnswersCount + audioChallengeDayAllAnswersCount)*100 ) : 0;
+    const dayAccuracy: number = (currentStatistics && (sprintDayAllAnswersCount + audioChallengeDayAllAnswersCount) !== 0) ? Math.round((sprintDayCorrectAnswersCount + audioChallengeDayCorrectAnswersCount) /(sprintDayAllAnswersCount + audioChallengeDayAllAnswersCount)*100 ) : 0;
     const currentDateStatistic: currentDateStatistic = {
       sprintDayLearnedWords,
       sprintDayCorrectAnswersCount,
