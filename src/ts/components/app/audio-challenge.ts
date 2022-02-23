@@ -393,9 +393,9 @@ class StartAudioChallengeApp {
     if (gameDifficulty || document.body.classList.contains('book') || target.closest('.round-statistic__replay')) {
       localStorage.setItem('rslang-words-data', '');
       const requestsServer = new RequestsServer();
-      StartAudioChallengeApp.roundStatistic.allUserWords = (await requestsServer.getAllUserWords()).length;
       await this.resetRoundData();
       await this.resetAnswers();
+      StartAudioChallengeApp.roundStatistic.allUserWords = (await requestsServer.getAllUserWords()).length;
       await this.renderPage();
       await this.renderPreloaderPage();
       await this.getWordGroupAndPage(target);
