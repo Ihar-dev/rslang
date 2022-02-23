@@ -379,7 +379,7 @@ class Sprint {
         let group = Number(bookSettings.group);
         const userWords: userWord[] = await sprintRoundStatistic.getAllUserWords() as userWord[];
         let wordsFromStudyBook: word[] = await this.getWordsChunk(filteredPage, group) as word[];
-        filteredWordsForRound.length =0;
+        filteredWordsForRound = [];
          while (filteredWordsForRound.length < 20 && filteredPage >= 0) {
         wordsFromStudyBook.forEach(async (element) => {
             const isWordIncludes = userWords.find((value) => value.wordId === element.id);
@@ -416,6 +416,7 @@ class Sprint {
         localStorage.setItem('rslang-words-data', ''); 
         newSprint.sprintView();
     } else {
+        console.log(`no words find`);
         const bookButton: HTMLElement = document.querySelector('.menu__book-button') as HTMLElement;
         bookButton.click();
     }           

@@ -5,13 +5,12 @@ const view = `
     <div class="full-statistic-container off">
         <div class="full-statistic-name">
           <div>Статистика за всё время</div>
-          <p>Спринт</p>
-          <p>Аудио-
-          челлендж</p>
+          <p>Sprint</p>
+          <p>Audio Challenge</p>
           <p>Итого</p>
         </div>
         <div class="full-statistic-row">
-          <div class=" all-statistic-naming">
+          <div class=" all-statistic naming">
               <p class="">Новых слов</p>
               <p class="">Изучено слов</p>
               <p class="">Правильных ответов, %</p>
@@ -22,7 +21,7 @@ const view = `
         </div>
         <div>Статистика за текущий год</div>
         <div class="full-statistic-row">
-            <div class="year-statistic-naming">
+            <div class="year-statistic naming">
             <p class="">Новых слов</p>
               <p class="">Изучено слов</p>
               <p class="">Правильных ответов, %</p>
@@ -33,7 +32,7 @@ const view = `
         </div>
         <div>Статистика за текущий месяц</div>
         <div class="full-statistic-row">
-              <div class=" month-statistic-naming">
+              <div class=" month-statistic naming">
                   <p class="">Новых слов</p>
               <p class="">Изучено слов</p>
               <p class="">Правильных ответов, %</p>
@@ -42,9 +41,9 @@ const view = `
               <div class="month-statistic-challenge table-row"></div>
               <div class="month-statistic-sum table-row"></div>
         </div>
-        <div>Статистика за сегодня</div>
+        <div class="today-statistic-container">Статистика за сегодня</div>
         <div class="full-statistic-row">
-           <div class=" day-statistic-naming">
+           <div class=" day-statistic naming">
              <p class="">Новых слов</p>
               <p class="">Изучено слов</p>
               <p class="">Правильных ответов, %</p>

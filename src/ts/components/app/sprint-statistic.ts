@@ -112,19 +112,21 @@ class SprintStatistic implements RoundStatistic {
   sortRoundCorrectWords = async (user: userSettings):Promise<void> => {
     const userWords: userWord[] = await this.getAllUserWords() as userWord[];
     this.correctAnswers.forEach(async (element) => {
-      const isWordIncludes = userWords.find((value) => value.wordId === element.id);
+      const isWordIncludes = userWords.find((value) => value.wordId === element.id);      
       if (isWordIncludes) {
-          const word: userWord = await this.getUserWord(element.id) as userWord;
+        const words: userWord[] = userWords.filter((value) => value.wordId === element.id);
+      const word:userWord = words[0];      
          if (word.difficulty === 'hard') {
-           await this.changeUserWord(word, 'hard', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) + 1);
            learnedWords = Number(word.optional.correctAnswersCount) == 4 ? learnedWords + 1: learnedWords;
+           await this.changeUserWord(word, 'hard', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) + 1);
+           
         } else {
-          await this.changeUserWord(word, 'studied', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) +1);
           learnedWords = Number(word.optional.correctAnswersCount) == 2 ? learnedWords + 1: learnedWords;
+          await this.changeUserWord(word, 'studied', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) +1);
+          
         }
       } else {
         await this.createUserWord(user, element, 1, 1, 1);
-        createdUserWords++;
       }
     });
   }
@@ -134,14 +136,14 @@ class SprintStatistic implements RoundStatistic {
     this.wrongAnswers.forEach(async (element) => {
       const isWordIncludes = userWords.find((value) => value.wordId === element.id);      
       if (isWordIncludes) { 
-        const word: userWord = await this.getUserWord(element.id) as userWord;
+        const words: userWord[] = userWords.filter((value) => value.wordId === element.id);
+      const word:userWord = words[0];
         if (word.difficulty === 'hard') {
           await this.changeUserWord(word, 'hard', 0, Number(word.optional.correctAnswersCountForStatistics), Number(word.optional.allAnswersCount) + 1);
         }else if (word.difficulty === 'studied') {
           await this.changeUserWord(word, 'studied', 0, Number(word.optional.correctAnswersCountForStatistics), Number(word.optional.allAnswersCount) + 1); }       
       } else {
-        await this.createUserWord(user, element, 0, 0, 0);
-        createdUserWords++;
+        await this.createUserWord(user, element, 0, 0, 0);        
       }
     })
   }
@@ -200,6 +202,7 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
 
   createUserWord = async (user: userSettings, word: word, correctAnswers: number, correctAnswersCountForStatistics: number, allAnswersCount: number) => {
     const url = `${settings.APIUrl}users/${user.userId}/words/${word.id}`;
+    createdUserWords++;
     try {
       const req = await fetch(url, {
         method: 'POST',
@@ -209,7 +212,7 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          "difficulty": "studying",
+          "difficulty": "studied",
           "optional": {
             'correctAnswersCount': `${correctAnswers}`,
             'correctAnswersCountForStatistics': `${correctAnswersCountForStatistics}`,
@@ -217,7 +220,7 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
           }
         })
       });
-      const data = await req.json();
+      const data = await req.json(); 
     } catch (error) {}
   }
 
