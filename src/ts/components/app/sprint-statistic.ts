@@ -106,6 +106,7 @@ class SprintStatistic implements RoundStatistic {
     const allWordsRoundCount: number = this.correctAnswers.length + this.wrongAnswers.length;
     const correctAnswersRoundCount: number = this.correctAnswers.length;
     statistics.updateStatistics(learnedWords, longestCorrectRange, 'sprint', allWordsRoundCount, correctAnswersRoundCount, createdUserWords);
+    console.log(`correct ${correctAnswersRoundCount}`);
     }
   }
 
@@ -116,15 +117,16 @@ class SprintStatistic implements RoundStatistic {
       if (isWordIncludes) {
           const word: userWord = await this.getUserWord(element.id) as userWord;
          if (word.difficulty === 'hard') {
-           await this.changeUserWord(word, 'hard', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) + 1);
            learnedWords = Number(word.optional.correctAnswersCount) == 4 ? learnedWords + 1: learnedWords;
+           await this.changeUserWord(word, 'hard', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) + 1);
+           
         } else {
-          await this.changeUserWord(word, 'studied', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) +1);
           learnedWords = Number(word.optional.correctAnswersCount) == 2 ? learnedWords + 1: learnedWords;
+          await this.changeUserWord(word, 'studied', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) +1);
+          
         }
       } else {
         await this.createUserWord(user, element, 1, 1, 1);
-        createdUserWords++;
       }
     });
   }
@@ -140,8 +142,7 @@ class SprintStatistic implements RoundStatistic {
         }else if (word.difficulty === 'studied') {
           await this.changeUserWord(word, 'studied', 0, Number(word.optional.correctAnswersCountForStatistics), Number(word.optional.allAnswersCount) + 1); }       
       } else {
-        await this.createUserWord(user, element, 0, 0, 0);
-        createdUserWords++;
+        await this.createUserWord(user, element, 0, 0, 0);        
       }
     })
   }
@@ -200,6 +201,7 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
 
   createUserWord = async (user: userSettings, word: word, correctAnswers: number, correctAnswersCountForStatistics: number, allAnswersCount: number) => {
     const url = `${settings.APIUrl}users/${user.userId}/words/${word.id}`;
+    createdUserWords++;
     try {
       const req = await fetch(url, {
         method: 'POST',
@@ -217,7 +219,8 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
           }
         })
       });
-      const data = await req.json();
+      const data = await req.json();       
+      console.log('user word created')
     } catch (error) {}
   }
 

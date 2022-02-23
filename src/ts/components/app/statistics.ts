@@ -147,6 +147,7 @@ class Statistics {
         },
       });
       statisticsData = await res.json();
+      console.log(statisticsData)
     } catch (er) {}
     return statisticsData;
   }
