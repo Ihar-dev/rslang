@@ -71,6 +71,7 @@ class StudyBook {
     await this.renderCoreComponents();
     this.addPaginationListeners();
     this.addGroupMenuListeners();
+    localStorage.setItem('rslang-words-settings', JSON.stringify(this.wordsSettings));
   }
 
   private async renderCoreComponents(): Promise < void > {
