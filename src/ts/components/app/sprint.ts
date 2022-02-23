@@ -152,9 +152,13 @@ class Sprint {
         const menuButtons: NodeList = menuContainer.childNodes as NodeList;
         menuButtons.forEach(element => {
             const button = element as HTMLElement;
-            button.outerHTML;
             if (button.className !== 'menu__toggle-button') {
-                button.addEventListener('click', (): void => {
+                button.addEventListener('click', this.exitSprint)
+            }
+        });
+    }
+
+    exitSprint = (): void => {
                     sprintRoundStatistic.sortRoundWords();
                     const namingContainer: HTMLElement = document.querySelector('.page-container__naming') as HTMLElement;
                     namingContainer.classList.remove('filter-gray');
@@ -162,10 +166,13 @@ class Sprint {
                     this.clearCountDownTimeouts();
                     ticAudio.pause();
                     this.resetRoundStatistic();
-                })
-            }
-        });
-    }
+                    const menuContainer: HTMLElement = document.querySelector('.header-container__menu') as HTMLElement;
+                    const menuButtons: NodeList = menuContainer.childNodes as NodeList;
+                    menuButtons.forEach(element => {
+            const button = element as HTMLElement;
+            button.removeEventListener('click', this.exitSprint);
+                    });
+                }
 
     renderQuestionContainer = () => {
         const questionBody = document.querySelector('.sprint-game-body') as HTMLElement;
