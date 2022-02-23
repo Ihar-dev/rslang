@@ -375,17 +375,18 @@ class Sprint {
         wordsSet.length =  0;
         wordsSetFull.length = 0;       
         const rslangBookSettings: string = localStorage.getItem('rslang-words-settings') as string;
-                const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
-                let filteredPage = Number(bookSettings.page);
-                page = filteredPage;
-                let group = Number(bookSettings.group);
+        const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
+        let filteredPage = Number(bookSettings.page);
+        page = filteredPage;
+        let group = Number(bookSettings.group);
+        const userWords: userWord[] = await sprintRoundStatistic.getAllUserWords() as userWord[];
         let wordsFromStudyBook: word[] = await this.getWordsChunk(filteredPage, group) as word[];
         filteredWordsForRound.length =0;
          while (filteredWordsForRound.length < 20 && filteredPage >= 0) {
         wordsFromStudyBook.forEach(async (element) => {
-                 const wordId: string = element.id;
-                 const word: userWord | null = await sprintRoundStatistic.getUserWord(wordId) as unknown as userWord | null;
-                 if (word !== null) {
+            const isWordIncludes = userWords.find((value) => value.wordId === element.id);
+                if (isWordIncludes) {
+                    const word: userWord = await sprintRoundStatistic.getUserWord(element.id) as userWord;
                      switch (word.difficulty) {
                          case 'hard':
                              if (Number(word.optional.correctAnswersCount) < 5 && filteredWordsForRound.length < 20) {
