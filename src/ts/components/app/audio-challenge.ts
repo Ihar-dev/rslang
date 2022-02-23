@@ -39,6 +39,7 @@ interface RoundStatistic {
   correctAnswersSeries: number;
   bestCorrectAnswersSeries: number;
   wordsLearned: number;
+  allUserWords: number;
 }
 
 class StartAudioChallengeApp {
@@ -55,6 +56,7 @@ class StartAudioChallengeApp {
     correctAnswersSeries: 0,
     bestCorrectAnswersSeries: 0,
     wordsLearned: 0,
+    allUserWords: 0,
   };
 
   private static getRandomNumber(min: number, max: number): number {
@@ -76,6 +78,7 @@ class StartAudioChallengeApp {
     StartAudioChallengeApp.roundStatistic.correctAnswersSeries = 0;
     StartAudioChallengeApp.roundStatistic.bestCorrectAnswersSeries = 0;
     StartAudioChallengeApp.roundStatistic.wordsLearned = 0;
+    StartAudioChallengeApp.roundStatistic.allUserWords = 0;
   }
 
   private async resetAnswers(): Promise<void> {
@@ -389,6 +392,8 @@ class StartAudioChallengeApp {
 
     if (gameDifficulty || document.body.classList.contains('book') || target.closest('.round-statistic__replay')) {
       localStorage.setItem('rslang-words-data', '');
+      const requestsServer = new RequestsServer();
+      StartAudioChallengeApp.roundStatistic.allUserWords = (await requestsServer.getAllUserWords()).length;
       await this.resetRoundData();
       await this.resetAnswers();
       await this.renderPage();
@@ -429,14 +434,16 @@ class StartAudioChallengeApp {
     } else {
       await this.renderStatistic();
       await this.playAudio(endRoundSound);
+      const requestsServer = new RequestsServer();
       const statistics = new Statistics();
+      const createdUserWordsRoundCount = (await requestsServer.getAllUserWords()).length - StartAudioChallengeApp.roundStatistic.allUserWords;
       const roundStatistic = StartAudioChallengeApp.roundStatistic;
       const learnedWords = roundStatistic.wordsLearned;
       const longestCorrectRange = roundStatistic.bestCorrectAnswersSeries;
       const game = 'audio-challenge';
       const allWordsRoundCount = roundStatistic.numberOfQuestions;
       const correctAnswersRoundCount = roundStatistic.correctAnswers.length;
-      statistics.updateStatistics(learnedWords, longestCorrectRange, game, allWordsRoundCount, correctAnswersRoundCount);
+      statistics.updateStatistics(learnedWords, longestCorrectRange, game, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount);
     }
   }
 
