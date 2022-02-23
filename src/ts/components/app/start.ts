@@ -127,6 +127,13 @@ class StartApp implements startAppInterface {
     const aboutBackContainer = getElementByClassName('page-container__about-back-cont') as HTMLElement;
     const innerContainer = getElementByClassName('about-back-cont__inner-cont') as HTMLElement;
     const crossButton = getElementByClassName('about-cont__cross-button') as HTMLElement;
+    const videoContainer = getElementByClassName('about-back-cont__video-cont') as HTMLElement;
+    const videoButton = getElementByClassName('about-back-cont__video-button') as HTMLElement;
+
+    videoButton.addEventListener('click', () => {
+      toggleElement(videoContainer);
+      toggleElement(videoButton);
+    });
 
     aboutContainer.addEventListener('click', () => {
       setElementActive(aboutBackContainer);
@@ -135,17 +142,20 @@ class StartApp implements startAppInterface {
 
     aboutBackContainer.addEventListener('click', (event) => {
       if (event.target === event.currentTarget) {
-        this.closeAbout(innerContainer, aboutBackContainer);
+        this.closeAbout(innerContainer, aboutBackContainer, videoContainer,videoButton);
       };
     });
 
     crossButton.addEventListener('click', () => {
-      this.closeAbout(innerContainer, aboutBackContainer);
+      this.closeAbout(innerContainer, aboutBackContainer,videoContainer, videoButton);
     });
   }
 
-  private closeAbout(innerContainer: HTMLElement, aboutBackContainer: HTMLElement): void {
+  private closeAbout(innerContainer: HTMLElement, aboutBackContainer: HTMLElement,
+    videoContainer: HTMLElement, videoButton: HTMLElement): void {
     setElementInactive(innerContainer);
+    setElementInactive(videoContainer);
+    setElementInactive(videoButton);
     setTimeout(() => {
       setElementInactive(aboutBackContainer);
     }, 300);
