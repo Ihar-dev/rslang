@@ -131,23 +131,26 @@ class RenderStatistic {
     allPeriodStatisticSumContainer.innerHTML = this.tableRowView((currentStatistics.optional.allPeriodSprint.createdUserWordsCount + currentStatistics.optional.allPeriodChallenge.createdUserWordsCount), currentStatistics.learnedWords ,((currentStatistics.optional.allPeriodSprint.allAnswersCount + currentStatistics.optional.allPeriodChallenge.allAnswersCount) ? Math.round(100 * (currentStatistics.optional.allPeriodSprint.correctAnswersCount + currentStatistics.optional.allPeriodChallenge.correctAnswersCount)/(currentStatistics.optional.allPeriodSprint.allAnswersCount + currentStatistics.optional.allPeriodChallenge.allAnswersCount)) : 0));
 
     currentYearStatisticSprintContainer.innerHTML = this.tableRowView(currentStatistics.optional.currentYearSprint.createdUserWordsCount, currentStatistics.optional.currentYearSprint.learnedWords ,(currentStatistics.optional.currentYearSprint.allAnswersCount ? Math.round(100 * currentStatistics.optional.currentYearSprint.correctAnswersCount/currentStatistics.optional.currentYearSprint.allAnswersCount) : 0));
+
     currentYearStatisticChallengeContainer.innerHTML = this.tableRowView(currentStatistics.optional.currentYearChallenge.createdUserWordsCount, currentStatistics.optional.currentYearChallenge.learnedWords ,(currentStatistics.optional.currentYearChallenge.allAnswersCount ? Math.round(100 * currentStatistics.optional.currentYearChallenge.correctAnswersCount/currentStatistics.optional.currentYearChallenge.allAnswersCount) : 0));
+
     currentYearStatisticSumContainer.innerHTML = this.tableRowView((currentStatistics.optional.currentYearSprint.createdUserWordsCount + currentStatistics.optional.currentYearChallenge.createdUserWordsCount), (currentStatistics.optional.currentYearSprint.learnedWords + currentStatistics.optional.currentYearChallenge.learnedWords) ,Math.round((currentStatistics.optional.currentYearSprint.allAnswersCount + currentStatistics.optional.currentYearChallenge.allAnswersCount) ? Math.round(100 * (currentStatistics.optional.currentYearSprint.correctAnswersCount + currentStatistics.optional.currentYearChallenge.correctAnswersCount)/(currentStatistics.optional.currentYearSprint.allAnswersCount + currentStatistics.optional.currentYearChallenge.allAnswersCount)) : 0));
 
     currentMonthStatisticSprintContainer.innerHTML = this.tableRowView(currentStatistics.optional.currentMonthSprint.createdUserWordsCount, currentStatistics.optional.currentMonthSprint.learnedWords ,(currentStatistics.optional.currentMonthSprint.allAnswersCount ? Math.round(100 * currentStatistics.optional.currentMonthSprint.correctAnswersCount/currentStatistics.optional.currentMonthSprint.allAnswersCount) : 0));
+
     currentMonthStatisticChallengeContainer.innerHTML = this.tableRowView(currentStatistics.optional.currentMonthChallenge.createdUserWordsCount, currentStatistics.optional.currentMonthChallenge.learnedWords ,(currentStatistics.optional.currentMonthChallenge.allAnswersCount ? Math.round(100 * currentStatistics.optional.currentMonthChallenge.correctAnswersCount/currentStatistics.optional.currentMonthChallenge.allAnswersCount) : 0));
     currentMonthStatisticSumContainer.innerHTML = this.tableRowView((currentStatistics.optional.currentMonthSprint.createdUserWordsCount + currentStatistics.optional.currentMonthChallenge.createdUserWordsCount), (currentStatistics.optional.currentMonthSprint.learnedWords + currentStatistics.optional.currentMonthChallenge.learnedWords) , ((currentStatistics.optional.currentMonthSprint.allAnswersCount + currentStatistics.optional.currentMonthChallenge.allAnswersCount) ? Math.round(100 *(currentStatistics.optional.currentMonthSprint.correctAnswersCount + currentStatistics.optional.currentMonthChallenge.correctAnswersCount)/(currentStatistics.optional.currentMonthSprint.allAnswersCount + currentStatistics.optional.currentMonthChallenge.allAnswersCount)) : 0));
 
     currentDayStatisticSprintContainer.innerHTML = this.tableRowView(currentStatistics.optional.currentDaySprint.createdUserWordsCount, currentStatistics.optional.currentDaySprint.learnedWords ,(currentStatistics.optional.currentDaySprint.allAnswersCount ? Math.round(100 * currentStatistics.optional.currentDaySprint.correctAnswersCount/currentStatistics.optional.currentDaySprint.allAnswersCount) : 0));
+
     currentDayStatisticChallengeContainer.innerHTML = this.tableRowView(currentStatistics.optional.currentDayChallenge.createdUserWordsCount, currentStatistics.optional.currentDayChallenge.learnedWords ,(currentStatistics.optional.currentDayChallenge.allAnswersCount ? Math.round(100 * currentStatistics.optional.currentDayChallenge.correctAnswersCount/currentStatistics.optional.currentDayChallenge.allAnswersCount) : 0));
 
-    currentDayStatisticSumContainer.innerHTML = this.tableRowView((currentStatistics.optional.currentDaySprint.createdUserWordsCount + currentStatistics.optional.currentDayChallenge.createdUserWordsCount), currentStatistics.learnedWords , ((currentStatistics.optional.currentDaySprint.allAnswersCount + currentStatistics.optional.currentDayChallenge.allAnswersCount) ? Math.round(100 *(currentStatistics.optional.currentDaySprint.correctAnswersCount + currentStatistics.optional.currentDayChallenge.correctAnswersCount)/(currentStatistics.optional.currentDaySprint.allAnswersCount + currentStatistics.optional.currentDayChallenge.allAnswersCount)) : 0));   
+    currentDayStatisticSumContainer.innerHTML = this.tableRowView((currentStatistics.optional.currentDaySprint.createdUserWordsCount + currentStatistics.optional.currentDayChallenge.createdUserWordsCount), currentStatistics.optional.currentDaySprint.learnedWords + currentStatistics.optional.currentDayChallenge.learnedWords , ((currentStatistics.optional.currentDaySprint.allAnswersCount + currentStatistics.optional.currentDayChallenge.allAnswersCount) ? Math.round(100 *(currentStatistics.optional.currentDaySprint.correctAnswersCount + currentStatistics.optional.currentDayChallenge.correctAnswersCount)/(currentStatistics.optional.currentDaySprint.allAnswersCount + currentStatistics.optional.currentDayChallenge.allAnswersCount)) : 0));   
     
 
   }
 
   renderDayStatistic = async (currentStatistics: statisticsType) => {
-    //const currentDateStatistic: currentDateStatistic = await this.getDayStatisticData(currentStatistics) as currentDateStatistic;
 
     const sprintDayCreatedUserWordsContainer: HTMLElement = document.querySelector('.sprintDayCreatedUserWordsCount') as HTMLElement;
     const sprintDayLongestCorrectRangeContainer: HTMLElement = document.querySelector('.sprintDayLongestCorrectRange') as HTMLElement;
@@ -158,13 +161,10 @@ class RenderStatistic {
     const dayLearnedWordsContainer: HTMLElement = document.querySelector('.dayLearnedWords') as HTMLElement;
     const dayAccuracyContainer: HTMLElement = document.querySelector('.dayAccuracy') as HTMLElement;
     const dayCreatedUserWordsContainer: HTMLElement = document.querySelector('.dayCreatedUserWordsContainer') as HTMLElement;
-
-
-    console.log(currentStatistics);
+   
     sprintDayCreatedUserWordsContainer.textContent = `${currentStatistics.optional.currentDaySprint.createdUserWordsCount}`;
     sprintDayLongestCorrectRangeContainer.textContent = `${currentStatistics.optional.currentDaySprint.longestCorrectRange}`;
-    console.log(currentStatistics.optional.currentDaySprint.allAnswersCount);
-
+   
     sprintDayAccuracyContainer.textContent = `${(currentStatistics.optional.currentDaySprint.allAnswersCount ? Math.round(100 * currentStatistics.optional.currentDaySprint.correctAnswersCount/currentStatistics.optional.currentDaySprint.allAnswersCount) : 0)}%`;
 
     audioChallengeDayCreatedUserWordsContainer.textContent = `${currentStatistics.optional.currentDayChallenge.createdUserWordsCount}`;

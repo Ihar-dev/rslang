@@ -146,8 +146,7 @@ class Statistics {
           'Content-Type': 'application/json'
         },
       });
-      statisticsData = await res.json();
-      console.log(statisticsData)
+      statisticsData = await res.json();     
     } catch (er) {}
     return statisticsData;
   }

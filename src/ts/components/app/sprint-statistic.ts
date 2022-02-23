@@ -106,16 +106,16 @@ class SprintStatistic implements RoundStatistic {
     const allWordsRoundCount: number = this.correctAnswers.length + this.wrongAnswers.length;
     const correctAnswersRoundCount: number = this.correctAnswers.length;
     statistics.updateStatistics(learnedWords, longestCorrectRange, 'sprint', allWordsRoundCount, correctAnswersRoundCount, createdUserWords);
-    console.log(`correct ${correctAnswersRoundCount}`);
     }
   }
 
   sortRoundCorrectWords = async (user: userSettings):Promise<void> => {
     const userWords: userWord[] = await this.getAllUserWords() as userWord[];
     this.correctAnswers.forEach(async (element) => {
-      const isWordIncludes = userWords.find((value) => value.wordId === element.id);
+      const isWordIncludes = userWords.find((value) => value.wordId === element.id);      
       if (isWordIncludes) {
-          const word: userWord = await this.getUserWord(element.id) as userWord;
+        const words: userWord[] = userWords.filter((value) => value.wordId === element.id);
+      const word:userWord = words[0];      
          if (word.difficulty === 'hard') {
            learnedWords = Number(word.optional.correctAnswersCount) == 4 ? learnedWords + 1: learnedWords;
            await this.changeUserWord(word, 'hard', Number(word.optional.correctAnswersCount) + 1, Number(word.optional.correctAnswersCountForStatistics) + 1, Number(word.optional.allAnswersCount) + 1);
@@ -136,7 +136,8 @@ class SprintStatistic implements RoundStatistic {
     this.wrongAnswers.forEach(async (element) => {
       const isWordIncludes = userWords.find((value) => value.wordId === element.id);      
       if (isWordIncludes) { 
-        const word: userWord = await this.getUserWord(element.id) as userWord;
+        const words: userWord[] = userWords.filter((value) => value.wordId === element.id);
+      const word:userWord = words[0];
         if (word.difficulty === 'hard') {
           await this.changeUserWord(word, 'hard', 0, Number(word.optional.correctAnswersCountForStatistics), Number(word.optional.allAnswersCount) + 1);
         }else if (word.difficulty === 'studied') {
@@ -211,7 +212,7 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          "difficulty": "studying",
+          "difficulty": "studied",
           "optional": {
             'correctAnswersCount': `${correctAnswers}`,
             'correctAnswersCountForStatistics': `${correctAnswersCountForStatistics}`,
@@ -219,8 +220,7 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
           }
         })
       });
-      const data = await req.json();       
-      console.log('user word created')
+      const data = await req.json(); 
     } catch (error) {}
   }
 
