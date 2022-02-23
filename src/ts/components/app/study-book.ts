@@ -285,7 +285,10 @@ class StudyBook {
     if (filteredUserWords.length && filteredUserWords[0].difficulty === 'hard') {
       setAttributeForElement(cardHardButton, 'title', 'Убрать из сложных');
       setElementActive(cardHardButton);
-    } else setAttributeForElement(cardHardButton, 'title', 'Добавить в сложные');
+    } else {
+      setAttributeForElement(cardHardButton, 'title', 'Добавить в сложные');
+      setElementInactive(cardHardButton);
+    };
     if (refreshStatus) {
       cardHardButton.addEventListener('click', async () => {
         if (getAttributeFromElement(cardHardButton, 'title') === 'Добавить в сложные') {
