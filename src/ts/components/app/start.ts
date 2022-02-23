@@ -199,7 +199,6 @@ class StartApp implements startAppInterface {
    
     const statisticsButton = getElementByClassName('menu__statistics-button') as HTMLElement;
     statisticsButton.addEventListener('click', async () => {
-      statistics.getStatistics();
       this.resetStartForBook(menuContainer, footer, page);
       const body = getBody() as HTMLElement;
       addClassForElement(body, 'start');
