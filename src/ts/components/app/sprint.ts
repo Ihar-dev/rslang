@@ -127,7 +127,6 @@ class Sprint {
         if (roundTimerContainer) roundTimerContainer.remove();
         nextRoundButton.addEventListener('click', () => {
             if (page < 30) {page++} else page = 0;
-            console.log(page);
             newSprint.startSprint();
         });
         quitRoundButton.addEventListener('click', () => {
@@ -338,8 +337,7 @@ class Sprint {
             await this.filterWordsForRound();
             } else {
               const bookButton: HTMLElement = document.querySelector('.menu__book-button')as HTMLElement;
-        bookButton.click();
-        console.log('find no words');  
+        bookButton.click();  
             } 
          } else {
         const openDifficulty = new OpenGameDifficultyPage;
@@ -375,17 +373,18 @@ class Sprint {
         wordsSet.length =  0;
         wordsSetFull.length = 0;       
         const rslangBookSettings: string = localStorage.getItem('rslang-words-settings') as string;
-                const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
-                let filteredPage = Number(bookSettings.page);
-                page = filteredPage;
-                let group = Number(bookSettings.group);
+        const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
+        let filteredPage = Number(bookSettings.page);
+        page = filteredPage;
+        let group = Number(bookSettings.group);
+        const userWords: userWord[] = await sprintRoundStatistic.getAllUserWords() as userWord[];
         let wordsFromStudyBook: word[] = await this.getWordsChunk(filteredPage, group) as word[];
         filteredWordsForRound.length =0;
          while (filteredWordsForRound.length < 20 && filteredPage >= 0) {
         wordsFromStudyBook.forEach(async (element) => {
-                 const wordId: string = element.id;
-                 const word: userWord | null = await sprintRoundStatistic.getUserWord(wordId) as unknown as userWord | null;
-                 if (word !== null) {
+            const isWordIncludes = userWords.find((value) => value.wordId === element.id);
+                if (isWordIncludes) {
+                    const word: userWord = await sprintRoundStatistic.getUserWord(element.id) as userWord;
                      switch (word.difficulty) {
                          case 'hard':
                              if (Number(word.optional.correctAnswersCount) < 5 && filteredWordsForRound.length < 20) {
@@ -406,11 +405,9 @@ class Sprint {
                      filteredWordsForRound.push(element);
              });       
             filteredPage = filteredPage - 1;
-            console.log(`${filteredPage} `)
             wordsFromStudyBook = await this.getWordsChunk(filteredPage, group);
         } 
         setTimeout(() => {
-            console.log(filteredWordsForRound);
         if (filteredWordsForRound.length > 0) {
         filteredWordsForRound.forEach(element => {
             wordsSetFull.push(element);
@@ -421,7 +418,6 @@ class Sprint {
     } else {
         const bookButton: HTMLElement = document.querySelector('.menu__book-button') as HTMLElement;
         bookButton.click();
-        console.log('find no words')
     }           
         }, 1000);
         

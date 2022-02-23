@@ -51,9 +51,7 @@ export const getVolumeLocalStorage = (): void => {
         audio.volume = Number(localStorage.getItem('volume'));
         volume.setAttribute('value', `${audio.volume}`)
         volume.style.background = `linear-gradient(to right, #24809E 0%, #24809E ${Number(audio.volume)*100}%, #808080 ${Number(audio.volume)*100}%, #808080 100%)`;              
-    } catch (error) {       
-        console.log(error);
-    }
+    } catch (error) {}
     toggleMute();
     volume.addEventListener('input', updateVolume);  
 };
