@@ -4,7 +4,7 @@
 
 .progress {
     display: block;
-    background: linear-gradient(to right, #24809E 24%, #808080 24%, #808080 100%); 
+    background: linear-gradient(to right, #24809E 50%, #808080 50%, #808080 100%); 
     border-radius: 4px;
     height: 12px;
      width: 90%;

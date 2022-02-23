@@ -20,9 +20,7 @@ class SprintView extends Sprint {
     const pageContainer: HTMLElement = document.querySelector('.page-container') as HTMLElement;
     const namingContainer: HTMLElement = document.querySelector('.page-container__naming') as HTMLElement;
     namingContainer.classList.add('filter-gray');
-    namingContainer.classList.add('naming-sprint');
-    //const menuContainer: HTMLElement = document.querySelector('.header-container__menu') as HTMLElement;
-    //menuContainer.classList.remove('game');    
+    namingContainer.classList.add('naming-sprint');    
     const sprintContainer: HTMLElement = document.createElement('div');
     sprintContainer.classList.add('sprint-container');
     pageContainer.append(sprintContainer);
@@ -40,7 +38,7 @@ class SprintView extends Sprint {
     let secondsCountdown = timer;
     ticAudio.src = require('../../../../assets/audio/clock-ticking-2.mp3');
     ticAudio.loop = true;
-    ticAudio.volume = 0.5;
+    ticAudio.volume = 0.8;
     ticAudio.play();
     for (let i = 0; i <= timer; i++) {
       timeOuts.push(setTimeout(() => {
@@ -81,7 +79,7 @@ class SprintView extends Sprint {
         <div class="sprint-game-sound-container"></div>
         <div class="sprint-game-volume-container">
             <label for="volume" class="volume-label">
-            <input type="range" value="0.24" min="0" max="1" step="0.01" class="progress" id="volume">
+            <input type="range" value="0.5" min="0" max="1" step="0.01" class="progress" id="volume">
             </label>
         </div>
     </div>
@@ -90,7 +88,7 @@ class SprintView extends Sprint {
     <div class="sprint-game-footer">
     </div>`;
     getVolumeLocalStorage();
-    correctAudio.volume = 0.2;
+    correctAudio.volume = 0.3;
     correctAudio.play();
     this.startSprintRound();
     const roundTimerContainer: HTMLElement = document.querySelector('.sprint-round-countdown') as HTMLElement;
