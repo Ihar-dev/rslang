@@ -374,7 +374,7 @@ class Sprint {
         wordsSetFull.length = 0;       
         const rslangBookSettings: string = localStorage.getItem('rslang-words-settings') as string;
         const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
-        let filteredPage = Number(bookSettings.page);
+        let filteredPage = bookSettings.page ? Number(bookSettings.page) : 0;
         page = filteredPage;
         let group = Number(bookSettings.group);
         const userWords: userWord[] = await sprintRoundStatistic.getAllUserWords() as userWord[];
