@@ -106,8 +106,7 @@ class SprintStatistic implements RoundStatistic {
     const longestCorrectRange: number = this.correctAnswersSeries;
     const allWordsRoundCount: number = this.correctAnswers.length + this.wrongAnswers.length;
     const correctAnswersRoundCount: number = this.correctAnswers.length;
-    statistics.updateStatistics(learnedWords, longestCorrectRange, 'sprint', allWordsRoundCount, correctAnswersRoundCount);
-    //statistics.updateStatistics(learnedWords, longestCorrectRange, 'sprint', allWordsRoundCount, correctAnswersRoundCount, createdUserWords);
+    statistics.updateStatistics(learnedWords, longestCorrectRange, 'sprint', allWordsRoundCount, correctAnswersRoundCount, createdUserWords);
     }
   }
 

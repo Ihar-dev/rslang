@@ -55,7 +55,7 @@ const view = `
 <div class="sprint-statistic game-statistic">SPRINT
     <div class="statistics-table-row">
         <div class="">Количество новых слов за день</div>
-        <div class="sprintDayLearnedWords"></div>
+        <div class="sprintDayCreatedUserWordsCount"></div>
     </div>
     <div class="statistics-table-row">
         <div class="">Процент правильных ответов</div>
@@ -69,7 +69,7 @@ const view = `
 <div class="audio-challenge-statistic game-statistic">AUDIO CHALLENGE
     <div class="statistics-table-row">
         <div class="">Количество новых слов за день</div>
-        <div class="audioChallengeDayLearnedWords"></div>
+        <div class="audioChallengeDayCreatedUserWordsCount"></div>
     </div>
     <div class="statistics-table-row">
         <div class="">Процент правильных ответов</div>
@@ -83,7 +83,7 @@ const view = `
 <div class="words-statistic game-statistic">ОБЩАЯ СТАТИСТИКА
     <div class="statistics-table-row">
         <div class="">Количество новых слов за день</div>
-        <div class="">0</div>
+        <div class="dayCreatedUserWordsContainer">0</div>
     </div>
     <div class="statistics-table-row">
         <div class="">Количество изученных слов за день</div>
