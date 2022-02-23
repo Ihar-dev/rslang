@@ -2,6 +2,7 @@ import '../view/sprintview/audiocontrols.css';
 
 //create and export new audio **************************************/
 export const audio = new Audio() ;
+
 export let currentVolume = audio.volume;
 export const ticAudio = new Audio(require('../../../assets/audio/clock-ticking-2.mp3'));
 export const incorrectAudio = new Audio();
@@ -34,7 +35,6 @@ export const updateVolume = (): void => {
         volumeOnOffButton.classList.remove('mute');
     }
 const volumeAudio = new Audio(require('../../../assets/audio/correctanswer.mp3'));
-//When create new audio - add it volume to the start of this line/
 volumeAudio.volume  = endRoundAudio.volume = incorrectAudio.volume = correctAudio.volume = wordAudio.volume = audio.volume;
 
 saveSettings();
@@ -47,11 +47,18 @@ const saveSettings = () => {
 
 export const getVolumeLocalStorage = (): void => {
     const volume = document.getElementById('volume') as HTMLInputElement;
+    audio.volume = 0.5;
+    if (localStorage.getItem('volume')){
     try {
         audio.volume = Number(localStorage.getItem('volume'));
         volume.setAttribute('value', `${audio.volume}`)
         volume.style.background = `linear-gradient(to right, #24809E 0%, #24809E ${Number(audio.volume)*100}%, #808080 ${Number(audio.volume)*100}%, #808080 100%)`;              
     } catch (error) {}
+} else {
+audio.volume = 0.5;
+volume.setAttribute('value', `${audio.volume}`)
+        volume.style.background = `linear-gradient(to right, #24809E 0%, #24809E ${Number(audio.volume)*100}%, #808080 ${Number(audio.volume)*100}%, #808080 100%)`;
+}
     toggleMute();
     volume.addEventListener('input', updateVolume);  
 };
