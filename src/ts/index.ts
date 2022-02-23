@@ -1,6 +1,10 @@
 import '../styles/main.css';
-import {StartApp} from './components/app/start';
-import {Statistics} from './components/app/statistics';
+import {
+  StartApp
+} from './components/app/start';
+import {
+  Statistics
+} from './components/app/statistics';
 
 const startApp = new StartApp();
 startApp.render(true);
@@ -12,4 +16,4 @@ const updateStatistics = async () => {
   statistics.updateStatistics(0, 0, 'sprint', 0, 0, 0);
 };
 
-updateStatistics();
+if (startApp.userSettings.userId) updateStatistics();
