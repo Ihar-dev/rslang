@@ -36,7 +36,9 @@ const view = `
   </div>
   <div class="about-back-cont__video-cont">
     <div class="about-back-cont__heading">Видео</div>
-    <div class="about-back-cont__temp-heading">Здесь вот-вот появится окно с видео</div>
+      <iframe class="video-frame" src="https://www.youtube.com/embed/5j-6WmDMNGY" title="YouTube video player"
+      frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
   </div>
 </div>
 `;
