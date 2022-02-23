@@ -3,7 +3,13 @@ render: async () => {
 const view = `
 <div class="statistic-container">
     <div class="full-statistic-container off">
-        <div>Статистика за всё время</div>
+        <div class="full-statistic-name">
+          <div>Статистика за всё время</div>
+          <p>Спринт</p>
+          <p>Аудио-
+          челлендж</p>
+          <p>Итого</p>
+        </div>
         <div class="full-statistic-row">
           <div class=" all-statistic-naming">
               <p class="">Новых слов</p>
@@ -14,9 +20,9 @@ const view = `
           <div class="all-statistic-challenge table-row"></div>
           <div class="all-statistic-sum table-row"></div>
         </div>
-        <div>Статистика за год</div>
+        <div>Статистика за текущий год</div>
         <div class="full-statistic-row">
-            <div class=" year-statistic-naming">
+            <div class="year-statistic-naming">
             <p class="">Новых слов</p>
               <p class="">Изучено слов</p>
               <p class="">Правильных ответов, %</p>
@@ -25,7 +31,7 @@ const view = `
             <div class="year-statistic-challenge table-row"></div>
             <div class="year-statistic-sum table-row"></div>
         </div>
-        <div>Статистика за месяц</div>
+        <div>Статистика за текущий месяц</div>
         <div class="full-statistic-row">
               <div class=" month-statistic-naming">
                   <p class="">Новых слов</p>

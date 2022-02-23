@@ -101,8 +101,7 @@ class SprintStatistic implements RoundStatistic {
     const user: userSettings = this.getUser() as userSettings;
     if (startApp.userSettings.userId) {
       await this.sortRoundCorrectWords(user);
-      await this.sortRoundInCorrectWords(user);      
-    console.log(`words sorted`)
+      await this.sortRoundInCorrectWords(user); 
     const longestCorrectRange: number = this.correctAnswersSeries;
     const allWordsRoundCount: number = this.correctAnswers.length + this.wrongAnswers.length;
     const correctAnswersRoundCount: number = this.correctAnswers.length;
@@ -196,9 +195,7 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
           }
         })
       });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   createUserWord = async (user: userSettings, word: word, correctAnswers: number, correctAnswersCountForStatistics: number, allAnswersCount: number) => {
@@ -221,11 +218,7 @@ const rawResponse = await fetch(`${settings.APIUrl}users/${startApp.userSettings
         })
       });
       const data = await req.json();
-      console.log(' user word created')
-    } catch (error) {
-      console.log(' user word create error')
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
 }

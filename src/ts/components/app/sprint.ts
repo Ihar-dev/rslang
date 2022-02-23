@@ -127,7 +127,6 @@ class Sprint {
         if (roundTimerContainer) roundTimerContainer.remove();
         nextRoundButton.addEventListener('click', () => {
             if (page < 30) {page++} else page = 0;
-            console.log(page);
             newSprint.startSprint();
         });
         quitRoundButton.addEventListener('click', () => {
@@ -338,8 +337,7 @@ class Sprint {
             await this.filterWordsForRound();
             } else {
               const bookButton: HTMLElement = document.querySelector('.menu__book-button')as HTMLElement;
-        bookButton.click();
-        console.log('find no words');  
+        bookButton.click();  
             } 
          } else {
         const openDifficulty = new OpenGameDifficultyPage;
@@ -407,11 +405,9 @@ class Sprint {
                      filteredWordsForRound.push(element);
              });       
             filteredPage = filteredPage - 1;
-            console.log(`${filteredPage} `)
             wordsFromStudyBook = await this.getWordsChunk(filteredPage, group);
         } 
         setTimeout(() => {
-            console.log(filteredWordsForRound);
         if (filteredWordsForRound.length > 0) {
         filteredWordsForRound.forEach(element => {
             wordsSetFull.push(element);
@@ -422,7 +418,6 @@ class Sprint {
     } else {
         const bookButton: HTMLElement = document.querySelector('.menu__book-button') as HTMLElement;
         bookButton.click();
-        console.log('find no words')
     }           
         }, 1000);
         

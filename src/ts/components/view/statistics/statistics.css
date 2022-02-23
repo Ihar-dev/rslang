@@ -40,7 +40,7 @@
     max-width: 840px;
     width: 95vw;
     height: 59vh;
-    top:6vh;
+    top:10vh;
     margin: 0 auto;
     border-radius: 25px;
     background-color: #a2abc5fb;
@@ -51,7 +51,8 @@
 
 .full-statistic-container p {
     color: white;
-    border-bottom: solid 1px white;
+    border: solid 1px white;
+    text-shadow: 1px 1px 1px rgb(5, 5, 250);
     font-size: 3vh;
 }
 
@@ -94,8 +95,22 @@ text-shadow: 2px 1px 4px #037bf7;
 }
 
 .full-statistic-row {
+    width: 95%;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 4fr 1fr 1fr 1fr;
+}
+
+.full-statistic-name {
+    width: 95%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr 1fr;        
+}
+
+.full-statistic-name p {
+    width: 100%;
+    font-size: 1.2rem;
 }
 
 .table-row {
