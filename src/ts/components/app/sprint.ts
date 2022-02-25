@@ -78,7 +78,7 @@ class Sprint {
 
     getSprintQuestion = async (): Promise < void > => {
         const questionWord: word = wordsSet[0];
-        wordsSet = wordsSet.filter(element => element !== questionWord);
+        wordsSet = wordsSet.length > 2 ? wordsSet.filter(element => element !== questionWord): [];
         let tempWordsSet = wordsSetFull.filter(element => element !== questionWord);
         const answersSet: Array < word > = [];
         answersSet.push(questionWord);
@@ -197,8 +197,7 @@ class Sprint {
         if (wordsSet.length == 0) {
             this.roundOver();
             return;
-        };
-        await this.getSprintQuestion();
+        }else await this.getSprintQuestion();
         const wordContainer = document.querySelector('.sprint-question-word') as HTMLElement;
         const answerContainer = document.querySelector('.sprint-answer-word') as HTMLElement;
         wordContainer.textContent = answer.word;
@@ -329,7 +328,7 @@ class Sprint {
         } else {
         wordsSetFull = await this.getWordsChunk(page, group) as unknown as Array < word > ;
         wordsSet = await this.getWordsChunk(page, group) as unknown as Array < word > ;
-        }
+        };
         this.renderQuestionContainer();
         await this.renderSprintQuestion();
     }
@@ -338,10 +337,14 @@ class Sprint {
         const startApp = new StartApp;
         const body: HTMLElement = document.querySelector('body') as HTMLElement;
         body.classList.remove('book');
-        if (localStorage.getItem('rslang-words-data') && startApp.userSettings.userId) {
+        if (localStorage.getItem('rslang-words-data')) {            
             savedWordsFromStudyBook = localStorage.getItem('rslang-words-data') as string;
             if (savedWordsFromStudyBook.length > 0) {
+                if (startApp.userSettings.userId) {
+                    await this.getWordsFromStudyBook();
+                }else {
             await this.filterWordsForRound();
+                }
             } else {
               const bookButton: HTMLElement = document.querySelector('.menu__book-button')as HTMLElement;
         bookButton.click();  
@@ -364,16 +367,14 @@ class Sprint {
     }
     }
 
-    getWordsFromStudyBook = async () => {
-        if (localStorage.getItem('rslang-words-data')) {
-            savedWordsFromStudyBook = localStorage.getItem('rslang-words-data') as string;            
-            if (savedWordsFromStudyBook.length > 0) {                
+    getWordsFromStudyBook = async () => {                        
                 const rslangBookSettings: string = localStorage.getItem('rslang-words-settings') as string;
                 const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
                 page = Number(bookSettings.page);
                 group = Number(bookSettings.group);
-            } else return;
-        } else return;
+        wordsSetFull = await this.getWordsChunk(page, group) as unknown as Array < word > ;
+        wordsSet = await this.getWordsChunk(page, group) as unknown as Array < word > ;
+        savedWordsFromStudyBook = '';
     }
 
     filterWordsForRound = async(): Promise<void> => {
@@ -383,7 +384,7 @@ class Sprint {
         const bookSettings: rslangWordsSettings = JSON.parse(rslangBookSettings) as rslangWordsSettings;
         let filteredPage = bookSettings.page ? Number(bookSettings.page) : 0;
         page = filteredPage;
-        let group = Number(bookSettings.group);
+        let group = bookSettings.group ? Number(bookSettings.group) : 0;
         const userWords: userWord[] = await sprintRoundStatistic.getAllUserWords() as userWord[];
         let wordsFromStudyBook: word[] = await this.getWordsChunk(filteredPage, group) as word[];
         filteredWordsForRound = [];
@@ -427,9 +428,7 @@ class Sprint {
         const bookButton: HTMLElement = document.querySelector('.menu__book-button') as HTMLElement;
         bookButton.click();
     }           
-        }, 1000);
-        
-        
+        }, 1000); 
     }
 
 }
