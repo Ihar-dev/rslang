@@ -67,6 +67,7 @@ class StartApp implements startAppInterface {
     password: string,
     expiredTime: number,
   };
+  updateInterval: NodeJS.Timer;
 
   constructor() {
     if (localStorage.getItem('rslang-user-settings')) {
@@ -80,6 +81,8 @@ class StartApp implements startAppInterface {
       password: '',
       expiredTime: 0,
     };
+    this.updateInterval = setInterval(() => {});
+
   }
 
   public async render(menu: boolean): Promise < void > {
@@ -104,8 +107,14 @@ class StartApp implements startAppInterface {
         entryButton.textContent = 'Выйти';
       } else {
         entryButton.textContent = 'Войти';
-      }
-      if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) this.updateEntrance(entryButton);
+      };
+
+      if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) await this.updateEntrance(entryButton);
+      if (this.userSettings.userId) {
+        await statistics.updateStatistics(0, 0, 'audio-challenge', 0, 0, 0);
+        statistics.updateStatistics(0, 0, 'sprint', 0, 0, 0);
+      };
+
       this.addListeners(footer, page, body);
     };
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
@@ -115,6 +124,7 @@ class StartApp implements startAppInterface {
 
     if (localStorage.getItem('rslang-page') === 'book') this.startBookPage(body, menuContainer, footer, page);
     this.addAboutListeners();
+
   }
 
   private addListeners(footer: HTMLElement, page: HTMLElement, body: HTMLElement): void {
@@ -199,6 +209,10 @@ class StartApp implements startAppInterface {
    
     const statisticsButton = getElementByClassName('menu__statistics-button') as HTMLElement;
     statisticsButton.addEventListener('click', async () => {
+      if (this.userSettings.userId) {
+        await statistics.updateStatistics(0, 0, 'audio-challenge', 0, 0, 0);
+        await statistics.updateStatistics(0, 0, 'sprint', 0, 0, 0);
+      };
       this.resetStartForBook(menuContainer, footer, page);
       const body = getBody() as HTMLElement;
       addClassForElement(body, 'start');
@@ -288,6 +302,8 @@ class StartApp implements startAppInterface {
     localStorage.setItem('rslang-user-settings', '');
     entryButton.textContent = 'Войти';
     this.handleExitForHardButtons();
+
+    clearInterval(this.updateInterval);
   }
 
   private async handleExitForHardButtons(): Promise < void > {
@@ -317,7 +333,7 @@ class StartApp implements startAppInterface {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(signInData)
+        body: JSON.stringify(signInData),
       });
       const data = await res.json();
       if (res.status === 200) {
@@ -334,7 +350,9 @@ class StartApp implements startAppInterface {
         localStorage.setItem('rslang-user-settings', JSON.stringify(this.userSettings));
         userName.textContent = this.userSettings.name;
         entryButton.textContent = 'Выйти';
+
       };
+
     } catch (er) {
       this.handleMessage('Incorrect e-mail or password!', 'red-text');
       userName.textContent = '';
@@ -374,11 +392,21 @@ class StartApp implements startAppInterface {
         userName.textContent = this.userSettings.name;
         entryButton.textContent = 'Выйти';
         this.handleEntranceForHardButtons();
+
+        this.updateInterval = setInterval(async () => {
+          if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) await this.updateEntrance(entryButton);
+          if (this.userSettings.userId) {
+            await statistics.updateStatistics(0, 0, 'audio-challenge', 0, 0, 0);
+            statistics.updateStatistics(0, 0, 'sprint', 0, 0, 0);
+          }
+        }, this.userSettings.expiredTime + 1000);
+
       };
     } catch (er) {
       this.handleMessage('Incorrect e-mail or password!', 'red-text');
       userName.textContent = '';
       entryButton.textContent = 'Войти';
+      clearInterval(this.updateInterval);
     }
   }
 
