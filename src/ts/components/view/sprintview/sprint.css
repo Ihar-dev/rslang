@@ -23,7 +23,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgb(81, 165, 221);
-    background-image: url(https://c.pxhere.com/photos/02/f1/westminster_big_ben_london-1069141.jpg!d);
+    background-image: url(../../../../assets/img/westminster_big_ben_london-1069141.jpg);
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -165,6 +165,8 @@ stroke-dashoffset: 248.186;
 
 .sprint-wrong-button,
 .sprint-wright-button,
+.sprint-round-statistics-button,
+.sprint-exit-statistics-button,
 .next-round-button,
 .quit-round-button {
     width: 90%;
@@ -179,11 +181,13 @@ stroke-dashoffset: 248.186;
 }
 
 .sprint-wrong-button,
+.sprint-exit-statistics-button,
 .quit-round-button {
     background-color: hsla(9, 100%, 64%, 0.671);
 }
 
 .sprint-wright-button,
+.sprint-round-statistics-button,
 .next-round-button {
     background-color: #07fa44da;
 }

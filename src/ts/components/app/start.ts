@@ -193,7 +193,7 @@ class StartApp implements startAppInterface {
       this.resetStartForGames(menuContainer, footer, page);
       const target = event.target as HTMLElement;
       startAudioChallengeApp.startGame(target);
-      localStorage.setItem('rslang-page', 'audio challenge');
+      localStorage.setItem('rslang-page', 'audio-challenge');
     });
 
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
@@ -218,6 +218,7 @@ class StartApp implements startAppInterface {
       addClassForElement(body, 'start');
       const renderStatistic = new RenderStatistic;
       renderStatistic.renderStatisticPage();
+      localStorage.setItem('rslang-page', 'statistics');
     });
    
     const teamButton = getElementByClassName('menu__team-button') as HTMLElement;
