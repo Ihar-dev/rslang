@@ -183,7 +183,7 @@ class StartApp implements startAppInterface {
       this.resetStartForGames(menuContainer, footer, page);
       const target = event.target as HTMLElement;
       startAudioChallengeApp.startGame(target);
-      localStorage.setItem('rslang-page', 'audio challenge');
+      localStorage.setItem('rslang-page', 'audio-challenge');
     });
 
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
