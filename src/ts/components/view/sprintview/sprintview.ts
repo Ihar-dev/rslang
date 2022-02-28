@@ -121,8 +121,8 @@ class SprintView extends Sprint {
     <tbody>${this.renderWordsTable(sprintRoundStatistic.wrongAnswers)}</tbody>
   </table> 
         `;
-    const wrongButton: HTMLElement = document.querySelector('.sprint-wrong-button') as HTMLElement;
-    wrongButton.addEventListener('click', () => {
+    const exitStatisticsButton: HTMLElement = document.querySelector('.sprint-exit-statistics-button') as HTMLElement;
+    exitStatisticsButton.addEventListener('click', () => {
       roundStatisticContainer.remove();
     });
 
@@ -178,7 +178,7 @@ class SprintView extends Sprint {
       </tr>
     </table>
     <div class="round-statistic-words"></div>
-    <button class="sprint-wrong-button">CLOSE</button>
+    <button class="sprint-exit-statistics-button">CLOSE</button>
     </div>
     `;
     return roundStatisticViewHTML;

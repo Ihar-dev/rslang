@@ -218,6 +218,7 @@ class StartApp implements startAppInterface {
       addClassForElement(body, 'start');
       const renderStatistic = new RenderStatistic;
       renderStatistic.renderStatisticPage();
+      localStorage.setItem('rslang-page', 'statistics');
     });
    
     const teamButton = getElementByClassName('menu__team-button') as HTMLElement;

@@ -108,6 +108,7 @@ class Sprint {
         this.clearCountDownTimeouts();
         ticAudio.pause();
         endRoundAudio.play();
+        window.removeEventListener('keydown', this.keyboardListen);
         const questionBody = document.querySelector('.sprint-game-body') as HTMLElement;
         const questionFooter = document.querySelector('.sprint-game-footer') as HTMLElement;
         questionFooter.innerHTML = `
@@ -116,20 +117,22 @@ class Sprint {
         questionBody.innerHTML = `
    <p>ROUND OVER</p>
    <p>Your Score-${roundScore} </p>
-   <button class="sprint-wright-button">GET ROUND STATISTIC</button>`;
+   <button class="sprint-round-statistics-button">GET ROUND STATISTIC</button>`;
         sprintRoundStatistic.sortRoundWords();
-        const writeButton = document.querySelector('.sprint-wright-button') as HTMLElement;
-        writeButton.addEventListener('click', () => {
+        const roundStatisticsButton = document.querySelector('.sprint-round-statistics-button') as HTMLElement;
+        roundStatisticsButton.addEventListener('click', () => {
             newSprint.renderRoundStatistic();
         });
         const nextRoundButton = document.querySelector('.next-round-button') as HTMLElement;
         const quitRoundButton = document.querySelector('.quit-round-button') as HTMLElement;
         const roundTimerContainer = document.querySelector('.sprint-round-countdown') as HTMLElement;
         if (roundTimerContainer) roundTimerContainer.remove();
-        nextRoundButton.addEventListener('click', () => {
+        nextRoundButton.addEventListener('click', async() => {
             if (page < 30) {
                 page++
             } else page = 0;
+            wordsSetFull = await this.getWordsChunk(page, group) as unknown as Array < word > ;
+            wordsSet = await this.getWordsChunk(page, group) as unknown as Array < word > ;
             newSprint.startSprint();
         });
         quitRoundButton.addEventListener('click', () => {
@@ -229,22 +232,18 @@ class Sprint {
             return;
         }
         const writeButton: HTMLElement = document.querySelector('.sprint-wright-button') as HTMLElement;
-        const wrongButton: HTMLElement = document.querySelector('.sprint-wrong-button') as HTMLElement;
+        const wrongButton: HTMLElement = document.querySelector('.sprint-wrong-button') as HTMLElement;        
         switch (event.key) {
             case "Left":
             case "ArrowLeft":
-                wrongButton.click();
+                wrongButton.click();               
                 break;
             case "Right":
             case "ArrowRight":
-                writeButton.click();
+                writeButton.click();               
                 break;
             case "Enter":
-                writeButton.click();
-                break;
-            case "Esc":
-            case "Escape":
-                wrongButton.click();
+                writeButton.click();               
                 break;
             default:
                 return;
@@ -335,7 +334,6 @@ class Sprint {
         const body: HTMLElement = document.querySelector('body') as HTMLElement;
         body.classList.remove('book');
         savedPageRsLang = localStorage.getItem('rslang-page') ? localStorage.getItem('rslang-page') as string : 'home';
-        console.log(savedPageRsLang)
         if (savedPageRsLang === 'book') {
             if (!startApp.userSettings.userId) {
                 await this.getWordsFromStudyBook();
