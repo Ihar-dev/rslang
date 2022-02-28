@@ -110,10 +110,6 @@ class StartApp implements startAppInterface {
       };
 
       if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) await this.updateEntrance(entryButton);
-      if (this.userSettings.userId) {
-        await statistics.updateStatistics(0, 0, 'audio-challenge', 0, 0, 0);
-        statistics.updateStatistics(0, 0, 'sprint', 0, 0, 0);
-      };
 
       this.addListeners(footer, page, body);
     };
@@ -193,7 +189,7 @@ class StartApp implements startAppInterface {
       this.resetStartForGames(menuContainer, footer, page);
       const target = event.target as HTMLElement;
       startAudioChallengeApp.startGame(target);
-      localStorage.setItem('rslang-page', 'audio challenge');
+      localStorage.setItem('rslang-page', 'audio-challenge');
     });
 
     const menuSprintButton = getElementByClassName('menu__sprint-button') as HTMLElement;
@@ -218,11 +214,14 @@ class StartApp implements startAppInterface {
       addClassForElement(body, 'start');
       const renderStatistic = new RenderStatistic;
       renderStatistic.renderStatisticPage();
+      localStorage.setItem('rslang-page', 'statistics');
+      localStorage.setItem('rslang-words-data', '');
     });
    
     const teamButton = getElementByClassName('menu__team-button') as HTMLElement;
     teamButton.addEventListener('click', async () => {
       this.startTeamPage(body, menuContainer, footer, page);
+      localStorage.setItem('rslang-words-data', '');
     });
   }
 
@@ -394,11 +393,7 @@ class StartApp implements startAppInterface {
         this.handleEntranceForHardButtons();
 
         this.updateInterval = setInterval(async () => {
-          if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) await this.updateEntrance(entryButton);
-          if (this.userSettings.userId) {
-            await statistics.updateStatistics(0, 0, 'audio-challenge', 0, 0, 0);
-            statistics.updateStatistics(0, 0, 'sprint', 0, 0, 0);
-          }
+          if (this.userSettings.expiredTime - Date.now() < 0 && this.userSettings.expiredTime) this.updateEntrance(entryButton);
         }, this.userSettings.expiredTime + 1000);
 
       };
