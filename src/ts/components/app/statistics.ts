@@ -204,22 +204,16 @@ class Statistics {
         if (currentStatistics.optional.currentMonthChallenge.currentMonth === currentMonth) {
           currentStatistics = this.addAllPeriodChallenge(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount);
           currentStatistics = this.addCurrentYearChallenge(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentYear);
-          currentStatistics = this.moveCurrentMonthChallenge(currentStatistics, currentMonth);
           currentStatistics = this.addCurrentMonthChallenge(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentMonth);
           currentStatistics = this.setCurrentDayChallenge(currentStatistics, learnedWords, longestCorrectRoundRange, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentDate);
         } else {
           if (currentStatistics.optional.currentYearChallenge.currentYear === currentYear) {
             currentStatistics = this.addAllPeriodChallenge(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount);
             currentStatistics = this.addCurrentYearChallenge(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentYear);
-            currentStatistics = this.moveCurrentMonthChallenge(currentStatistics, currentMonth);
-            currentStatistics = this.moveCurrentYearChallenge(currentStatistics, currentYear);
             currentStatistics = this.setCurrentMonthChallenge(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentMonth);
             currentStatistics = this.setCurrentDayChallenge(currentStatistics, learnedWords, longestCorrectRoundRange, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentDate);
           } else {
             currentStatistics = this.addAllPeriodChallenge(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount);
-            currentStatistics = this.moveCurrentMonthChallenge(currentStatistics, currentMonth);
-            currentStatistics = this.moveCurrentYearChallenge(currentStatistics, currentYear);
-            currentStatistics = this.moveAllPeriodChallenge(currentStatistics);
             currentStatistics = this.setCurrentYearChallenge(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentYear);
             currentStatistics = this.setCurrentMonthChallenge(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentMonth);
             currentStatistics = this.setCurrentDayChallenge(currentStatistics, learnedWords, longestCorrectRoundRange, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentDate);
@@ -237,22 +231,16 @@ class Statistics {
         if (currentStatistics.optional.currentMonthSprint.currentMonth === currentMonth) {
           currentStatistics = this.addAllPeriodSprint(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount);
           currentStatistics = this.addCurrentYearSprint(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentYear);
-          currentStatistics = this.moveCurrentMonthSprint(currentStatistics, currentMonth);
           currentStatistics = this.addCurrentMonthSprint(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentMonth);
           currentStatistics = this.setCurrentDaySprint(currentStatistics, learnedWords, longestCorrectRoundRange, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentDate);
         } else {
           if (currentStatistics.optional.currentYearSprint.currentYear === currentYear) {
             currentStatistics = this.addAllPeriodSprint(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount);
             currentStatistics = this.addCurrentYearSprint(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentYear);
-            currentStatistics = this.moveCurrentMonthSprint(currentStatistics, currentMonth);
-            currentStatistics = this.moveCurrentYearSprint(currentStatistics, currentYear);
             currentStatistics = this.setCurrentMonthSprint(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentMonth);
             currentStatistics = this.setCurrentDaySprint(currentStatistics, learnedWords, longestCorrectRoundRange, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentDate);
           } else {
             currentStatistics = this.addAllPeriodSprint(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount);
-            currentStatistics = this.moveCurrentMonthSprint(currentStatistics, currentMonth);
-            currentStatistics = this.moveCurrentYearSprint(currentStatistics, currentYear);
-            currentStatistics = this.moveAllPeriodSprint(currentStatistics);
             currentStatistics = this.setCurrentYearSprint(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentYear);
             currentStatistics = this.setCurrentMonthSprint(currentStatistics, learnedWords, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentMonth);
             currentStatistics = this.setCurrentDaySprint(currentStatistics, learnedWords, longestCorrectRoundRange, allWordsRoundCount, correctAnswersRoundCount, createdUserWordsRoundCount, currentDate);
