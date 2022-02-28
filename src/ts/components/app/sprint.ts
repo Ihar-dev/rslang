@@ -333,7 +333,7 @@ class Sprint {
         const startApp = new StartApp;
         const body: HTMLElement = document.querySelector('body') as HTMLElement;
         body.classList.remove('book');
-        savedPageRsLang = localStorage.getItem('rslang-page') ? localStorage.getItem('rslang-page') as string : 'home';
+        savedPageRsLang = localStorage.getItem('rslang-page') === 'book' ? localStorage.getItem('rslang-page') as string : 'home';
         if (savedPageRsLang === 'book') {
             if (!startApp.userSettings.userId) {
                 await this.getWordsFromStudyBook();
