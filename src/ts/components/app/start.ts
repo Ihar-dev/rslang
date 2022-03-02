@@ -171,6 +171,14 @@ class StartApp implements startAppInterface {
     const menuToggleButton = getElementByClassName('menu__toggle-button') as HTMLElement;
     const menuContainer = getElementByClassName('header-container__menu') as HTMLElement;
 
+    menuContainer.addEventListener('mouseenter', () => {
+      setElementActive(menuContainer);
+    });
+
+    menuContainer.addEventListener('mouseleave', () => {
+      setElementInactive(menuContainer);
+    });
+
     menuToggleButton.addEventListener('click', () => {
       toggleElement(menuContainer);
     });
