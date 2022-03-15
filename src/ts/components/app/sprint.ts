@@ -79,16 +79,16 @@ class Sprint {
 
     getSprintQuestion = async (): Promise < void > => {
         const questionWord: word = wordsSet[0];
-        wordsSet = wordsSet.length > 2 ? wordsSet.filter(element => element !== questionWord) : [];
+        wordsSet = wordsSet.length > 1 ? wordsSet.filter(element => element !== questionWord) : [];
         let tempWordsSet = wordsSetFull.filter(element => element !== questionWord);
         const answersSet: Array < word > = [];
         answersSet.push(questionWord);
-        for (let i = 0; i <= 2; i++) {
+        for (let i = 0; i <= 1; i++) {
             const answerWord = this.getAnswerWord(tempWordsSet);
             answersSet.push(answerWord);
             tempWordsSet = tempWordsSet.filter(element => element !== answerWord);
         };
-        const index: number = this.getRandomIntInclusive(0, 2);
+        const index: number = this.getRandomIntInclusive(0, 1);
         answer = {
             word: questionWord.word,
             wordTranslate: questionWord.wordTranslate,
