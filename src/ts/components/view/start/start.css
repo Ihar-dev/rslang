@@ -74,6 +74,7 @@ body.start {
 .header-container__menu.active.game {
   top: 20px;
   right: 20px;
+  z-index: 3;
 }
 
 .header-container__menu {

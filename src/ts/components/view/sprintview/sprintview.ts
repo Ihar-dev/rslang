@@ -18,7 +18,7 @@ class SprintView extends Sprint {
   public sprintView = async (): Promise<void> => {
     const getReadyTime: number = 5; //-----time before start--------
     const pageContainer: HTMLElement = document.querySelector('.page-container') as HTMLElement;
-    const namingContainer: HTMLElement = document.querySelector('.page-container__naming') as HTMLElement;
+    const namingContainer: HTMLElement = document.querySelector('.page-container__top-cont') as HTMLElement;
     namingContainer.classList.add('filter-gray');
     namingContainer.classList.add('naming-sprint');    
     const sprintContainer: HTMLElement = document.createElement('div');

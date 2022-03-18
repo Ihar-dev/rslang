@@ -56,9 +56,6 @@ let filteredWordsForRound: word[] = [];
 let roundScore: number;
 let savedPageRsLang: string = 'home';
 let rightAnswersSugar: number = 0;
-
-//-----------------Get CHUNK OF Words for Game---------------------------
-
 let page = 0;
 let group = 0;
 
@@ -270,7 +267,6 @@ class Sprint {
         const rightAnswersCountContainer = document.querySelector('.sprint-round-right-answers-count') as HTMLElement;
         const cupContainer = document.querySelector('.sprint-round-right-answers-cup') as HTMLElement;
         const cupNode = document.querySelectorAll('.cup') as NodeList;
-        console.log(rightAnswersSugar)
         if (rightAnswersSugar < 3) {
             rightAnswersSugar++;
             const sugar = document.createElement('div');
@@ -281,7 +277,7 @@ class Sprint {
             rightAnswersSugar = 0;
             roundScoreContainer.textContent = `${roundScore}`;
             rightAnswersCountContainer.innerHTML = '';
-            if (cupNode.length < 4) {
+            if (cupNode.length < 5) {
                 const cup = document.createElement('div');
                 cup.classList.add('cup');
                 cupContainer.append(cup);
