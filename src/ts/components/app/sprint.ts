@@ -55,9 +55,7 @@ let wordsSetFull: Array < word > = [];
 let filteredWordsForRound: word[] = [];
 let roundScore: number;
 let savedPageRsLang: string = 'home';
-
-//-----------------Get CHUNK OF Words for Game---------------------------
-
+let rightAnswersSugar: number = 0;
 let page = 0;
 let group = 0;
 
@@ -268,17 +266,18 @@ class Sprint {
         roundScoreContainer.textContent = `${roundScore}`;
         const rightAnswersCountContainer = document.querySelector('.sprint-round-right-answers-count') as HTMLElement;
         const cupContainer = document.querySelector('.sprint-round-right-answers-cup') as HTMLElement;
-        const writeAnswersCount: NodeList = rightAnswersCountContainer.childNodes as NodeList;
         const cupNode = document.querySelectorAll('.cup') as NodeList;
-        if (writeAnswersCount.length < 3) {
+        if (rightAnswersSugar < 3) {
+            rightAnswersSugar++;
             const sugar = document.createElement('div');
             sugar.classList.add('sugar');
             rightAnswersCountContainer.append(sugar);
         } else {
             roundScore += 100;
+            rightAnswersSugar = 0;
             roundScoreContainer.textContent = `${roundScore}`;
             rightAnswersCountContainer.innerHTML = '';
-            if (cupNode.length < 4) {
+            if (cupNode.length < 5) {
                 const cup = document.createElement('div');
                 cup.classList.add('cup');
                 cupContainer.append(cup);
@@ -296,6 +295,7 @@ class Sprint {
     getWrongAnswer = () => {
         sprintRoundStatistic.wrongAnswers.push(answer.questionWord);
         sprintRoundStatistic.correctAnswersSeries = 0;
+        rightAnswersSugar = 0;
         const writeButton: HTMLElement = document.querySelector('.sprint-wright-button') as HTMLElement;
         const wrongButton: HTMLElement = document.querySelector('.sprint-wrong-button') as HTMLElement;
         writeButton.removeEventListener('click', this.getWrongAnswer);

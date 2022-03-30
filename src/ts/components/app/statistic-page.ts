@@ -28,12 +28,14 @@ class RenderStatistic {
 
   renderStatisticPage = async () => {
     const page: HTMLElement = document.querySelector('.page-container') as HTMLElement;
+    const savedPageRsLang: string = localStorage.getItem('rslang-page') ? localStorage.getItem('rslang-page') as string : 'home';
     page.innerHTML = await StatisticRender.render();
     const statistics = new Statistics();
     const currentStatistics: statisticsType = await statistics.getStatistics() as statisticsType;
     await this.renderDayStatistic(currentStatistics);
     await this.renderFullStatisticData(currentStatistics);
     this.selectFullStatistic();
+    this.exitStatisticslisten(savedPageRsLang);
 
   }
 
@@ -42,15 +44,24 @@ class RenderStatistic {
     const dayStatisticButton: HTMLElement = document.querySelector('.day-statistic-button') as HTMLElement;
     const fullStatisticContainer: HTMLElement = document.querySelector('.full-statistic-container') as HTMLElement;
     fullStatisticButton.addEventListener('click', () => {
-      fullStatisticContainer.classList.toggle('off');
-      fullStatisticButton.classList.toggle('statistic-button-active');
-      dayStatisticButton.classList.toggle('statistic-button-active');
+      fullStatisticContainer.classList.remove('off');
+      fullStatisticButton.classList.add('statistic-button-active');
+      dayStatisticButton.classList.remove('statistic-button-active');
     });
     dayStatisticButton.addEventListener('click', () => {
       fullStatisticContainer.classList.add('off');
       fullStatisticButton.classList.remove('statistic-button-active');
       dayStatisticButton.classList.add('statistic-button-active');
     });
+  }
+
+  private exitStatisticslisten = (savedPageRsLang: string) => {
+    const savedPage: string = savedPageRsLang === 'statistics' ? 'home': savedPageRsLang;
+    const exitStatisticsButton: HTMLElement = document.querySelector('.close-statistics-button') as HTMLElement;
+    exitStatisticsButton.addEventListener('click', ()=>{      
+      const backButton: HTMLElement = document.querySelector(`.menu__${savedPage}-button`) as HTMLElement;
+      backButton.click();
+    })
   }
 
   getDayStatisticData = async (currentStatistics: statisticsType): Promise < currentDateStatistic > => {
@@ -124,11 +135,14 @@ class RenderStatistic {
     const currentDayStatisticChallengeContainer: HTMLElement = document.querySelector('.day-statistic-challenge') as HTMLElement;
     const currentDayStatisticSumContainer: HTMLElement = document.querySelector('.day-statistic-sum') as HTMLElement;   
 
-    allPeriodStatisticSprintContainer.innerHTML = this.tableRowView(currentStatistics.optional.allPeriodSprint.createdUserWordsCount, currentStatistics.optional.allPeriodSprint.learnedWords ,(currentStatistics.optional.allPeriodSprint.allAnswersCount ? Math.round(100 * currentStatistics.optional.allPeriodSprint.correctAnswersCount/currentStatistics.optional.allPeriodSprint.allAnswersCount) : 0));
+    allPeriodStatisticSprintContainer.innerHTML = `<p class="full-statistic-name">Sprint</p>
+    ${this.tableRowView(currentStatistics.optional.allPeriodSprint.createdUserWordsCount, currentStatistics.optional.allPeriodSprint.learnedWords ,(currentStatistics.optional.allPeriodSprint.allAnswersCount ? Math.round(100 * currentStatistics.optional.allPeriodSprint.correctAnswersCount/currentStatistics.optional.allPeriodSprint.allAnswersCount) : 0))}`;
 
-    allPeriodStatisticChallengeContainer.innerHTML = this.tableRowView(currentStatistics.optional.allPeriodChallenge.createdUserWordsCount, currentStatistics.optional.allPeriodChallenge.learnedWords ,(currentStatistics.optional.allPeriodChallenge.allAnswersCount ? Math.round(100 * currentStatistics.optional.allPeriodChallenge.correctAnswersCount/currentStatistics.optional.allPeriodChallenge.allAnswersCount) : 0));
+    allPeriodStatisticChallengeContainer.innerHTML = `<p class="full-statistic-name">Audio Challenge</p>
+    ${this.tableRowView(currentStatistics.optional.allPeriodChallenge.createdUserWordsCount, currentStatistics.optional.allPeriodChallenge.learnedWords ,(currentStatistics.optional.allPeriodChallenge.allAnswersCount ? Math.round(100 * currentStatistics.optional.allPeriodChallenge.correctAnswersCount/currentStatistics.optional.allPeriodChallenge.allAnswersCount) : 0))}`;
 
-    allPeriodStatisticSumContainer.innerHTML = this.tableRowView((currentStatistics.optional.allPeriodSprint.createdUserWordsCount + currentStatistics.optional.allPeriodChallenge.createdUserWordsCount), currentStatistics.learnedWords ,((currentStatistics.optional.allPeriodSprint.allAnswersCount + currentStatistics.optional.allPeriodChallenge.allAnswersCount) ? Math.round(100 * (currentStatistics.optional.allPeriodSprint.correctAnswersCount + currentStatistics.optional.allPeriodChallenge.correctAnswersCount)/(currentStatistics.optional.allPeriodSprint.allAnswersCount + currentStatistics.optional.allPeriodChallenge.allAnswersCount)) : 0));
+    allPeriodStatisticSumContainer.innerHTML = `<p class="full-statistic-name">Итого</p>
+    ${this.tableRowView((currentStatistics.optional.allPeriodSprint.createdUserWordsCount + currentStatistics.optional.allPeriodChallenge.createdUserWordsCount), currentStatistics.learnedWords ,((currentStatistics.optional.allPeriodSprint.allAnswersCount + currentStatistics.optional.allPeriodChallenge.allAnswersCount) ? Math.round(100 * (currentStatistics.optional.allPeriodSprint.correctAnswersCount + currentStatistics.optional.allPeriodChallenge.correctAnswersCount)/(currentStatistics.optional.allPeriodSprint.allAnswersCount + currentStatistics.optional.allPeriodChallenge.allAnswersCount)) : 0))}`;
 
     currentYearStatisticSprintContainer.innerHTML = this.tableRowView(currentStatistics.optional.currentYearSprint.createdUserWordsCount, currentStatistics.optional.currentYearSprint.learnedWords ,(currentStatistics.optional.currentYearSprint.allAnswersCount ? Math.round(100 * currentStatistics.optional.currentYearSprint.correctAnswersCount/currentStatistics.optional.currentYearSprint.allAnswersCount) : 0));
 

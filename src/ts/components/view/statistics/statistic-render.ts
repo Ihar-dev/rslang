@@ -3,14 +3,10 @@ render: async () => {
 const view = `
 <div class="statistic-container">
     <div class="full-statistic-container off">
-        <div class="full-statistic-name">
-          <div>Статистика за всё время</div>
-          <p>Sprint</p>
-          <p>Audio Challenge</p>
-          <p>Итого</p>
-        </div>
-        <div class="full-statistic-row">
+        <div class="full-statistic-naming">Статистика за всё время</div>               
+          <div class="full-statistic-row">
           <div class=" all-statistic naming">
+              <p class="full-statistic-name"></p>
               <p class="">Новых слов</p>
               <p class="">Изучено слов</p>
               <p class="">Правильных ответов, %</p>
@@ -19,7 +15,7 @@ const view = `
           <div class="all-statistic-challenge table-row"></div>
           <div class="all-statistic-sum table-row"></div>
         </div>
-        <div>Статистика за текущий год</div>
+        <div class= "full-statistic-naming">Статистика за текущий год</div>
         <div class="full-statistic-row">
             <div class="year-statistic naming">
             <p class="">Новых слов</p>
@@ -30,7 +26,7 @@ const view = `
             <div class="year-statistic-challenge table-row"></div>
             <div class="year-statistic-sum table-row"></div>
         </div>
-        <div>Статистика за текущий месяц</div>
+        <div class= "full-statistic-naming">Статистика за текущий месяц</div>
         <div class="full-statistic-row">
               <div class=" month-statistic naming">
                   <p class="">Новых слов</p>
@@ -41,7 +37,7 @@ const view = `
               <div class="month-statistic-challenge table-row"></div>
               <div class="month-statistic-sum table-row"></div>
         </div>
-        <div class="today-statistic-container">Статистика за сегодня</div>
+        <div class="full-statistic-naming">Статистика за сегодня</div>
         <div class="full-statistic-row">
            <div class=" day-statistic naming">
              <p class="">Новых слов</p>
@@ -54,49 +50,50 @@ const view = `
         </div>
     </div>
 <div class="statistic-header">
-    <div class="day-statistic-button statistic-button-active">Статистика за сегодня</div>
-    <div class="full-statistic-button">Полная статистика</div>
+    <div class="day-statistic-button statistic-button-active"title="Day Statistics">Статистика за сегодня</div>
+    <div class="full-statistic-button" title="Full Statistics">&nbsp;&nbsp;Полная статистика&nbsp;&nbsp;</div>
+    <button class="close-statistics-button" title="Close"></button>
 </div>
 <div class="sprint-statistic game-statistic">SPRINT
     <div class="statistics-table-row">
-        <div class="">Количество новых слов за день</div>
-        <div class="sprintDayCreatedUserWordsCount"></div>
+        <div class="table-text-left">Количество новых слов за день</div>
+        <div class="sprintDayCreatedUserWordsCount table-text-left"></div>
     </div>
     <div class="statistics-table-row">
-        <div class="">Процент правильных ответов</div>
-        <div class="sprintDayAccuracy"></div>
+        <div class="table-text-left">Процент правильных ответов</div>
+        <div class="sprintDayAccuracy table-text-left"></div>
     </div>
     <div class="statistics-table-row">
-        <div class="">Самая длинная серия правильных ответов</div>
-        <div class="sprintDayLongestCorrectRange"></div>
+        <div class="table-text-left">Самая длинная серия правильных ответов</div>
+        <div class="sprintDayLongestCorrectRange table-text-left"></div>
     </div>
 </div>
 <div class="audio-challenge-statistic game-statistic">AUDIO CHALLENGE
     <div class="statistics-table-row">
-        <div class="">Количество новых слов за день</div>
-        <div class="audioChallengeDayCreatedUserWordsCount"></div>
+        <div class="table-text-left">Количество новых слов за день</div>
+        <div class="audioChallengeDayCreatedUserWordsCount table-text-left"></div>
     </div>
     <div class="statistics-table-row">
-        <div class="">Процент правильных ответов</div>
-        <div class="audioChallengeDayAccuracy"></div>
+        <div class="table-text-left">Процент правильных ответов</div>
+        <div class="audioChallengeDayAccuracy table-text-left"></div>
     </div>
     <div class="statistics-table-row">
-        <div class="">Самая длинная серия правильных ответов</div>
-        <div class="audioChallengeDayLongestCorrectRange"></div>
+        <div class="table-text-left">Самая длинная серия правильных ответов</div>
+        <div class="audioChallengeDayLongestCorrectRange table-text-left"></div>
     </div>
 </div>
 <div class="words-statistic game-statistic">ОБЩАЯ СТАТИСТИКА
     <div class="statistics-table-row">
-        <div class="">Количество новых слов за день</div>
-        <div class="dayCreatedUserWordsContainer">0</div>
+        <div class="table-text-left">Количество новых слов за день</div>
+        <div class="dayCreatedUserWordsContainer table-text-left">0</div>
     </div>
     <div class="statistics-table-row">
-        <div class="">Количество изученных слов за день</div>
-        <div class="dayLearnedWords"></div>
+        <div class="table-text-left">Количество изученных слов за день</div>
+        <div class="dayLearnedWords table-text-left"></div>
     </div>
     <div class="statistics-table-row">
-        <div class="">Процент правильных ответов за день</div>
-        <div class="dayAccuracy"></div>
+        <div class="table-text-left">Процент правильных ответов за день</div>
+        <div class="dayAccuracy table-text-left"></div>
     </div>
 
 </div>`;
