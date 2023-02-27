@@ -10,6 +10,7 @@ import {
   sprintRoundStatistic,
   word
 } from "../../app/sprint-statistic";
+import { settings } from '../../app/start';
 
 export const timeOuts: Array < NodeJS.Timeout > = [];
 
@@ -18,7 +19,7 @@ class SprintView extends Sprint {
   public sprintView = async (): Promise<void> => {
     const getReadyTime: number = 5; //-----time before start--------
     const pageContainer: HTMLElement = document.querySelector('.page-container') as HTMLElement;
-    const namingContainer: HTMLElement = document.querySelector('.page-container__naming') as HTMLElement;
+    const namingContainer: HTMLElement = document.querySelector('.page-container__top-cont') as HTMLElement;
     namingContainer.classList.add('filter-gray');
     namingContainer.classList.add('naming-sprint');    
     const sprintContainer: HTMLElement = document.createElement('div');
@@ -129,7 +130,7 @@ class SprintView extends Sprint {
     roundStatisticContainer.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (target.closest('.round-statistic-audio')) {
-        const audioPath = `${SprintView.baseUrl}${target.dataset.audio}`;
+        const audioPath = `${settings.APIUrl}${target.dataset.audio}`;
         audio.src = audioPath;
         audio.play();
       }
