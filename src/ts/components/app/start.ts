@@ -38,7 +38,7 @@ type user = {
 
 enum settings {
   tokenDuration = 14400000,
-  APIUrl = 'https://rs-lang-work-team.herokuapp.com/',
+  APIUrl = "https://rs-lang-back-uac7.onrender.com/",
   numberOfPages = 30,
   numberOfGroups = 6,
   wordsPerPage = 20,

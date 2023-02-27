@@ -10,6 +10,7 @@ import {
   sprintRoundStatistic,
   word
 } from "../../app/sprint-statistic";
+import { settings } from '../../app/start';
 
 export const timeOuts: Array < NodeJS.Timeout > = [];
 
@@ -129,7 +130,7 @@ class SprintView extends Sprint {
     roundStatisticContainer.addEventListener('click', (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (target.closest('.round-statistic-audio')) {
-        const audioPath = `${SprintView.baseUrl}${target.dataset.audio}`;
+        const audioPath = `${settings.APIUrl}${target.dataset.audio}`;
         audio.src = audioPath;
         audio.play();
       }
